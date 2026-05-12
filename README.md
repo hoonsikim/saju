@@ -7,7 +7,7 @@ Korean Four Pillars of Destiny (사주, 四柱) — global edition.
 - **Languages (day 1)**: English · 한국어 · 日本語 · 中文
 - **Pricing (planned)**: Free tier (basic reading) → Premium ($5~9 per detailed reading or $9/mo membership)
 - **Stack**: Static frontend + Cloudflare Worker calling Claude API for reading generation
-- **Live URL (D+2~)**: https://hoonsikim.github.io/saju
+- **Live URL**: https://hoonsikim.github.io/saju (landing live D+1, free reading live D+3)
 
 ## Why this exists
 
@@ -25,13 +25,12 @@ This fills that gap: **authentic Korean Saju + modern UX + AI consistency + shar
 
 ## Roadmap
 
-- **D+1** (오늘): repo + README + PLAN + landing scaffold
-- **D+2~3**: Saju calculation engine (Year/Month/Day/Hour pillar from birth date)
-- **D+4**: Cloudflare Worker + Claude API integration
-- **D+5**: Free reading + email signup
-- **D+7~10**: Multi-language (EN/KO/JA/ZH) reading templates
-- **D+14**: Premium tier (Polar.sh or Lemon Squeezy)
-- **D+30**: Shareable result image (Twitter/Insta card)
+- **D+1** (오늘): repo + landing live + calendar engine prototype
+- **D+2**: Cloudflare Worker + Claude API + first end-to-end reading
+- **D+3**: Free reading LIVE (en) + email collection
+- **D+5**: Multi-language (EN/KO/JA/ZH) reading templates
+- **D+7**: Premium tier (Polar.sh) + share card
+- **D+14**: Result image generation + viral loop instrumented
 
 ## License
 

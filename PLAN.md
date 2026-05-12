@@ -16,9 +16,11 @@
 | AI-native | 본문 작성 | skill seed | **reading 자체가 LLM 생성** |
 | 진입 ETA | 7-10일 | 4-8주 | 2-5일 MVP |
 
-## MVP scope (D+1 → D+10)
+## MVP scope (D+1 → D+3) — 압축 타임라인
 
-### Phase 1 — 계산 엔진 (D+2~3)
+원래 D+10 잡았던 건 P001 잔재. Saju는 calendar lib + LLM API 호출이면 끝 — D+3 live free reading 가능.
+
+### Phase 1 — 계산 엔진 (D+1 오늘 ~ D+2 새벽)
 - 한국 만세력(萬歲曆) 알고리즘 (정밀 calendar conversion)
 - 입력: 생년월일시 + 위치(city → timezone)
 - 출력: 4 pillars (Year/Month/Day/Hour) — 천간(天干) 10개 × 지지(地支) 12개
@@ -28,26 +30,26 @@
 - 라이브러리 후보: `lunar-javascript`, `saju.js`, 직접 구현
 - 검증: 한국 만세력 공식 사이트 결과와 cross-check
 
-### Phase 2 — Reading 생성 (D+4)
+### Phase 2 — Reading 생성 (D+2)
 - Cloudflare Worker (무료 100k req/day)
 - 입력: 4 pillars + 5행 + 10신 + 대운 + 사용자 선택 언어
 - 처리: Claude API 호출 with Saju expert system prompt
 - 출력: 600~1500자 reading (general / love / career / wealth / health)
 - 캐싱: 같은 입력 → 같은 reading (deterministic with temperature=0)
 
-### Phase 3 — Frontend (D+5)
+### Phase 3 — Frontend wiring (D+2~3)
 - Static HTML/CSS/JS
 - 폼: 생년월일시·위치·언어·reading 종류(general/love/career)
 - 결과 화면: reading + 5행 wheel chart + 4 pillars 시각화
 - 다국어 i18n: 1 source → EN/KO/JA/ZH (i18n JSON)
 - 모바일 first
 
-### Phase 4 — 다국어 (D+7~10)
+### Phase 4 — 다국어 (D+3~5, free reading 라이브 후 즉시)
 - Master 프롬프트 1개 → 언어별 토큰 swap
 - 검증: 각 언어로 같은 입력 → 의미 동일한 reading 확인
 - 언어 detection: 브라우저 locale 기반 + 수동 toggle
 
-### Phase 5 — 공유 + 결제 (D+14)
+### Phase 5 — 공유 + 결제 (D+7)
 - Result share card (Cloudflare Worker 이미지 생성)
   - 사용자 4 pillars + "Saju says ..." 1줄 hook + saju.<domain>
 - Premium tier: Polar.sh or Lemon Squeezy
