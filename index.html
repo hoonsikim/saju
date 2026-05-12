@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Saju — Korean Four Pillars of Destiny | Live this week</title>
-  <meta name="description" content="Authentic Korean Saju (四柱) reading. AI-powered. Multilingual (EN/KO/JA/ZH). Not Western astrology — real Year/Month/Day/Hour pillars + Five Elements.">
-  <meta property="og:title" content="Saju — Korean Four Pillars of Destiny">
-  <meta property="og:description" content="Authentic Korean fortune reading. AI-powered. Global, multilingual.">
+  <title>Saju — Free Korean Four Pillars Reading</title>
+  <meta name="description" content="Authentic Korean Saju (四柱) reading. Free. Instant. Real Korean methodology — Year/Month/Day/Hour pillars + Five Elements + Ten Gods.">
+  <meta property="og:title" content="Saju — Free Korean Four Pillars Reading">
+  <meta property="og:description" content="Authentic Korean fortune. Real Day Master, Five Elements, Ten Gods. Instant, free.">
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -16,46 +16,81 @@
       <div class="container">
         <p class="kicker">사주 · 四柱 · Sa-ju</p>
         <h1>Your fate, in the language Korea has used for 1,000 years.</h1>
-        <p class="lead">Authentic <strong>Korean Four Pillars of Destiny</strong> — Year, Month, Day, Hour. Five Elements in balance. Ten Gods at work. AI-powered, multilingual, modern UX.</p>
-        <p class="lead-sub">Not Western astrology pretending to be Eastern. The real thing. <strong>Live this week.</strong></p>
-
-        <div class="lang-switch">
-          <button class="lang active" data-lang="en">English</button>
-          <button class="lang" data-lang="ko">한국어</button>
-          <button class="lang" data-lang="ja">日本語</button>
-          <button class="lang" data-lang="zh">中文</button>
-        </div>
-
-        <form class="waitlist" action="mailto:h.company.sean@gmail.com?subject=Saju%20waitlist" method="get">
-          <input type="email" name="email" placeholder="your@email.com" required>
-          <button type="submit">Notify me on launch</button>
-        </form>
-        <p class="note">No spam. One email when first free reading is live (D+3 ≈ May 14, 2026).</p>
+        <p class="lead">Authentic <strong>Korean Four Pillars of Destiny</strong> — Year, Month, Day, Hour. Five Elements in balance. Ten Gods at work.</p>
+        <p class="lead-sub">Not Western astrology pretending to be Eastern. The real thing. <strong>Free. Instant. No signup.</strong></p>
       </div>
     </section>
 
-    <section class="pillars">
+    <section class="form-section">
+      <div class="container narrow">
+        <h2>Get your free reading</h2>
+        <form id="saju-form" autocomplete="off">
+          <div class="row">
+            <label>
+              <span>Birth date</span>
+              <input type="date" id="birth-date" required min="1900-01-01" max="2026-12-31" value="1990-01-01">
+            </label>
+            <label>
+              <span>Birth time (local)</span>
+              <input type="time" id="birth-time" value="12:00">
+            </label>
+          </div>
+          <div class="row">
+            <label>
+              <span>Language</span>
+              <select id="language">
+                <option value="en">English</option>
+                <option value="ko">한국어</option>
+              </select>
+            </label>
+            <label>
+              <span>Reading style</span>
+              <select id="reading-type">
+                <option value="general">General — life direction</option>
+                <option value="career">Career &amp; work</option>
+                <option value="love">Love &amp; relationships</option>
+              </select>
+            </label>
+          </div>
+          <p class="hint">Don't know your birth time? Use 12:00 — gives a less precise Hour pillar but everything else stays accurate.</p>
+          <button type="submit" id="submit-btn">Read my Saju →</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="result-section" id="result" hidden>
+      <div class="container narrow">
+        <h2>Your Four Pillars</h2>
+        <div class="pillars-grid" id="pillars-grid"></div>
+
+        <h3>Five Elements Balance</h3>
+        <div class="elements-bars" id="elements-bars"></div>
+
+        <h3>Day Master</h3>
+        <div class="day-master-box" id="day-master-box"></div>
+
+        <h3>Reading</h3>
+        <div class="reading-badge" id="reading-badge"></div>
+        <div class="reading-text" id="reading-text"></div>
+
+        <div class="actions">
+          <button id="share-btn" type="button">Copy share text</button>
+          <button id="reset-btn" type="button" class="ghost">New reading</button>
+        </div>
+
+        <p class="upgrade-note">This is a rule-based reading. <strong>Deeper LLM-powered reading coming this week</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20premium%20waitlist">notify me</a> when it's live.</p>
+      </div>
+    </section>
+
+    <section class="pillars-explainer">
       <div class="container">
         <h2>The Four Pillars (四柱)</h2>
         <div class="pillar-grid">
-          <div class="pillar"><div class="pillar-name">Year Pillar 年柱</div><p>Your ancestry, where you come from.</p></div>
-          <div class="pillar"><div class="pillar-name">Month Pillar 月柱</div><p>Your parents, the season of your birth.</p></div>
-          <div class="pillar"><div class="pillar-name">Day Pillar 日柱</div><p>Your core self. The most important pillar.</p></div>
-          <div class="pillar"><div class="pillar-name">Hour Pillar 時柱</div><p>Your offspring, the legacy you carry.</p></div>
+          <div class="pillar-card"><div class="pillar-name">Year Pillar 年柱</div><p>Your ancestry, where you come from.</p></div>
+          <div class="pillar-card"><div class="pillar-name">Month Pillar 月柱</div><p>Your parents, the season of your birth.</p></div>
+          <div class="pillar-card"><div class="pillar-name">Day Pillar 日柱</div><p>Your core self. The most important pillar.</p></div>
+          <div class="pillar-card"><div class="pillar-name">Hour Pillar 時柱</div><p>Your offspring, the legacy you carry.</p></div>
         </div>
-      </div>
-    </section>
-
-    <section class="diff">
-      <div class="container narrow">
-        <h2>Why this is different</h2>
-        <ul class="diff-list">
-          <li><strong>Real Korean methodology.</strong> Year/Month/Day/Hour pillars from authentic 만세력 (Manse-ryeok) calendar. Five Elements (오행). Ten Gods (십신). Daewoon 10-year cycles.</li>
-          <li><strong>Not Western astrology in a Korean wrapper.</strong> Co-Star and The Pattern are Western. We are not.</li>
-          <li><strong>Multilingual from day 1.</strong> Same reading, four languages. EN/KO/JA/ZH.</li>
-          <li><strong>AI-powered.</strong> Consistent, deep, personalized. Not a fortune cookie generator.</li>
-          <li><strong>Shareable.</strong> One-click image card for Twitter, Instagram, TikTok.</li>
-        </ul>
       </div>
     </section>
   </main>
@@ -63,19 +98,147 @@
   <footer>
     <div class="container">
       <p>Built autonomously by <strong>일사령(逸事令)</strong> · <a href="https://github.com/hoonsikim/saju">GitHub</a></p>
-      <p>© 2026 · Saju methodology is Korean tradition · Code is MIT licensed</p>
+      <p>© 2026 · Saju methodology = Korean tradition · Code = MIT licensed</p>
     </div>
   </footer>
 
-  <script>
-    // Language switcher (placeholder — full i18n D+7~10)
-    document.querySelectorAll('.lang').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.lang').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.documentElement.lang = btn.dataset.lang;
-      });
+  <script type="module">
+    import { birthInfoToFourPillars, elementBalance } from './src/saju.browser.js';
+    import { generateReading } from './src/reading-rules.js';
+
+    // Cloudflare Worker URL — set after `wrangler deploy`.
+    // Empty = use client-side rule-based reading only.
+    const WORKER_URL = window.SAJU_WORKER_URL || '';
+
+    const ELEMENT_COLOR = {
+      wood: '#4ade80', fire: '#f97316', earth: '#d4a574',
+      metal: '#94a3b8', water: '#3b82f6',
+    };
+    const ELEMENT_NAME = {
+      en: { wood: 'Wood', fire: 'Fire', earth: 'Earth', metal: 'Metal', water: 'Water' },
+      ko: { wood: '목(木)', fire: '화(火)', earth: '토(土)', metal: '금(金)', water: '수(水)' },
+    };
+
+    async function fetchLLMReading(input) {
+      if (!WORKER_URL) return null;
+      try {
+        const res = await fetch(WORKER_URL + '/reading', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(input),
+        });
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data.reading || null;
+      } catch {
+        return null;
+      }
+    }
+
+    document.getElementById('saju-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const date = document.getElementById('birth-date').value.split('-').map(Number);
+      const time = document.getElementById('birth-time').value.split(':').map(Number);
+      const lang = document.getElementById('language').value;
+      const readingType = document.getElementById('reading-type').value;
+
+      const input = {
+        year: date[0], month: date[1], day: date[2],
+        hour: time[0], minute: time[1] || 0,
+        language: lang, readingType,
+      };
+
+      const saju = birthInfoToFourPillars(input);
+
+      const submitBtn = document.getElementById('submit-btn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = lang === 'ko' ? '읽는 중…' : 'Reading…';
+
+      // 1) Render structure immediately (instant)
+      renderResult(saju, lang, null);
+      document.getElementById('result').hidden = false;
+      document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // 2) Try LLM reading (Cloudflare Worker), fallback to rule-based
+      const llmText = await fetchLLMReading(input);
+      const reading = llmText || generateReading(saju, lang);
+      const provenance = llmText ? 'llm' : 'rule';
+      renderReading(reading, provenance, lang);
+
+      submitBtn.disabled = false;
+      submitBtn.textContent = lang === 'ko' ? 'Saju 다시 보기 →' : 'Read my Saju →';
     });
+
+    document.getElementById('reset-btn').addEventListener('click', () => {
+      document.getElementById('result').hidden = true;
+      document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    document.getElementById('share-btn').addEventListener('click', async () => {
+      const reading = document.getElementById('reading-text').textContent;
+      const pillars = Array.from(document.querySelectorAll('.pillar-cell .pillar-chars')).map(e => e.textContent).join(' / ');
+      const text = `My Korean Saju reading:\n\n${pillars}\n\n${reading}\n\n→ saju.hoonsikim.io (work in progress, hoonsikim.github.io/saju)`;
+      try {
+        await navigator.clipboard.writeText(text);
+        document.getElementById('share-btn').textContent = '✓ Copied!';
+        setTimeout(() => document.getElementById('share-btn').textContent = 'Copy share text', 2000);
+      } catch (err) {
+        alert('Copy failed: ' + err.message);
+      }
+    });
+
+    function renderResult(saju, lang) {
+      // 4 pillars
+      const labels = lang === 'ko' ? ['연주', '월주', '일주', '시주'] : ['Year', 'Month', 'Day', 'Hour'];
+      const labelsHan = ['年柱', '月柱', '日柱', '時柱'];
+      const pillarsHtml = ['year', 'month', 'day', 'hour'].map((key, i) => {
+        const p = saju.pillars[key];
+        const isDay = key === 'day';
+        return `
+          <div class="pillar-cell ${isDay ? 'day-pillar' : ''}">
+            <div class="pillar-label">${labels[i]}<br><span class="pillar-han">${labelsHan[i]}</span></div>
+            <div class="pillar-chars" style="color: ${ELEMENT_COLOR[p.ganElement]}">${p.gan}</div>
+            <div class="pillar-chars" style="color: ${ELEMENT_COLOR[p.zhiElement]}">${p.zhi}</div>
+            <div class="pillar-meta">${ELEMENT_NAME[lang][p.ganElement]} / ${ELEMENT_NAME[lang][p.zhiElement]}</div>
+          </div>`;
+      }).join('');
+      document.getElementById('pillars-grid').innerHTML = pillarsHtml;
+
+      // 5 elements bars
+      const balance = elementBalance(saju);
+      const barsHtml = ['wood', 'fire', 'earth', 'metal', 'water'].map(e => `
+        <div class="element-row">
+          <div class="element-label" style="color: ${ELEMENT_COLOR[e]}">${ELEMENT_NAME[lang][e]}</div>
+          <div class="element-bar"><div class="element-fill" style="width: ${balance[e]}%; background: ${ELEMENT_COLOR[e]}"></div></div>
+          <div class="element-pct">${balance[e]}%</div>
+        </div>`).join('');
+      document.getElementById('elements-bars').innerHTML = barsHtml;
+
+      // Day Master box
+      document.getElementById('day-master-box').innerHTML = `
+        <div class="dm-char" style="color: ${ELEMENT_COLOR[saju.dayMasterElement]}">${saju.dayMaster}</div>
+        <div class="dm-meta">${ELEMENT_NAME[lang][saju.dayMasterElement]}</div>
+      `;
+
+      // Reading — initial placeholder (overwritten by renderReading)
+      const placeholder = lang === 'ko' ? '리딩 생성 중…' : 'Generating reading…';
+      document.getElementById('reading-text').textContent = placeholder;
+    }
+
+    function renderReading(text, provenance, lang) {
+      const el = document.getElementById('reading-text');
+      el.textContent = text;
+      const badge = document.getElementById('reading-badge');
+      if (badge) {
+        if (provenance === 'llm') {
+          badge.textContent = lang === 'ko' ? '🌙 LLM 리딩 (Claude Haiku 4.5)' : '🌙 LLM reading (Claude Haiku 4.5)';
+          badge.className = 'reading-badge badge-llm';
+        } else {
+          badge.textContent = lang === 'ko' ? '⚡ 즉시 룰 기반 리딩 — LLM 리딩은 곧' : '⚡ Instant rule-based reading — LLM coming soon';
+          badge.className = 'reading-badge badge-rule';
+        }
+      }
+    }
   </script>
 </body>
 </html>
