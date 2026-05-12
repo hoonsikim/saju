@@ -1,0 +1,31 @@
+{
+  "name": "saju",
+  "version": "1.0.0",
+  "description": "Korean Saju (Four Pillars of Destiny) \u2014 global, AI-powered, multilingual",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/saju.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hoonsikim/saju.git"
+  },
+  "keywords": [
+    "saju",
+    "korean",
+    "fortune",
+    "astrology",
+    "four-pillars",
+    "ai"
+  ],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/hoonsikim/saju/issues"
+  },
+  "homepage": "https://github.com/hoonsikim/saju#readme",
+  "dependencies": {
+    "lunar-javascript": "^1.7.7"
+  }
+}

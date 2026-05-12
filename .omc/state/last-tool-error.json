@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"node test/saju.test.js 2>&1\",\"description\":\"Run saju engine tests\"}",
+  "error": "Exit code 1\n✓ 1990-01-01 12:00 — year pillar = 己巳\n✓ 1990-01-01 12:00 — day master 존재\n✓ 1990-01-01 12:00 — 8 chars 분류 합계 = 8\n✓ 2000-01-01 00:00 — year pillar = 己卯\n✓ 2000-01-01 00:00 — element wood/water 존재\n✓ 2024-08-15 — year pillar = 甲辰 (2024년 갑진년)\n✗ 2024-08-15 — day master 천간 1글자\n   actual:   \"辛\"\n   should contain: \"\"\n✓ 2024-08-15 — pillars 4개 모두 존재\n  立春 전 month pillar: 乙丑\n  立春 후 month pillar: 丙寅\n✓ 2024-02-05 (立春 후) — month pillar 지지 = 寅\n✓ 1995-06-15 — element balance 합 = 101% (98~102 허용)\n  bal...",
+  "timestamp": "2026-05-12T07:31:00.487Z",
+  "retry_count": 1
+}
