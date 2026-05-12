@@ -1,0 +1,12 @@
+name = "saju-reading"
+main = "src/index.js"
+compatibility_date = "2024-12-01"
+workers_dev = true
+
+[vars]
+ALLOWED_ORIGIN = "https://hoonsikim.github.io"
+ANTHROPIC_MODEL = "claude-haiku-4-5-20251001"
+MAX_TOKENS = "1024"
+
+# Secrets (set via `wrangler secret put`):
+#   ANTHROPIC_API_KEY

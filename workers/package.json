@@ -1,0 +1,17 @@
+{
+  "name": "saju-reading-worker",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "dependencies": {
+    "lunar-javascript": "^1.7.7"
+  },
+  "devDependencies": {
+    "wrangler": "^3.95.0"
+  }
+}
