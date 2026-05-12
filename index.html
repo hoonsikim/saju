@@ -41,6 +41,8 @@
               <select id="language">
                 <option value="en">English</option>
                 <option value="ko">한국어</option>
+                <option value="ja">日本語</option>
+                <option value="zh">中文</option>
               </select>
             </label>
             <label>
@@ -117,6 +119,20 @@
     const ELEMENT_NAME = {
       en: { wood: 'Wood', fire: 'Fire', earth: 'Earth', metal: 'Metal', water: 'Water' },
       ko: { wood: '목(木)', fire: '화(火)', earth: '토(土)', metal: '금(金)', water: '수(水)' },
+      ja: { wood: '木', fire: '火', earth: '土', metal: '金', water: '水' },
+      zh: { wood: '木', fire: '火', earth: '土', metal: '金', water: '水' },
+    };
+    const PILLAR_LABELS = {
+      en: ['Year', 'Month', 'Day', 'Hour'],
+      ko: ['연주', '월주', '일주', '시주'],
+      ja: ['年柱', '月柱', '日柱', '時柱'],
+      zh: ['年柱', '月柱', '日柱', '时柱'],
+    };
+    const UI_TEXT = {
+      en: { loading: 'Reading…', submit: 'Read my Saju →', placeholder: 'Generating reading…', badgeLlm: '🌙 LLM reading (Claude Haiku 4.5)', badgeRule: '⚡ Instant rule-based reading — LLM coming soon' },
+      ko: { loading: '읽는 중…', submit: 'Saju 다시 보기 →', placeholder: '리딩 생성 중…', badgeLlm: '🌙 LLM 리딩 (Claude Haiku 4.5)', badgeRule: '⚡ 즉시 룰 기반 리딩 — LLM 리딩은 곧' },
+      ja: { loading: '読み込み中…', submit: '四柱を読む →', placeholder: 'リーディング生成中…', badgeLlm: '🌙 LLMリーディング (Claude Haiku 4.5)', badgeRule: '⚡ 即時ルールベースリーディング — LLMは間もなく' },
+      zh: { loading: '解读中…', submit: '解读我的四柱 →', placeholder: '生成解读中…', badgeLlm: '🌙 LLM解读 (Claude Haiku 4.5)', badgeRule: '⚡ 即时规则解读 — LLM版本即将上线' },
     };
 
     async function fetchLLMReading(input) {
@@ -150,9 +166,10 @@
 
       const saju = birthInfoToFourPillars(input);
 
+      const T = UI_TEXT[lang] || UI_TEXT.en;
       const submitBtn = document.getElementById('submit-btn');
       submitBtn.disabled = true;
-      submitBtn.textContent = lang === 'ko' ? '읽는 중…' : 'Reading…';
+      submitBtn.textContent = T.loading;
 
       // 1) Render structure immediately (instant)
       renderResult(saju, lang, null);
@@ -166,7 +183,7 @@
       renderReading(reading, provenance, lang);
 
       submitBtn.disabled = false;
-      submitBtn.textContent = lang === 'ko' ? 'Saju 다시 보기 →' : 'Read my Saju →';
+      submitBtn.textContent = T.submit;
     });
 
     document.getElementById('reset-btn').addEventListener('click', () => {
@@ -188,41 +205,40 @@
     });
 
     function renderResult(saju, lang) {
-      // 4 pillars
-      const labels = lang === 'ko' ? ['연주', '월주', '일주', '시주'] : ['Year', 'Month', 'Day', 'Hour'];
+      const names = ELEMENT_NAME[lang] || ELEMENT_NAME.en;
+      const labels = PILLAR_LABELS[lang] || PILLAR_LABELS.en;
       const labelsHan = ['年柱', '月柱', '日柱', '時柱'];
+      const showHan = lang === 'en' || lang === 'ko';
       const pillarsHtml = ['year', 'month', 'day', 'hour'].map((key, i) => {
         const p = saju.pillars[key];
         const isDay = key === 'day';
+        const labelHtml = showHan ? `${labels[i]}<br><span class="pillar-han">${labelsHan[i]}</span>` : labels[i];
         return `
           <div class="pillar-cell ${isDay ? 'day-pillar' : ''}">
-            <div class="pillar-label">${labels[i]}<br><span class="pillar-han">${labelsHan[i]}</span></div>
+            <div class="pillar-label">${labelHtml}</div>
             <div class="pillar-chars" style="color: ${ELEMENT_COLOR[p.ganElement]}">${p.gan}</div>
             <div class="pillar-chars" style="color: ${ELEMENT_COLOR[p.zhiElement]}">${p.zhi}</div>
-            <div class="pillar-meta">${ELEMENT_NAME[lang][p.ganElement]} / ${ELEMENT_NAME[lang][p.zhiElement]}</div>
+            <div class="pillar-meta">${names[p.ganElement]} / ${names[p.zhiElement]}</div>
           </div>`;
       }).join('');
       document.getElementById('pillars-grid').innerHTML = pillarsHtml;
 
-      // 5 elements bars
       const balance = elementBalance(saju);
       const barsHtml = ['wood', 'fire', 'earth', 'metal', 'water'].map(e => `
         <div class="element-row">
-          <div class="element-label" style="color: ${ELEMENT_COLOR[e]}">${ELEMENT_NAME[lang][e]}</div>
+          <div class="element-label" style="color: ${ELEMENT_COLOR[e]}">${names[e]}</div>
           <div class="element-bar"><div class="element-fill" style="width: ${balance[e]}%; background: ${ELEMENT_COLOR[e]}"></div></div>
           <div class="element-pct">${balance[e]}%</div>
         </div>`).join('');
       document.getElementById('elements-bars').innerHTML = barsHtml;
 
-      // Day Master box
       document.getElementById('day-master-box').innerHTML = `
         <div class="dm-char" style="color: ${ELEMENT_COLOR[saju.dayMasterElement]}">${saju.dayMaster}</div>
-        <div class="dm-meta">${ELEMENT_NAME[lang][saju.dayMasterElement]}</div>
+        <div class="dm-meta">${names[saju.dayMasterElement]}</div>
       `;
 
-      // Reading — initial placeholder (overwritten by renderReading)
-      const placeholder = lang === 'ko' ? '리딩 생성 중…' : 'Generating reading…';
-      document.getElementById('reading-text').textContent = placeholder;
+      const t = UI_TEXT[lang] || UI_TEXT.en;
+      document.getElementById('reading-text').textContent = t.placeholder;
     }
 
     function renderReading(text, provenance, lang) {
@@ -230,11 +246,12 @@
       el.textContent = text;
       const badge = document.getElementById('reading-badge');
       if (badge) {
+        const t = UI_TEXT[lang] || UI_TEXT.en;
         if (provenance === 'llm') {
-          badge.textContent = lang === 'ko' ? '🌙 LLM 리딩 (Claude Haiku 4.5)' : '🌙 LLM reading (Claude Haiku 4.5)';
+          badge.textContent = t.badgeLlm;
           badge.className = 'reading-badge badge-llm';
         } else {
-          badge.textContent = lang === 'ko' ? '⚡ 즉시 룰 기반 리딩 — LLM 리딩은 곧' : '⚡ Instant rule-based reading — LLM coming soon';
+          badge.textContent = t.badgeRule;
           badge.className = 'reading-badge badge-rule';
         }
       }

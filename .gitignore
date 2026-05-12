@@ -9,3 +9,4 @@ dist/
 build/
 .wrangler/
 .dev.vars
+.omc/state/
