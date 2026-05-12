@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saju — Korean Four Pillars of Destiny | Coming D+10</title>
+  <meta name="description" content="Authentic Korean Saju (四柱) reading. AI-powered. Multilingual (EN/KO/JA/ZH). Not Western astrology — real Year/Month/Day/Hour pillars + Five Elements.">
+  <meta property="og:title" content="Saju — Korean Four Pillars of Destiny">
+  <meta property="og:description" content="Authentic Korean fortune reading. AI-powered. Global, multilingual.">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="container">
+        <p class="kicker">사주 · 四柱 · Sa-ju</p>
+        <h1>Your fate, in the language Korea has used for 1,000 years.</h1>
+        <p class="lead">Authentic <strong>Korean Four Pillars of Destiny</strong> — Year, Month, Day, Hour. Five Elements in balance. Ten Gods at work. AI-powered, multilingual, modern UX.</p>
+        <p class="lead-sub">Not Western astrology pretending to be Eastern. The real thing. <strong>Coming D+10.</strong></p>
+
+        <div class="lang-switch">
+          <button class="lang active" data-lang="en">English</button>
+          <button class="lang" data-lang="ko">한국어</button>
+          <button class="lang" data-lang="ja">日本語</button>
+          <button class="lang" data-lang="zh">中文</button>
+        </div>
+
+        <form class="waitlist" action="mailto:h.company.sean@gmail.com?subject=Saju%20waitlist" method="get">
+          <input type="email" name="email" placeholder="your@email.com" required>
+          <button type="submit">Notify me on launch</button>
+        </form>
+        <p class="note">No spam. One email when Saju is live (D+10 ≈ May 21, 2026).</p>
+      </div>
+    </section>
+
+    <section class="pillars">
+      <div class="container">
+        <h2>The Four Pillars (四柱)</h2>
+        <div class="pillar-grid">
+          <div class="pillar"><div class="pillar-name">Year Pillar 年柱</div><p>Your ancestry, where you come from.</p></div>
+          <div class="pillar"><div class="pillar-name">Month Pillar 月柱</div><p>Your parents, the season of your birth.</p></div>
+          <div class="pillar"><div class="pillar-name">Day Pillar 日柱</div><p>Your core self. The most important pillar.</p></div>
+          <div class="pillar"><div class="pillar-name">Hour Pillar 時柱</div><p>Your offspring, the legacy you carry.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="diff">
+      <div class="container narrow">
+        <h2>Why this is different</h2>
+        <ul class="diff-list">
+          <li><strong>Real Korean methodology.</strong> Year/Month/Day/Hour pillars from authentic 만세력 (Manse-ryeok) calendar. Five Elements (오행). Ten Gods (십신). Daewoon 10-year cycles.</li>
+          <li><strong>Not Western astrology in a Korean wrapper.</strong> Co-Star and The Pattern are Western. We are not.</li>
+          <li><strong>Multilingual from day 1.</strong> Same reading, four languages. EN/KO/JA/ZH.</li>
+          <li><strong>AI-powered.</strong> Consistent, deep, personalized. Not a fortune cookie generator.</li>
+          <li><strong>Shareable.</strong> One-click image card for Twitter, Instagram, TikTok.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>Built autonomously by <strong>일사령(逸事令)</strong> · <a href="https://github.com/hoonsikim/saju">GitHub</a></p>
+      <p>© 2026 · Saju methodology is Korean tradition · Code is MIT licensed</p>
+    </div>
+  </footer>
+
+  <script>
+    // Language switcher (placeholder — full i18n D+7~10)
+    document.querySelectorAll('.lang').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.lang').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.documentElement.lang = btn.dataset.lang;
+      });
+    });
+  </script>
+</body>
+</html>
