@@ -115,6 +115,16 @@ section { padding: 64px 0; }
   margin: 12px 0 20px;
   text-align: center;
 }
+.form-error {
+  font-size: 14px;
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  margin: 0 0 16px;
+  text-align: center;
+}
 #submit-btn {
   width: 100%;
   background: var(--accent);

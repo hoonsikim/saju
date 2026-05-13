@@ -103,6 +103,7 @@
             </label>
           </div>
           <p class="hint" id="form-hint">Don't know your birth time? Use 12:00 — gives a less precise Hour pillar but everything else stays accurate.</p>
+          <p class="form-error" id="form-error" role="alert" hidden></p>
           <button type="submit" id="submit-btn">Read my Saju →</button>
         </form>
       </div>
@@ -206,6 +207,9 @@
         labelLanguage: 'Language',
         labelReadingType: 'Reading style',
         hint: "Don't know your birth time? Use 12:00 — gives a less precise Hour pillar but everything else stays accurate.",
+        errorInvalidDate: 'Please enter a valid birth date.',
+        errorYearRange: 'Birth year must be between 1900 and 2030.',
+        errorInvalidTime: 'Please enter a valid birth time (00:00–23:59).',
         readingTypeGeneral: 'General — life direction',
         readingTypeCareer: 'Career & work',
         readingTypeLove: 'Love & relationships',
@@ -248,6 +252,9 @@
         labelLanguage: '언어',
         labelReadingType: '풀이 종류',
         hint: '태어난 시각을 모르세요? 12:00을 사용하세요 — 시주만 덜 정확하고 나머지는 정확합니다.',
+        errorInvalidDate: '올바른 생년월일을 입력해 주세요.',
+        errorYearRange: '출생 연도는 1900~2030 사이여야 합니다.',
+        errorInvalidTime: '올바른 시각을 입력해 주세요 (00:00~23:59).',
         readingTypeGeneral: '전반 — 인생 방향',
         readingTypeCareer: '직업 · 일',
         readingTypeLove: '연애 · 관계',
@@ -290,6 +297,9 @@
         labelLanguage: '言語',
         labelReadingType: 'リーディング種類',
         hint: '出生時刻が分かりませんか? 12:00を使ってください — 時柱だけ精度が下がり、他は正確のままです。',
+        errorInvalidDate: '正しい生年月日を入力してください。',
+        errorYearRange: '出生年は1900〜2030の範囲で入力してください。',
+        errorInvalidTime: '正しい出生時刻を入力してください (00:00〜23:59)。',
         readingTypeGeneral: '総合 — 人生の方向',
         readingTypeCareer: '仕事・キャリア',
         readingTypeLove: '恋愛・人間関係',
@@ -332,6 +342,9 @@
         labelLanguage: '语言',
         labelReadingType: '解读类型',
         hint: '不知道出生时间? 用12:00 — 仅时柱精度下降,其他保持准确。',
+        errorInvalidDate: '请输入正确的出生日期。',
+        errorYearRange: '出生年份须在1900~2030之间。',
+        errorInvalidTime: '请输入正确的出生时间 (00:00~23:59)。',
         readingTypeGeneral: '综合 — 人生方向',
         readingTypeCareer: '事业 · 工作',
         readingTypeLove: '爱情 · 关系',
@@ -523,6 +536,33 @@
       }
     }
 
+    function validateBirthInput(input, lang) {
+      const t = CHROME[lang] || CHROME.en;
+      const { year, month, day, hour, minute } = input;
+      if (![year, month, day].every(Number.isFinite) || month < 1 || month > 12 || day < 1 || day > 31) {
+        return t.errorInvalidDate;
+      }
+      if (year < 1900 || year > 2030) {
+        return t.errorYearRange;
+      }
+      if (!Number.isFinite(hour) || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+        return t.errorInvalidTime;
+      }
+      return null;
+    }
+
+    function showFormError(message) {
+      const el = document.getElementById('form-error');
+      el.textContent = message;
+      el.hidden = false;
+    }
+
+    function hideFormError() {
+      const el = document.getElementById('form-error');
+      el.textContent = '';
+      el.hidden = true;
+    }
+
     document.getElementById('saju-form').addEventListener('submit', async e => {
       e.preventDefault();
       const date = document.getElementById('birth-date').value.split('-').map(Number);
@@ -532,9 +572,17 @@
 
       const input = {
         year: date[0], month: date[1], day: date[2],
-        hour: time[0], minute: time[1] || 0,
+        hour: time[0], minute: Number.isFinite(time[1]) ? time[1] : 0,
         language: lang, readingType,
       };
+
+      const errorMessage = validateBirthInput(input, lang);
+      if (errorMessage) {
+        showFormError(errorMessage);
+        document.getElementById('form-error').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      hideFormError();
 
       encodeBirthToUrl(input);
 
@@ -571,6 +619,7 @@
     document.getElementById('reset-btn').addEventListener('click', () => {
       document.getElementById('result').hidden = true;
       document.getElementById('card-preview').hidden = true;
+      hideFormError();
       const url = new URL(window.location.href);
       url.searchParams.delete('b');
       url.searchParams.delete('t');
