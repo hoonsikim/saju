@@ -1,7 +1,8 @@
-// 룰 기반 reading 생성기 — LLM 없이도 작동. EN/KO/JA/ZH/ES/PT 6언어.
-// 4 pillars + Day Master + 5 elements + 10 gods → 300~500자 reading.
+// 룰 기반 reading 생성기 — LLM 없이도 작동. 20언어.
+// 4 pillars + Day Master + 5 elements + 10 gods → 자연어 reading.
 //
-// ADR-014: ES/PT 추가 — 사주 개념 무명 시장 (스페인 500M + 포르투갈/브라질 260M) blue ocean.
+// 지원: en ko ja zh es pt fr de it ru tr nl pl sv id fil vi th hi ar
+// RTL: ar (applyChrome에서 dir 처리)
 
 const DAY_MASTER_ARCHETYPE = {
   '甲': {
@@ -9,8 +10,22 @@ const DAY_MASTER_ARCHETYPE = {
     ko: '양목(陽木) — 큰 나무. 곧고 성장 지향적, 자연스럽게 새 길을 여는 리더형.',
     ja: '陽木 — 大樹。まっすぐで成長志向、自然と新しい道を切り開くリーダー型。',
     zh: '阳木 — 大树。正直、追求成长，天然的开拓型领导者。',
-    es: 'Madera Yang — el Árbol Alto. Recto, orientado al crecimiento, naturalmente un líder que abre caminos nuevos.',
-    pt: 'Madeira Yang — a Árvore Alta. Reto, voltado ao crescimento, naturalmente um líder que abre novos caminhos.',
+    es: 'Madera Yang — el Árbol Alto. Recto, orientado al crecimiento, naturalmente un líder que abre caminos.',
+    pt: 'Madeira Yang — a Árvore Alta. Reto, voltado ao crescimento, naturalmente um líder que abre caminhos.',
+    fr: 'Bois Yang — le Grand Arbre. Droit, tourné vers la croissance, naturellement un leader qui ouvre la voie.',
+    de: 'Yang-Holz — der hohe Baum. Aufrecht, wachstumsorientiert, von Natur aus eine Führungspersönlichkeit, die Neuland erschließt.',
+    it: 'Legno Yang — l\'Albero Alto. Diritto, orientato alla crescita, un leader naturale che apre nuove strade.',
+    ru: 'Ян-Дерево — Высокое Дерево. Прямой, ориентированный на рост, естественный лидер, прокладывающий новые пути.',
+    tr: 'Yang Ağaç — Uzun Ağaç. Dik, büyümeye yönelik, doğal olarak yeni yollar açan bir lider.',
+    nl: 'Yang Hout — de Hoge Boom. Rechtop, gericht op groei, een natuurlijke leider die nieuw terrein ontgint.',
+    pl: 'Yang Drewno — Wysokie Drzewo. Wyprostowany, ukierunkowany na wzrost, naturalny lider torujący nowe ścieżki.',
+    sv: 'Yang-trä — det höga trädet. Upprätt, växtorienterad, en naturlig ledare som bryter ny mark.',
+    id: 'Kayu Yang — Pohon Tinggi. Tegak, berorientasi pertumbuhan, pemimpin alami yang membuka jalan baru.',
+    fil: 'Yang Kahoy — ang Mataas na Puno. Tuwid, nakatuon sa paglago, likas na pinuno na nagbubukas ng bagong landas.',
+    vi: 'Mộc Dương — Đại Thụ. Thẳng thắn, hướng tới tăng trưởng, người dẫn đầu mở ra con đường mới.',
+    th: 'ไม้หยาง — ต้นไม้ใหญ่ ตรง มุ่งสู่การเติบโต ผู้นำโดยธรรมชาติที่บุกเบิกทางใหม่',
+    hi: 'यांग लकड़ी — विशाल वृक्ष। सीधा, विकासोन्मुख, स्वाभाविक नेता जो नई राह बनाता है।',
+    ar: 'الخشب اليانغ — الشجرة العالية. مستقيم، يتجه نحو النمو، قائد طبيعي يفتح طرقاً جديدة.',
   },
   '乙': {
     en: 'Yin Wood — the Vine. Adaptive, persistent, finds light in any crack. Quietly unstoppable.',
@@ -19,14 +34,42 @@ const DAY_MASTER_ARCHETYPE = {
     zh: '阴木 — 藤蔓。柔韧而坚持，从任何缝隙中找到光。静默而无法阻挡。',
     es: 'Madera Yin — la Enredadera. Adaptable, persistente, encuentra luz en cualquier grieta. Imparable en silencio.',
     pt: 'Madeira Yin — a Trepadeira. Adaptável, persistente, encontra luz em qualquer fresta. Silenciosamente imparável.',
+    fr: 'Bois Yin — la Vigne. Adaptable, persévérante, trouve la lumière dans toute fissure. Silencieusement imparable.',
+    de: 'Yin-Holz — die Ranke. Anpassungsfähig, beharrlich, findet in jedem Spalt Licht. Leise unaufhaltsam.',
+    it: 'Legno Yin — la Vite. Adattabile, persistente, trova luce in ogni crepa. Silenziosamente inarrestabile.',
+    ru: 'Инь-Дерево — Лоза. Гибкая, упорная, находит свет в любой щели. Тихо неудержима.',
+    tr: 'Yin Ağaç — Sarmaşık. Uyumlu, ısrarlı, her çatlaktan ışık bulur. Sessizce durdurulamaz.',
+    nl: 'Yin Hout — de Klimplant. Aanpasbaar, volhardend, vindt licht in elke spleet. Stil onstuitbaar.',
+    pl: 'Yin Drewno — Pnącze. Adaptacyjne, wytrwałe, znajduje światło w każdej szczelinie. Cicho nie do powstrzymania.',
+    sv: 'Yin-trä — Vinrankan. Anpassningsbar, ihärdig, finner ljus i varje spricka. Tyst ostoppbar.',
+    id: 'Kayu Yin — Tanaman Rambat. Adaptif, gigih, menemukan cahaya di setiap celah. Diam-diam tak terhentikan.',
+    fil: 'Yin Kahoy — ang Baging. Maaayos, mapagpatuloy, nakakahanap ng liwanag sa bawat siwang. Tahimik na walang humpay.',
+    vi: 'Mộc Âm — Dây Leo. Linh hoạt, kiên trì, tìm thấy ánh sáng trong mọi kẽ hở. Thầm lặng không thể ngăn cản.',
+    th: 'ไม้หยิน — เถาวัลย์ ยืดหยุ่น พากเพียร พบแสงในรอยร้าวใดๆ หยุดไม่ได้อย่างเงียบ',
+    hi: 'यिन लकड़ी — लता। अनुकूलनशील, दृढ़, हर दरार में प्रकाश पाता है। चुपचाप अजेय।',
+    ar: 'الخشب اليين — الكرمة. متكيف، مثابر، يجد النور في كل شق. لا يُوقَف بصمت.',
   },
   '丙': {
     en: 'Yang Fire — the Sun. Bright, generous, warms everyone around you. Charisma is your default.',
     ko: '양화(陽火) — 태양. 밝고 너그러우며 주변을 따뜻하게. 카리스마가 기본.',
     ja: '陽火 — 太陽。明るく寛大で、周囲を温める。カリスマが基本。',
     zh: '阳火 — 太阳。明亮慷慨，温暖周围。魅力是默认。',
-    es: 'Fuego Yang — el Sol. Brillante, generoso, calienta a todos a tu alrededor. El carisma es tu default.',
-    pt: 'Fogo Yang — o Sol. Brilhante, generoso, aquece todos ao seu redor. Carisma é o seu padrão.',
+    es: 'Fuego Yang — el Sol. Brillante, generoso, calienta a todos. El carisma es tu default.',
+    pt: 'Fogo Yang — o Sol. Brilhante, generoso, aquece a todos. Carisma é seu padrão.',
+    fr: 'Feu Yang — le Soleil. Brillant, généreux, réchauffe tout le monde. Le charisme est ton défaut.',
+    de: 'Yang-Feuer — die Sonne. Hell, großzügig, wärmt jeden um dich. Charisma ist die Standardeinstellung.',
+    it: 'Fuoco Yang — il Sole. Brillante, generoso, scalda tutti. Il carisma è il tuo default.',
+    ru: 'Ян-Огонь — Солнце. Яркий, щедрый, согревает всех вокруг. Харизма по умолчанию.',
+    tr: 'Yang Ateş — Güneş. Parlak, cömert, etrafındaki herkesi ısıtır. Karizma varsayılandır.',
+    nl: 'Yang Vuur — de Zon. Helder, gul, verwarmt iedereen om je heen. Charisma is je default.',
+    pl: 'Yang Ogień — Słońce. Jasny, hojny, ogrzewa każdego wokół. Charyzma to twój domyślny stan.',
+    sv: 'Yang-eld — Solen. Klar, generös, värmer alla omkring dig. Karisma är ditt default.',
+    id: 'Api Yang — Matahari. Cerah, dermawan, menghangatkan semua orang. Karisma adalah default-mu.',
+    fil: 'Yang Apoy — ang Araw. Maliwanag, mapagbigay, nagpapainit sa lahat. Karisma ang iyong default.',
+    vi: 'Hỏa Dương — Mặt Trời. Sáng, hào phóng, sưởi ấm mọi người. Sức cuốn hút là mặc định.',
+    th: 'ไฟหยาง — ดวงอาทิตย์ สว่าง ใจกว้าง ทำให้ทุกคนรอบข้างอบอุ่น เสน่ห์เป็นค่าตั้งต้น',
+    hi: 'यांग अग्नि — सूर्य। उज्ज्वल, उदार, सबको गर्म करता है। करिश्मा आपका डिफ़ॉल्ट है।',
+    ar: 'النار اليانغ — الشمس. مشرق، كريم، يدفئ كل من حولك. الكاريزما هي افتراضك.',
   },
   '丁': {
     en: 'Yin Fire — the Candle. Focused, refined, illuminates one thing deeply. Quietly powerful.',
@@ -35,6 +78,20 @@ const DAY_MASTER_ARCHETYPE = {
     zh: '阴火 — 蜡烛。专注精细，深照一物。静谧而强大。',
     es: 'Fuego Yin — la Vela. Enfocado, refinado, ilumina una cosa profundamente. Poderoso en silencio.',
     pt: 'Fogo Yin — a Vela. Focado, refinado, ilumina uma coisa profundamente. Silenciosamente poderoso.',
+    fr: 'Feu Yin — la Bougie. Concentré, raffiné, illumine une chose profondément. Silencieusement puissant.',
+    de: 'Yin-Feuer — die Kerze. Fokussiert, raffiniert, beleuchtet eine Sache tief. Leise kraftvoll.',
+    it: 'Fuoco Yin — la Candela. Concentrato, raffinato, illumina una cosa profondamente. Silenziosamente potente.',
+    ru: 'Инь-Огонь — Свеча. Сосредоточен, утончён, освещает одно глубоко. Тиха сила.',
+    tr: 'Yin Ateş — Mum. Odaklı, rafine, bir şeyi derinden aydınlatır. Sessizce güçlü.',
+    nl: 'Yin Vuur — de Kaars. Gefocust, verfijnd, verlicht één ding diep. Stil krachtig.',
+    pl: 'Yin Ogień — Świeca. Skupiony, wyrafinowany, oświetla jedno głęboko. Cicho potężny.',
+    sv: 'Yin-eld — Stearinljuset. Fokuserad, förfinad, lyser upp en sak djupt. Tyst kraftfull.',
+    id: 'Api Yin — Lilin. Fokus, halus, menerangi satu hal secara mendalam. Diam-diam kuat.',
+    fil: 'Yin Apoy — ang Kandila. Nakatuon, pino, malalim na nagliliwanag sa isang bagay. Tahimik na makapangyarihan.',
+    vi: 'Hỏa Âm — Ngọn Nến. Tập trung, tinh tế, soi sáng sâu một việc. Thầm lặng mạnh mẽ.',
+    th: 'ไฟหยิน — เทียน มีสมาธิ ประณีต ส่องสว่างสิ่งหนึ่งอย่างลึกซึ้ง พลังเงียบสงบ',
+    hi: 'यिन अग्नि — मोमबत्ती। केंद्रित, परिष्कृत, एक चीज को गहराई से रोशन करता है। मौन शक्तिशाली।',
+    ar: 'النار اليين — الشمعة. مركّز، مصقول، يضيء شيئاً واحداً بعمق. قوي بصمت.',
   },
   '戊': {
     en: 'Yang Earth — the Mountain. Steady, reliable, hard to move once decided. Foundation for others.',
@@ -43,14 +100,42 @@ const DAY_MASTER_ARCHETYPE = {
     zh: '阳土 — 山。稳健可靠，一旦决定难以动摇。他人的根基。',
     es: 'Tierra Yang — la Montaña. Firme, confiable, difícil de mover una vez decidido. Cimiento para otros.',
     pt: 'Terra Yang — a Montanha. Firme, confiável, difícil de mover depois de decidir. Alicerce para os outros.',
+    fr: 'Terre Yang — la Montagne. Stable, fiable, difficile à bouger une fois décidé. Fondation pour les autres.',
+    de: 'Yang-Erde — der Berg. Beständig, verlässlich, schwer zu bewegen, wenn entschieden. Fundament für andere.',
+    it: 'Terra Yang — la Montagna. Stabile, affidabile, difficile da muovere una volta deciso. Fondamento per gli altri.',
+    ru: 'Ян-Земля — Гора. Устойчивый, надёжный, трудно сдвинуть, когда решил. Основа для других.',
+    tr: 'Yang Toprak — Dağ. Sağlam, güvenilir, karar verince kıpırdamaz. Diğerlerinin temeli.',
+    nl: 'Yang Aarde — de Berg. Standvastig, betrouwbaar, moeilijk te bewegen eenmaal beslist. Fundament voor anderen.',
+    pl: 'Yang Ziemia — Góra. Stabilny, niezawodny, trudny do poruszenia, gdy zdecyduje. Fundament dla innych.',
+    sv: 'Yang-jord — Berget. Stadig, pålitlig, svår att flytta när bestämd. Grund för andra.',
+    id: 'Tanah Yang — Gunung. Mantap, dapat diandalkan, sulit digerakkan setelah memutuskan. Fondasi bagi orang lain.',
+    fil: 'Yang Lupa — ang Bundok. Matatag, maaasahan, mahirap igalaw kapag nakapag-desisyon. Pundasyon ng iba.',
+    vi: 'Thổ Dương — Núi. Vững vàng, đáng tin, khó lay chuyển khi đã quyết. Nền tảng cho người khác.',
+    th: 'ดินหยาง — ภูเขา มั่นคง น่าเชื่อถือ เคลื่อนยากเมื่อตัดสินใจแล้ว เป็นรากฐานให้ผู้อื่น',
+    hi: 'यांग पृथ्वी — पर्वत। स्थिर, विश्वसनीय, निर्णय के बाद हिलाना कठिन। दूसरों की नींव।',
+    ar: 'الأرض اليانغ — الجبل. ثابت، موثوق، يصعب تحريكه بعد القرار. أساس للآخرين.',
   },
   '己': {
     en: 'Yin Earth — the Field. Nurturing, fertile, makes things grow around you. Quietly productive.',
     ko: '음토(陰土) — 밭. 양육적이고 비옥함, 주변을 자라게 함. 조용한 생산성.',
     ja: '陰土 — 畑。育成的で肥沃、周りを育てる。静かな生産性。',
     zh: '阴土 — 田地。培育肥沃，让周围生长。静默高产。',
-    es: 'Tierra Yin — el Campo. Nutridor, fértil, hace crecer lo que está a tu alrededor. Productivo en silencio.',
-    pt: 'Terra Yin — o Campo. Nutritivo, fértil, faz crescer o que está ao seu redor. Silenciosamente produtivo.',
+    es: 'Tierra Yin — el Campo. Nutridor, fértil, hace crecer lo que te rodea. Productivo en silencio.',
+    pt: 'Terra Yin — o Campo. Nutritivo, fértil, faz crescer o que te rodeia. Silenciosamente produtivo.',
+    fr: 'Terre Yin — le Champ. Nourrissant, fertile, fait pousser ce qui t\'entoure. Silencieusement productif.',
+    de: 'Yin-Erde — das Feld. Nährend, fruchtbar, lässt um dich herum wachsen. Leise produktiv.',
+    it: 'Terra Yin — il Campo. Nutriente, fertile, fa crescere ciò che ti circonda. Silenziosamente produttivo.',
+    ru: 'Инь-Земля — Поле. Питающая, плодородная, растит вокруг тебя. Тихо продуктивна.',
+    tr: 'Yin Toprak — Tarla. Besleyici, verimli, etrafındakini büyütür. Sessizce üretken.',
+    nl: 'Yin Aarde — het Veld. Voedend, vruchtbaar, laat groeien wat je omringt. Stil productief.',
+    pl: 'Yin Ziemia — Pole. Pożywne, urodzajne, sprawia, że to wokół rośnie. Cicho produktywne.',
+    sv: 'Yin-jord — Fältet. Närande, bördigt, får det runt dig att växa. Tyst produktiv.',
+    id: 'Tanah Yin — Ladang. Memelihara, subur, membuat sekitarmu tumbuh. Diam-diam produktif.',
+    fil: 'Yin Lupa — ang Bukid. Nagpapalago, mayaman, pinapatubo ang nakapaligid. Tahimik na produktibo.',
+    vi: 'Thổ Âm — Cánh Đồng. Nuôi dưỡng, màu mỡ, làm xung quanh phát triển. Thầm lặng năng suất.',
+    th: 'ดินหยิน — ทุ่งนา หล่อเลี้ยง อุดมสมบูรณ์ ทำให้รอบข้างเติบโต ผลิตได้เงียบๆ',
+    hi: 'यिन पृथ्वी — खेत। पोषक, उपजाऊ, चारों ओर वृद्धि करता है। मौन उत्पादक।',
+    ar: 'الأرض اليين — الحقل. مغذٍّ، خصب، ينمي ما حولك. منتج بصمت.',
   },
   '庚': {
     en: 'Yang Metal — the Sword. Direct, decisive, cuts through what does not serve. Justice-driven.',
@@ -59,6 +144,20 @@ const DAY_MASTER_ARCHETYPE = {
     zh: '阳金 — 剑。直接果断，斩除无用。正义驱动。',
     es: 'Metal Yang — la Espada. Directo, decidido, corta lo que no sirve. Movido por la justicia.',
     pt: 'Metal Yang — a Espada. Direto, decidido, corta o que não serve. Movido pela justiça.',
+    fr: 'Métal Yang — l\'Épée. Direct, décisif, tranche ce qui ne sert pas. Animé par la justice.',
+    de: 'Yang-Metall — das Schwert. Direkt, entschlossen, schneidet ab, was nicht dient. Gerechtigkeitsgetrieben.',
+    it: 'Metallo Yang — la Spada. Diretto, deciso, taglia ciò che non serve. Mosso dalla giustizia.',
+    ru: 'Ян-Металл — Меч. Прямой, решительный, отсекает ненужное. Движим справедливостью.',
+    tr: 'Yang Metal — Kılıç. Doğrudan, kararlı, işe yaramayanı keser. Adalet odaklı.',
+    nl: 'Yang Metaal — het Zwaard. Direct, beslist, snijdt weg wat niet dient. Gedreven door gerechtigheid.',
+    pl: 'Yang Metal — Miecz. Bezpośredni, zdecydowany, odcina to, co nie służy. Napędzany sprawiedliwością.',
+    sv: 'Yang-metall — Svärdet. Direkt, beslutsam, skär bort det som inte tjänar. Rättvisedriven.',
+    id: 'Logam Yang — Pedang. Langsung, tegas, memotong yang tidak berguna. Didorong keadilan.',
+    fil: 'Yang Metal — ang Espada. Tuwiran, mapagdesisyon, tinatanggal ang walang silbi. Hinihimok ng katarungan.',
+    vi: 'Kim Dương — Thanh Kiếm. Trực tiếp, quyết đoán, cắt bỏ thứ vô ích. Hướng tới công lý.',
+    th: 'โลหะหยาง — ดาบ ตรง เด็ดเดี่ยว ตัดสิ่งที่ไม่จำเป็น ขับเคลื่อนด้วยความยุติธรรม',
+    hi: 'यांग धातु — तलवार। प्रत्यक्ष, निर्णायक, अनुपयोगी को काटता है। न्याय से प्रेरित।',
+    ar: 'المعدن اليانغ — السيف. مباشر، حاسم، يقطع ما لا يفيد. مدفوع بالعدالة.',
   },
   '辛': {
     en: 'Yin Metal — the Jewel. Refined, beautiful, attracts admiration. Sensitive to detail.',
@@ -67,6 +166,20 @@ const DAY_MASTER_ARCHETYPE = {
     zh: '阴金 — 珠玉。精致美丽，引人赞叹。对细节敏感。',
     es: 'Metal Yin — la Joya. Refinado, hermoso, atrae admiración. Sensible al detalle.',
     pt: 'Metal Yin — a Joia. Refinado, belo, atrai admiração. Sensível ao detalhe.',
+    fr: 'Métal Yin — le Joyau. Raffiné, beau, attire l\'admiration. Sensible au détail.',
+    de: 'Yin-Metall — der Edelstein. Raffiniert, schön, zieht Bewunderung an. Detail-sensibel.',
+    it: 'Metallo Yin — il Gioiello. Raffinato, bello, attira ammirazione. Sensibile al dettaglio.',
+    ru: 'Инь-Металл — Драгоценность. Утончённый, красивый, притягивает восхищение. Чуток к деталям.',
+    tr: 'Yin Metal — Mücevher. Rafine, güzel, hayranlık çeker. Detaylara duyarlı.',
+    nl: 'Yin Metaal — het Juweel. Verfijnd, mooi, trekt bewondering aan. Gevoelig voor details.',
+    pl: 'Yin Metal — Klejnot. Wyrafinowany, piękny, przyciąga podziw. Wrażliwy na szczegóły.',
+    sv: 'Yin-metall — Juvelen. Förfinad, vacker, drar beundran. Detaljkänslig.',
+    id: 'Logam Yin — Permata. Halus, indah, menarik kekaguman. Peka terhadap detail.',
+    fil: 'Yin Metal — ang Hiyas. Pino, maganda, umaakit ng paghanga. Sensitibo sa detalye.',
+    vi: 'Kim Âm — Châu Báu. Tinh tế, đẹp đẽ, thu hút sự ngưỡng mộ. Nhạy bén với chi tiết.',
+    th: 'โลหะหยิน — อัญมณี ประณีต งดงาม ดึงดูดความชื่นชม ไวต่อรายละเอียด',
+    hi: 'यिन धातु — रत्न। परिष्कृत, सुंदर, प्रशंसा आकर्षित करता है। विवरण के प्रति संवेदनशील।',
+    ar: 'المعدن اليين — الجوهرة. مصقول، جميل، يجذب الإعجاب. حساس للتفاصيل.',
   },
   '壬': {
     en: 'Yang Water — the Ocean. Vast, ambitious, flows around any obstacle. Sees the long horizon.',
@@ -75,6 +188,20 @@ const DAY_MASTER_ARCHETYPE = {
     zh: '阳水 — 海洋。辽阔有志，绕过任何障碍。看长远地平。',
     es: 'Agua Yang — el Océano. Vasto, ambicioso, fluye alrededor de cualquier obstáculo. Ve el horizonte lejano.',
     pt: 'Água Yang — o Oceano. Vasto, ambicioso, flui em torno de qualquer obstáculo. Vê o horizonte distante.',
+    fr: 'Eau Yang — l\'Océan. Vaste, ambitieuse, coule autour de tout obstacle. Voit l\'horizon lointain.',
+    de: 'Yang-Wasser — der Ozean. Weit, ehrgeizig, fließt um jedes Hindernis. Sieht den fernen Horizont.',
+    it: 'Acqua Yang — l\'Oceano. Vasto, ambizioso, scorre attorno a ogni ostacolo. Vede l\'orizzonte lontano.',
+    ru: 'Ян-Вода — Океан. Просторный, амбициозный, обтекает любое препятствие. Видит дальний горизонт.',
+    tr: 'Yang Su — Okyanus. Geniş, hırslı, her engelin etrafından akar. Uzak ufku görür.',
+    nl: 'Yang Water — de Oceaan. Weids, ambitieus, stroomt om elk obstakel heen. Ziet de verre horizon.',
+    pl: 'Yang Woda — Ocean. Rozległy, ambitny, opływa każdą przeszkodę. Widzi daleki horyzont.',
+    sv: 'Yang-vatten — Havet. Vidsträckt, ambitiöst, flyter runt varje hinder. Ser den avlägsna horisonten.',
+    id: 'Air Yang — Samudra. Luas, ambisius, mengalir mengelilingi rintangan. Melihat cakrawala jauh.',
+    fil: 'Yang Tubig — ang Karagatan. Malawak, ambisyoso, dumadaloy sa palibot ng anumang hadlang. Nakikita ang malayong abot-tanaw.',
+    vi: 'Thủy Dương — Đại Dương. Mênh mông, hoài bão, chảy quanh mọi chướng ngại. Thấy chân trời xa.',
+    th: 'น้ำหยาง — มหาสมุทร กว้างใหญ่ ทะเยอทะยาน ไหลรอบอุปสรรค เห็นขอบฟ้าไกล',
+    hi: 'यांग जल — सागर। विशाल, महत्वाकांक्षी, हर बाधा को घेरकर बहता है। दूर के क्षितिज को देखता है।',
+    ar: 'الماء اليانغ — المحيط. شاسع، طموح، يجري حول أي عائق. يرى الأفق البعيد.',
   },
   '癸': {
     en: 'Yin Water — the Rain. Gentle, intuitive, nourishes quietly. Deep emotional intelligence.',
@@ -83,6 +210,20 @@ const DAY_MASTER_ARCHETYPE = {
     zh: '阴水 — 雨。温柔直觉，悄然滋养。深刻的情感智慧。',
     es: 'Agua Yin — la Lluvia. Suave, intuitivo, nutre en silencio. Profunda inteligencia emocional.',
     pt: 'Água Yin — a Chuva. Suave, intuitivo, nutre em silêncio. Profunda inteligência emocional.',
+    fr: 'Eau Yin — la Pluie. Douce, intuitive, nourrit en silence. Intelligence émotionnelle profonde.',
+    de: 'Yin-Wasser — der Regen. Sanft, intuitiv, nährt leise. Tiefe emotionale Intelligenz.',
+    it: 'Acqua Yin — la Pioggia. Dolce, intuitiva, nutre in silenzio. Profonda intelligenza emotiva.',
+    ru: 'Инь-Вода — Дождь. Мягкий, интуитивный, тихо питает. Глубокий эмоциональный интеллект.',
+    tr: 'Yin Su — Yağmur. Yumuşak, sezgisel, sessizce besler. Derin duygusal zeka.',
+    nl: 'Yin Water — de Regen. Zacht, intuïtief, voedt stil. Diepe emotionele intelligentie.',
+    pl: 'Yin Woda — Deszcz. Łagodny, intuicyjny, karmi w ciszy. Głęboka inteligencja emocjonalna.',
+    sv: 'Yin-vatten — Regnet. Mjuk, intuitiv, närar tyst. Djup känslomässig intelligens.',
+    id: 'Air Yin — Hujan. Lembut, intuitif, memelihara dalam diam. Kecerdasan emosional yang dalam.',
+    fil: 'Yin Tubig — ang Ulan. Marahan, makabuluhan, nagpapakain nang tahimik. Malalim na talas ng damdamin.',
+    vi: 'Thủy Âm — Mưa. Dịu dàng, trực giác, nuôi dưỡng thầm lặng. Trí tuệ cảm xúc sâu sắc.',
+    th: 'น้ำหยิน — สายฝน อ่อนโยน ใช้สัญชาตญาณ หล่อเลี้ยงเงียบๆ ความฉลาดทางอารมณ์ลึกซึ้ง',
+    hi: 'यिन जल — वर्षा। कोमल, सहज ज्ञान, चुपचाप पोषण करता है। गहरी भावनात्मक बुद्धि।',
+    ar: 'الماء اليين — المطر. لطيف، حدسي، يغذي بصمت. ذكاء عاطفي عميق.',
   },
 };
 
@@ -93,8 +234,22 @@ const ELEMENT_TRAIT = {
       ko: '계속 계획하고 자라며, 항상 다음을 향함',
       ja: '計画し続け成長し、常に次を目指す',
       zh: '不断规划成长，永远向前',
-      es: 'planificas y creces continuamente, siempre alcanzando lo que sigue',
+      es: 'planificas y creces continuamente, siempre alcanzando lo siguiente',
       pt: 'planeja e cresce continuamente, sempre buscando o próximo passo',
+      fr: 'planifies et grandis continuellement, toujours tendu vers la suite',
+      de: 'planst und wächst kontinuierlich, immer nach dem Nächsten greifend',
+      it: 'pianifichi e cresci continuamente, sempre proteso a ciò che viene',
+      ru: 'постоянно планируешь и растёшь, всегда тянешься к следующему',
+      tr: 'sürekli planlar ve büyürsün, hep bir sonrakine uzanırsın',
+      nl: 'plant en groeit continu, altijd reikend naar het volgende',
+      pl: 'nieustannie planujesz i rośniesz, zawsze sięgając po następne',
+      sv: 'planerar och växer kontinuerligt, sträcker dig alltid efter nästa',
+      id: 'merencanakan dan tumbuh terus-menerus, selalu menjangkau yang berikutnya',
+      fil: 'patuloy na nagpaplano at lumalago, palaging hinahanap ang susunod',
+      vi: 'liên tục lập kế hoạch và phát triển, luôn vươn tới điều tiếp theo',
+      th: 'วางแผนและเติบโตต่อเนื่อง มุ่งสู่สิ่งต่อไปเสมอ',
+      hi: 'निरंतर योजना और विकास, हमेशा अगले की ओर पहुँचना',
+      ar: 'تخطط وتنمو باستمرار، تمد يدك دائماً نحو التالي',
     },
     weak: {
       en: 'flexibility and the courage to start fresh',
@@ -103,6 +258,20 @@ const ELEMENT_TRAIT = {
       zh: '柔韧与重新开始的勇气',
       es: 'flexibilidad y el coraje de comenzar de nuevo',
       pt: 'flexibilidade e a coragem de começar de novo',
+      fr: 'flexibilité et le courage de recommencer',
+      de: 'Flexibilität und Mut zum Neuanfang',
+      it: 'flessibilità e il coraggio di ricominciare',
+      ru: 'гибкость и смелость начать заново',
+      tr: 'esneklik ve yeniden başlama cesareti',
+      nl: 'flexibiliteit en de moed om opnieuw te beginnen',
+      pl: 'elastyczność i odwaga, by zacząć od nowa',
+      sv: 'flexibilitet och modet att börja om',
+      id: 'fleksibilitas dan keberanian untuk memulai lagi',
+      fil: 'pagiging maluwag at lakas ng loob na magsimulang muli',
+      vi: 'linh hoạt và can đảm bắt đầu lại',
+      th: 'ความยืดหยุ่นและความกล้าที่จะเริ่มต้นใหม่',
+      hi: 'लचीलापन और नए सिरे से शुरू करने का साहस',
+      ar: 'المرونة وشجاعة البدء من جديد',
     },
   },
   fire: {
@@ -113,14 +282,42 @@ const ELEMENT_TRAIT = {
       zh: '以可见的热情引领与激励',
       es: 'inspiras y guías con pasión visible',
       pt: 'inspira e lidera com paixão visível',
+      fr: 'inspires et guides avec une passion visible',
+      de: 'inspirierst und führst mit sichtbarer Leidenschaft',
+      it: 'ispiri e guidi con passione visibile',
+      ru: 'вдохновляешь и ведёшь с видимой страстью',
+      tr: 'görünür tutkuyla ilham verir ve yön gösterirsin',
+      nl: 'inspireert en leidt met zichtbare passie',
+      pl: 'inspirujesz i prowadzisz z widoczną pasją',
+      sv: 'inspirerar och leder med synlig passion',
+      id: 'menginspirasi dan memimpin dengan gairah yang terlihat',
+      fil: 'nagbibigay-inspirasyon at nangunguna nang may nakikitang silakbo',
+      vi: 'truyền cảm hứng và dẫn dắt với đam mê hiển hiện',
+      th: 'สร้างแรงบันดาลใจและนำด้วยความหลงใหลที่เห็นได้',
+      hi: 'दृश्य जुनून के साथ प्रेरित और नेतृत्व करते हैं',
+      ar: 'تلهم وتقود بشغف ظاهر',
     },
     weak: {
       en: 'expression and the willingness to be seen',
       ko: '표현과 드러남에 대한 의지',
       ja: '表現と見られる意志',
       zh: '表达与被看见的意愿',
-      es: 'expresión y la disposición a ser visto',
+      es: 'expresión y la disposición de ser visto',
       pt: 'expressão e a disposição de ser visto',
+      fr: 'l\'expression et la volonté d\'être vu',
+      de: 'Ausdruck und die Bereitschaft, gesehen zu werden',
+      it: 'espressione e la disponibilità a essere visti',
+      ru: 'выражение и готовность быть увиденным',
+      tr: 'ifade ve görünür olma isteği',
+      nl: 'expressie en de bereidheid om gezien te worden',
+      pl: 'ekspresja i gotowość, by być widocznym',
+      sv: 'uttryck och viljan att synas',
+      id: 'ekspresi dan kemauan untuk dilihat',
+      fil: 'pagpapahayag at pagpayag na makita',
+      vi: 'biểu đạt và sẵn lòng được thấy',
+      th: 'การแสดงออกและความเต็มใจที่จะถูกมองเห็น',
+      hi: 'अभिव्यक्ति और दिखाई देने की इच्छा',
+      ar: 'التعبير والاستعداد للظهور',
     },
   },
   earth: {
@@ -131,6 +328,20 @@ const ELEMENT_TRAIT = {
       zh: '建立信任和稳定的基础',
       es: 'construyes confianza y creas bases estables',
       pt: 'constrói confiança e cria bases estáveis',
+      fr: 'construis la confiance et crées des fondations stables',
+      de: 'baust Vertrauen auf und schaffst stabile Grundlagen',
+      it: 'costruisci fiducia e crei basi stabili',
+      ru: 'строишь доверие и создаёшь устойчивые основы',
+      tr: 'güven inşa eder ve istikrarlı temeller kurarsın',
+      nl: 'bouwt vertrouwen op en creëert stabiele fundamenten',
+      pl: 'budujesz zaufanie i tworzysz stabilne fundamenty',
+      sv: 'bygger förtroende och skapar stabila grunder',
+      id: 'membangun kepercayaan dan menciptakan fondasi stabil',
+      fil: 'nagtatayo ng tiwala at lumilikha ng matatag na pundasyon',
+      vi: 'xây dựng niềm tin và tạo nền tảng vững chắc',
+      th: 'สร้างความไว้วางใจและรากฐานที่มั่นคง',
+      hi: 'विश्वास बनाते हैं और स्थिर नींव रचते हैं',
+      ar: 'تبني الثقة وتنشئ أسساً مستقرة',
     },
     weak: {
       en: 'patience and the ability to commit long-term',
@@ -139,6 +350,20 @@ const ELEMENT_TRAIT = {
       zh: '耐心和长期承诺',
       es: 'paciencia y la capacidad de comprometerse a largo plazo',
       pt: 'paciência e a capacidade de se comprometer a longo prazo',
+      fr: 'patience et la capacité de s\'engager à long terme',
+      de: 'Geduld und langfristige Hingabe',
+      it: 'pazienza e la capacità di impegnarsi a lungo termine',
+      ru: 'терпение и способность к долгосрочным обязательствам',
+      tr: 'sabır ve uzun vadeli bağlılık becerisi',
+      nl: 'geduld en het vermogen om langdurig te committeren',
+      pl: 'cierpliwość i zdolność do długoterminowego zaangażowania',
+      sv: 'tålamod och förmågan att binda sig långsiktigt',
+      id: 'kesabaran dan kemampuan berkomitmen jangka panjang',
+      fil: 'pasensiya at kakayahang magsumikap sa mahabang panahon',
+      vi: 'kiên nhẫn và khả năng cam kết lâu dài',
+      th: 'ความอดทนและความสามารถในการมุ่งมั่นระยะยาว',
+      hi: 'धैर्य और दीर्घकालिक प्रतिबद्धता की क्षमता',
+      ar: 'الصبر والقدرة على الالتزام طويل المدى',
     },
   },
   metal: {
@@ -149,6 +374,20 @@ const ELEMENT_TRAIT = {
       zh: '用敏锐判断穿透复杂',
       es: 'cortas la complejidad con juicio agudo',
       pt: 'corta a complexidade com julgamento agudo',
+      fr: 'tranches la complexité d\'un jugement aiguisé',
+      de: 'durchschneidest Komplexität mit scharfem Urteil',
+      it: 'tagli la complessità con giudizio acuto',
+      ru: 'рассекаешь сложность острым суждением',
+      tr: 'karmaşıklığı keskin yargıyla keser',
+      nl: 'snijdt door complexiteit met scherp oordeel',
+      pl: 'przecinasz złożoność ostrym osądem',
+      sv: 'skär igenom komplexitet med skarpt omdöme',
+      id: 'memotong kompleksitas dengan penilaian tajam',
+      fil: 'tinatanggal ang gulo gamit ang matalim na paghatol',
+      vi: 'cắt qua sự phức tạp bằng phán đoán sắc bén',
+      th: 'ตัดผ่านความซับซ้อนด้วยการตัดสินที่เฉียบคม',
+      hi: 'तेज निर्णय से जटिलता को काटते हैं',
+      ar: 'تشق التعقيد بحكم حاد',
     },
     weak: {
       en: 'discipline and the willingness to say no',
@@ -157,6 +396,20 @@ const ELEMENT_TRAIT = {
       zh: '自律和拒绝的勇气',
       es: 'disciplina y la disposición de decir no',
       pt: 'disciplina e a disposição de dizer não',
+      fr: 'la discipline et la volonté de dire non',
+      de: 'Disziplin und die Bereitschaft, Nein zu sagen',
+      it: 'disciplina e la disponibilità a dire no',
+      ru: 'дисциплина и готовность сказать нет',
+      tr: 'disiplin ve hayır deme isteği',
+      nl: 'discipline en de bereidheid om nee te zeggen',
+      pl: 'dyscyplina i gotowość, by mówić nie',
+      sv: 'disciplin och viljan att säga nej',
+      id: 'disiplin dan kemauan untuk berkata tidak',
+      fil: 'disiplina at pagpayag na sumagot ng hindi',
+      vi: 'kỷ luật và sẵn lòng nói không',
+      th: 'วินัยและความเต็มใจที่จะปฏิเสธ',
+      hi: 'अनुशासन और \'न\' कहने की इच्छा',
+      ar: 'الانضباط والاستعداد لقول لا',
     },
   },
   water: {
@@ -167,6 +420,20 @@ const ELEMENT_TRAIT = {
       zh: '看见他人忽略的深层潮流',
       es: 'ves las corrientes profundas que otros pierden',
       pt: 'vê as correntes profundas que outros não veem',
+      fr: 'vois les courants profonds que d\'autres manquent',
+      de: 'siehst die tieferen Strömungen, die andere verpassen',
+      it: 'vedi le correnti profonde che altri perdono',
+      ru: 'видишь глубинные течения, которые упускают другие',
+      tr: 'başkalarının kaçırdığı derin akıntıları görürsün',
+      nl: 'ziet de diepere stromingen die anderen missen',
+      pl: 'widzisz głębsze prądy, których inni nie dostrzegają',
+      sv: 'ser de djupare strömmarna andra missar',
+      id: 'melihat arus dalam yang dilewatkan orang lain',
+      fil: 'nakikita ang mas malalim na agos na hindi napapansin ng iba',
+      vi: 'thấy những dòng chảy sâu mà người khác bỏ lỡ',
+      th: 'เห็นกระแสลึกที่คนอื่นมองข้าม',
+      hi: 'गहरे प्रवाहों को देखते हैं जो दूसरे चूक जाते हैं',
+      ar: 'ترى التيارات العميقة التي يفوتها الآخرون',
     },
     weak: {
       en: 'depth, intuition, and emotional flexibility',
@@ -175,6 +442,20 @@ const ELEMENT_TRAIT = {
       zh: '深度、直觉与情感的柔韧',
       es: 'profundidad, intuición y flexibilidad emocional',
       pt: 'profundidade, intuição e flexibilidade emocional',
+      fr: 'profondeur, intuition et flexibilité émotionnelle',
+      de: 'Tiefe, Intuition und emotionale Flexibilität',
+      it: 'profondità, intuizione e flessibilità emotiva',
+      ru: 'глубина, интуиция и эмоциональная гибкость',
+      tr: 'derinlik, sezgi ve duygusal esneklik',
+      nl: 'diepte, intuïtie en emotionele flexibiliteit',
+      pl: 'głębia, intuicja i elastyczność emocjonalna',
+      sv: 'djup, intuition och emotionell flexibilitet',
+      id: 'kedalaman, intuisi, dan fleksibilitas emosional',
+      fil: 'lalim, instinct, at kakayahang umangkop sa damdamin',
+      vi: 'chiều sâu, trực giác và linh hoạt cảm xúc',
+      th: 'ความลึก สัญชาตญาณ และความยืดหยุ่นทางอารมณ์',
+      hi: 'गहराई, अंतर्ज्ञान और भावनात्मक लचीलापन',
+      ar: 'العمق والحدس والمرونة العاطفية',
     },
   },
 };
@@ -185,8 +466,22 @@ const TEN_GOD_MEANING = {
     ko: '본질을 공유하는 형제·동료 — 동등한 자에게서 힘을 얻음',
     ja: '本質を共有する兄弟・仲間 — 対等な者から力を得る',
     zh: '同质的兄弟同伴 — 在平等者中获得力量',
-    es: 'hermanos y pares que comparten tu naturaleza — encuentras fuerza en los iguales',
+    es: 'hermanos y pares que comparten tu naturaleza — encuentras fuerza en iguales',
     pt: 'irmãos e pares que compartilham sua natureza — você encontra força em iguais',
+    fr: 'frères et pairs qui partagent ta nature — tu trouves la force chez les égaux',
+    de: 'Geschwister und Gleichgesinnte, die deine Natur teilen — du findest Kraft unter Gleichen',
+    it: 'fratelli e pari che condividono la tua natura — trovi forza tra gli uguali',
+    ru: 'братья и равные, разделяющие твою природу — обретаешь силу среди равных',
+    tr: 'doğanı paylaşan kardeşler ve eşitler — eşitlerde güç bulursun',
+    nl: 'broers en gelijken die je aard delen — je vindt kracht in gelijken',
+    pl: 'rodzeństwo i równi, dzielący twoją naturę — siłę znajdujesz wśród równych',
+    sv: 'syskon och jämlikar som delar din natur — du finner styrka i jämlikar',
+    id: 'saudara dan setara yang berbagi sifatmu — kau menemukan kekuatan di antara yang setara',
+    fil: 'mga kapatid at kapantay na may parehong likas na pagkatao — natatagpuan mo ang lakas sa mga kapantay',
+    vi: 'anh em và đồng đẳng cùng bản chất — bạn tìm thấy sức mạnh trong những người ngang hàng',
+    th: 'พี่น้องและคนเทียบเท่าที่มีธรรมชาติเหมือนคุณ — คุณพบพลังในผู้เท่าเทียม',
+    hi: 'भाई-बहन और समान, जो आपकी प्रकृति साझा करते हैं — आप समानों में बल पाते हैं',
+    ar: 'إخوة وأقران يشاركون طبيعتك — تجد القوة في المتساوين',
   },
   '劫財': {
     en: 'rivals who push you to grow but compete for the same resources',
@@ -195,6 +490,20 @@ const TEN_GOD_MEANING = {
     zh: '对手 — 推动成长但争夺同样资源',
     es: 'rivales que te empujan a crecer pero compiten por los mismos recursos',
     pt: 'rivais que o impulsionam a crescer mas competem pelos mesmos recursos',
+    fr: 'rivaux qui te poussent à grandir mais qui se battent pour les mêmes ressources',
+    de: 'Rivalen, die dich zum Wachsen drängen, aber um dieselben Ressourcen kämpfen',
+    it: 'rivali che ti spingono a crescere ma competono per le stesse risorse',
+    ru: 'соперники, толкающие к росту, но борющиеся за те же ресурсы',
+    tr: 'büyümeye iten ama aynı kaynak için yarışan rakipler',
+    nl: 'rivalen die je pushen om te groeien maar concurreren om dezelfde middelen',
+    pl: 'rywale, którzy popychają cię do wzrostu, lecz walczą o te same zasoby',
+    sv: 'rivaler som driver dig att växa men tävlar om samma resurser',
+    id: 'rival yang mendorongmu tumbuh tapi bersaing untuk sumber daya yang sama',
+    fil: 'mga kaagaw na nagtutulak sa iyong umunlad ngunit nakikipaglaban sa parehong yaman',
+    vi: 'đối thủ thúc đẩy bạn phát triển nhưng tranh giành cùng nguồn lực',
+    th: 'คู่แข่งที่ผลักดันให้คุณเติบโตแต่ชิงทรัพยากรเดียวกัน',
+    hi: 'प्रतिद्वंद्वी जो आपको बढ़ने को प्रेरित करते हैं पर समान संसाधनों के लिए लड़ते हैं',
+    ar: 'منافسون يدفعونك للنمو لكنهم يتنافسون على نفس الموارد',
   },
   '食神': {
     en: 'creative output and pleasure — you build through what you naturally enjoy',
@@ -203,6 +512,20 @@ const TEN_GOD_MEANING = {
     zh: '创造性输出与喜悦 — 通过自然喜欢的事物建造',
     es: 'producción creativa y placer — construyes a través de lo que disfrutas naturalmente',
     pt: 'produção criativa e prazer — você constrói através do que naturalmente desfruta',
+    fr: 'production créative et plaisir — tu construis par ce que tu apprécies naturellement',
+    de: 'kreatives Schaffen und Vergnügen — du baust durch das, was du natürlich genießt',
+    it: 'produzione creativa e piacere — costruisci attraverso ciò che ami naturalmente',
+    ru: 'творческий выход и удовольствие — строишь через то, что естественно любишь',
+    tr: 'yaratıcı üretim ve haz — doğal olarak sevdiğin şeyden inşa edersin',
+    nl: 'creatieve output en plezier — je bouwt door wat je vanzelf geniet',
+    pl: 'twórczość i przyjemność — budujesz przez to, co naturalnie lubisz',
+    sv: 'kreativ output och njutning — du bygger genom det du naturligt njuter av',
+    id: 'output kreatif dan kesenangan — kau membangun lewat yang kau nikmati secara alami',
+    fil: 'malikhaing produkto at kasiyahan — gumagawa ka sa pamamagitan ng natural mong tinatamasa',
+    vi: 'sản phẩm sáng tạo và niềm vui — bạn xây dựng qua thứ mình tự nhiên yêu thích',
+    th: 'ผลผลิตสร้างสรรค์และความสุข — คุณสร้างผ่านสิ่งที่คุณชอบโดยธรรมชาติ',
+    hi: 'रचनात्मक उत्पादन और आनंद — आप उससे निर्माण करते हैं जो स्वाभाविक रूप से पसंद है',
+    ar: 'إنتاج إبداعي ومتعة — تبني من خلال ما تستمتع به طبيعياً',
   },
   '傷官': {
     en: 'rebellion and brilliance — your originality may unsettle institutions',
@@ -211,6 +534,20 @@ const TEN_GOD_MEANING = {
     zh: '叛逆与才华 — 你的原创性可能撼动制度',
     es: 'rebeldía y brillantez — tu originalidad puede sacudir instituciones',
     pt: 'rebeldia e brilhantismo — sua originalidade pode abalar instituições',
+    fr: 'rébellion et génie — ton originalité peut secouer les institutions',
+    de: 'Rebellion und Genialität — deine Originalität kann Institutionen erschüttern',
+    it: 'ribellione e genialità — la tua originalità può scuotere le istituzioni',
+    ru: 'бунт и блеск — твоя оригинальность может пошатнуть институты',
+    tr: 'isyan ve parlaklık — özgünlüğün kurumları sarsabilir',
+    nl: 'rebellie en briljantie — je originaliteit kan instituten doen wankelen',
+    pl: 'bunt i błyskotliwość — twoja oryginalność może wstrząsnąć instytucjami',
+    sv: 'uppror och briljans — din originalitet kan skaka institutioner',
+    id: 'pemberontakan dan kecemerlangan — orisinalitasmu bisa mengguncang institusi',
+    fil: 'paghihimagsik at kahusayan — ang iyong pagka-orihinal ay maaaring iyugyog ang mga institusyon',
+    vi: 'nổi loạn và rực rỡ — sự độc đáo của bạn có thể làm lung lay thể chế',
+    th: 'การกบฏและความเฉลียวฉลาด — ความเป็นต้นฉบับของคุณอาจสั่นสะเทือนสถาบัน',
+    hi: 'विद्रोह और प्रतिभा — आपकी मौलिकता संस्थानों को हिला सकती है',
+    ar: 'تمرد وعبقرية — أصالتك قد تزعزع المؤسسات',
   },
   '偏財': {
     en: 'unexpected wealth and many ventures — money flows from multiple sources',
@@ -219,6 +556,20 @@ const TEN_GOD_MEANING = {
     zh: '意外之财与多元尝试 — 钱财从多处流来',
     es: 'riqueza inesperada y muchas aventuras — el dinero fluye desde múltiples fuentes',
     pt: 'riqueza inesperada e muitos empreendimentos — dinheiro flui de várias fontes',
+    fr: 'richesse inattendue et multiples entreprises — l\'argent vient de plusieurs sources',
+    de: 'unerwarteter Reichtum und viele Unternehmungen — Geld fließt aus vielen Quellen',
+    it: 'ricchezza inattesa e molte imprese — il denaro arriva da più fonti',
+    ru: 'неожиданное богатство и множество начинаний — деньги текут из разных источников',
+    tr: 'beklenmedik servet ve birçok girişim — para birden çok kaynaktan akar',
+    nl: 'onverwachte rijkdom en vele ondernemingen — geld stroomt uit meerdere bronnen',
+    pl: 'nieoczekiwane bogactwo i liczne przedsięwzięcia — pieniądze płyną z wielu źródeł',
+    sv: 'oväntad rikedom och många företag — pengar flödar från flera källor',
+    id: 'kekayaan tak terduga dan banyak usaha — uang mengalir dari banyak sumber',
+    fil: 'di-inaasahang yaman at maraming gawain — dumadaloy ang pera mula sa iba\'t ibang pinagmumulan',
+    vi: 'tài lộc bất ngờ và nhiều cuộc phiêu lưu — tiền chảy từ nhiều nguồn',
+    th: 'ทรัพย์ไม่คาดฝันและการเริ่มต้นมากมาย — เงินไหลจากหลายแหล่ง',
+    hi: 'अप्रत्याशित धन और कई उद्यम — पैसा कई स्रोतों से बहता है',
+    ar: 'ثروة غير متوقعة ومشاريع كثيرة — المال يتدفق من مصادر متعددة',
   },
   '正財': {
     en: 'steady wealth from focused effort — discipline pays directly',
@@ -227,6 +578,20 @@ const TEN_GOD_MEANING = {
     zh: '专注带来的稳定财富 — 自律直接回报',
     es: 'riqueza estable del esfuerzo enfocado — la disciplina paga directamente',
     pt: 'riqueza estável do esforço focado — a disciplina paga diretamente',
+    fr: 'richesse stable d\'un effort concentré — la discipline paie directement',
+    de: 'beständiger Reichtum aus fokussierter Anstrengung — Disziplin zahlt sich direkt aus',
+    it: 'ricchezza stabile dallo sforzo concentrato — la disciplina paga direttamente',
+    ru: 'устойчивое богатство от сосредоточенного труда — дисциплина платит напрямую',
+    tr: 'odaklı çabadan istikrarlı servet — disiplin doğrudan ödüllendirir',
+    nl: 'stabiele rijkdom uit gefocuste inspanning — discipline betaalt direct',
+    pl: 'stałe bogactwo ze skupionego wysiłku — dyscyplina płaci wprost',
+    sv: 'stabil rikedom från fokuserad ansträngning — disciplin lönar sig direkt',
+    id: 'kekayaan stabil dari upaya fokus — disiplin membayar langsung',
+    fil: 'matatag na yaman mula sa nakatuong pagsisikap — direktang ginagantimpalaan ng disiplina',
+    vi: 'tài lộc ổn định từ nỗ lực tập trung — kỷ luật trả thưởng trực tiếp',
+    th: 'ทรัพย์มั่นคงจากความเพียรมุ่งมั่น — วินัยให้ผลตอบแทนโดยตรง',
+    hi: 'केंद्रित प्रयास से स्थिर धन — अनुशासन सीधे फल देता है',
+    ar: 'ثروة ثابتة من جهد مركز — الانضباط يكافأ مباشرة',
   },
   '七殺': {
     en: 'pressure and challenge — you grow under heat that breaks others',
@@ -235,6 +600,20 @@ const TEN_GOD_MEANING = {
     zh: '压力与挑战 — 在击垮他人的高温中你反而成长',
     es: 'presión y desafío — creces bajo el calor que rompe a otros',
     pt: 'pressão e desafio — você cresce sob o calor que quebra os outros',
+    fr: 'pression et défi — tu grandis sous une chaleur qui brise les autres',
+    de: 'Druck und Herausforderung — du wächst unter Hitze, die andere bricht',
+    it: 'pressione e sfida — cresci sotto un calore che spezza altri',
+    ru: 'давление и вызов — растёшь там, где жар ломает других',
+    tr: 'baskı ve mücadele — başkalarını kıran ısının altında büyürsün',
+    nl: 'druk en uitdaging — je groeit onder de hitte die anderen breekt',
+    pl: 'presja i wyzwanie — rośniesz w żarze, który łamie innych',
+    sv: 'tryck och utmaning — du växer under hetta som bryter andra',
+    id: 'tekanan dan tantangan — kau tumbuh di panas yang menghancurkan yang lain',
+    fil: 'panggigipit at hamon — ikaw ay lumalago sa init na bumabasag sa iba',
+    vi: 'áp lực và thử thách — bạn lớn lên dưới sức nóng làm gãy người khác',
+    th: 'แรงกดดันและความท้าทาย — คุณเติบโตในความร้อนที่ทำให้คนอื่นแตก',
+    hi: 'दबाव और चुनौती — आप उस ताप में बढ़ते हैं जो दूसरों को तोड़ता है',
+    ar: 'ضغط وتحدٍّ — تنمو تحت حرارة تكسر الآخرين',
   },
   '正官': {
     en: 'authority and structure — you thrive within and shape clear systems',
@@ -243,6 +622,20 @@ const TEN_GOD_MEANING = {
     zh: '权威与架构 — 你在清晰的系统中蓬勃并塑造它',
     es: 'autoridad y estructura — prosperas dentro y das forma a sistemas claros',
     pt: 'autoridade e estrutura — você prospera dentro e molda sistemas claros',
+    fr: 'autorité et structure — tu prospères dans et façonnes des systèmes clairs',
+    de: 'Autorität und Struktur — du gedeihst in klaren Systemen und prägst sie',
+    it: 'autorità e struttura — prosperi dentro e dai forma a sistemi chiari',
+    ru: 'власть и структура — процветаешь в ясных системах и формируешь их',
+    tr: 'otorite ve yapı — net sistemler içinde gelişir ve onları şekillendirirsin',
+    nl: 'autoriteit en structuur — je bloeit binnen en vormt heldere systemen',
+    pl: 'autorytet i struktura — rozkwitasz w jasnych systemach i kształtujesz je',
+    sv: 'auktoritet och struktur — du blomstrar inom och formar tydliga system',
+    id: 'otoritas dan struktur — kau berkembang dalam dan membentuk sistem yang jelas',
+    fil: 'awtoridad at istruktura — umaangat ka sa loob at humuhubog ng malinaw na sistema',
+    vi: 'quyền uy và cấu trúc — bạn thịnh vượng trong và định hình hệ thống rõ ràng',
+    th: 'อำนาจและโครงสร้าง — คุณเจริญในและหล่อหลอมระบบที่ชัดเจน',
+    hi: 'अधिकार और संरचना — आप स्पष्ट प्रणालियों में फलते-फूलते और उन्हें आकार देते हैं',
+    ar: 'سلطة وبنية — تزدهر داخل وتصوغ أنظمة واضحة',
   },
   '偏印': {
     en: 'unconventional learning — your wisdom comes from unusual sources',
@@ -251,6 +644,20 @@ const TEN_GOD_MEANING = {
     zh: '非传统学习 — 智慧来自不寻常的来源',
     es: 'aprendizaje no convencional — tu sabiduría viene de fuentes inusuales',
     pt: 'aprendizado não convencional — sua sabedoria vem de fontes incomuns',
+    fr: 'apprentissage non conventionnel — ta sagesse vient de sources inhabituelles',
+    de: 'unkonventionelles Lernen — deine Weisheit kommt aus ungewöhnlichen Quellen',
+    it: 'apprendimento non convenzionale — la tua saggezza viene da fonti insolite',
+    ru: 'нестандартное обучение — мудрость приходит из необычных источников',
+    tr: 'alışılmadık öğrenme — bilgeliğin sıra dışı kaynaklardan gelir',
+    nl: 'onconventioneel leren — je wijsheid komt uit ongewone bronnen',
+    pl: 'niekonwencjonalna nauka — twoja mądrość pochodzi z nietypowych źródeł',
+    sv: 'okonventionellt lärande — din visdom kommer från ovanliga källor',
+    id: 'pembelajaran tidak konvensional — kebijaksanaanmu datang dari sumber tak biasa',
+    fil: 'di-karaniwang pag-aaral — ang iyong karunungan ay galing sa mga di-pangkaraniwang pinanggalingan',
+    vi: 'học không quy ước — trí tuệ của bạn đến từ nguồn khác lạ',
+    th: 'การเรียนรู้นอกตำรา — ปัญญาของคุณมาจากแหล่งที่ไม่ปกติ',
+    hi: 'अपरंपरागत सीख — आपकी बुद्धि असामान्य स्रोतों से आती है',
+    ar: 'تعلم غير تقليدي — حكمتك تأتي من مصادر غير اعتيادية',
   },
   '正印': {
     en: 'mentors, books, and inherited support — you grow through what nourishes you',
@@ -259,6 +666,20 @@ const TEN_GOD_MEANING = {
     zh: '师长、典籍、传承支持 — 通过滋养而成长',
     es: 'mentores, libros y apoyo heredado — creces a través de lo que te nutre',
     pt: 'mentores, livros e apoio herdado — você cresce através do que te nutre',
+    fr: 'mentors, livres et soutien hérité — tu grandis par ce qui te nourrit',
+    de: 'Mentoren, Bücher und ererbte Unterstützung — du wächst durch das, was dich nährt',
+    it: 'mentori, libri e supporto ereditato — cresci attraverso ciò che ti nutre',
+    ru: 'наставники, книги и наследие — растёшь через то, что питает',
+    tr: 'mentörler, kitaplar ve miras destek — seni besleyenle büyürsün',
+    nl: 'mentoren, boeken en geërfde steun — je groeit door wat je voedt',
+    pl: 'mentorzy, książki i odziedziczone wsparcie — rośniesz przez to, co cię karmi',
+    sv: 'mentorer, böcker och ärvt stöd — du växer genom det som närar dig',
+    id: 'mentor, buku, dan dukungan warisan — kau tumbuh lewat yang menutrisi',
+    fil: 'mga tagapayo, aklat, at namanang suporta — lumalago ka sa pamamagitan ng nagpapakain sa iyo',
+    vi: 'người thầy, sách, và sự hỗ trợ thừa kế — bạn lớn lên qua điều nuôi dưỡng',
+    th: 'ผู้สอน หนังสือ และการสนับสนุนสืบทอด — คุณเติบโตผ่านสิ่งที่หล่อเลี้ยง',
+    hi: 'गुरु, पुस्तकें और विरासत में मिला सहयोग — आप उससे बढ़ते हैं जो आपको पोषित करता है',
+    ar: 'معلمون وكتب ودعم موروث — تنمو عبر ما يغذيك',
   },
 };
 
@@ -268,8 +689,22 @@ const ELEMENT_DIRECTION = {
     ko: '프로젝트 시작, 새 기술 학습, 미래를 위한 씨앗 심기',
     ja: 'プロジェクトの開始、新スキル習得、未来の季節への種まき',
     zh: '启动项目、学习新技能、为未来播种',
-    es: 'iniciar proyectos, aprender nuevas habilidades, plantar semillas para futuras estaciones',
+    es: 'iniciar proyectos, aprender nuevas habilidades, plantar semillas para estaciones futuras',
     pt: 'iniciar projetos, aprender novas habilidades, plantar sementes para estações futuras',
+    fr: 'lancer des projets, apprendre de nouvelles compétences, semer pour les saisons à venir',
+    de: 'Projekte starten, neue Fähigkeiten lernen, Samen für kommende Jahreszeiten säen',
+    it: 'avviare progetti, imparare nuove abilità, piantare semi per stagioni future',
+    ru: 'запуск проектов, освоение новых навыков, посев семян для будущих сезонов',
+    tr: 'projeleri başlatmak, yeni beceriler öğrenmek, gelecekteki mevsimler için tohum ekmek',
+    nl: 'projecten starten, nieuwe vaardigheden leren, zaden planten voor toekomstige seizoenen',
+    pl: 'rozpoczynanie projektów, nauka nowych umiejętności, sianie ziaren na przyszłe pory roku',
+    sv: 'starta projekt, lära nya färdigheter, så frön för kommande säsonger',
+    id: 'memulai proyek, mempelajari keterampilan baru, menanam benih untuk musim mendatang',
+    fil: 'pagsisimula ng mga proyekto, pag-aaral ng mga bagong kasanayan, pagtatanim ng binhi para sa hinaharap',
+    vi: 'khởi động dự án, học kỹ năng mới, gieo hạt cho các mùa tương lai',
+    th: 'เริ่มโครงการ เรียนทักษะใหม่ หว่านเมล็ดสำหรับฤดูในอนาคต',
+    hi: 'परियोजनाएँ शुरू करना, नए कौशल सीखना, भविष्य के मौसमों के लिए बीज बोना',
+    ar: 'بدء المشاريع، تعلم مهارات جديدة، زرع البذور للمواسم المقبلة',
   },
   fire: {
     en: 'visible action, networking, sharing what you have built',
@@ -278,6 +713,20 @@ const ELEMENT_DIRECTION = {
     zh: '可见的行动、社交、分享所建成果',
     es: 'acción visible, conectar con otros, compartir lo que has construido',
     pt: 'ação visível, conectar-se com outros, compartilhar o que você construiu',
+    fr: 'action visible, réseautage, partager ce que tu as bâti',
+    de: 'sichtbare Aktion, Networking, das Geschaffene teilen',
+    it: 'azione visibile, networking, condividere ciò che hai costruito',
+    ru: 'видимые действия, нетворкинг, демонстрация созданного',
+    tr: 'görünür eylem, ağ kurma, inşa ettiğini paylaşma',
+    nl: 'zichtbare actie, netwerken, delen wat je hebt gebouwd',
+    pl: 'widoczne działanie, nawiązywanie kontaktów, dzielenie się tym, co zbudowane',
+    sv: 'synlig handling, nätverkande, dela det du byggt',
+    id: 'tindakan kasat mata, jejaring, berbagi apa yang sudah dibangun',
+    fil: 'nakikitang aksyon, networking, pagbabahagi ng iyong itinayo',
+    vi: 'hành động hữu hình, kết nối, chia sẻ thứ bạn đã xây',
+    th: 'การกระทำที่มองเห็น สร้างเครือข่าย แบ่งปันสิ่งที่สร้าง',
+    hi: 'दृश्य कार्य, नेटवर्किंग, जो बनाया उसे साझा करना',
+    ar: 'فعل ظاهر، التواصل، مشاركة ما بنيت',
   },
   earth: {
     en: 'consolidating what you have, deepening trust, building durable systems',
@@ -286,6 +735,20 @@ const ELEMENT_DIRECTION = {
     zh: '巩固已有、深化信任、构筑持久系统',
     es: 'consolidar lo que tienes, profundizar la confianza, construir sistemas duraderos',
     pt: 'consolidar o que você tem, aprofundar a confiança, construir sistemas duradouros',
+    fr: 'consolider ce que tu as, approfondir la confiance, bâtir des systèmes durables',
+    de: 'das Vorhandene festigen, Vertrauen vertiefen, dauerhafte Systeme bauen',
+    it: 'consolidare ciò che hai, approfondire la fiducia, costruire sistemi duraturi',
+    ru: 'укрепление имеющегося, углубление доверия, постройка устойчивых систем',
+    tr: 'sahip olduğunu pekiştirmek, güveni derinleştirmek, dayanıklı sistemler kurmak',
+    nl: 'consolideren wat je hebt, vertrouwen verdiepen, duurzame systemen bouwen',
+    pl: 'utrwalanie tego, co masz, pogłębianie zaufania, budowa trwałych systemów',
+    sv: 'konsolidera det du har, fördjupa förtroende, bygga hållbara system',
+    id: 'mengonsolidasi yang dimiliki, memperdalam kepercayaan, membangun sistem tahan lama',
+    fil: 'pagpapatibay ng nasa iyo, pagpapalalim ng tiwala, pagtatayo ng matibay na sistema',
+    vi: 'củng cố thứ đang có, đào sâu niềm tin, xây dựng hệ thống bền vững',
+    th: 'รวบรวมสิ่งที่มี ขยายความไว้วางใจ สร้างระบบที่ยั่งยืน',
+    hi: 'जो है उसे मजबूत करना, विश्वास गहराना, टिकाऊ प्रणालियाँ बनाना',
+    ar: 'تعزيز ما لديك، تعميق الثقة، بناء أنظمة دائمة',
   },
   metal: {
     en: 'pruning, deciding what to drop, sharpening one craft',
@@ -294,6 +757,20 @@ const ELEMENT_DIRECTION = {
     zh: '修剪、决定舍弃、专精一项技艺',
     es: 'podar, decidir qué soltar, afinar un oficio',
     pt: 'podar, decidir o que descartar, aperfeiçoar um ofício',
+    fr: 'élaguer, décider ce qu\'on lâche, affûter un seul métier',
+    de: 'beschneiden, entscheiden, was loszulassen, ein Handwerk schärfen',
+    it: 'potare, decidere cosa lasciare, affinare un mestiere',
+    ru: 'обрезка, решение, от чего отказаться, оттачивание одного ремесла',
+    tr: 'budama, neyi bırakacağına karar verme, bir zanaatı keskinleştirme',
+    nl: 'snoeien, beslissen wat los te laten, één ambacht aanscherpen',
+    pl: 'przycinanie, decyzja, co odpuścić, ostrzenie jednego rzemiosła',
+    sv: 'beskärning, besluta vad du släpper, slipa ett hantverk',
+    id: 'memangkas, memutuskan apa yang dilepas, mengasah satu keahlian',
+    fil: 'pagpuputol, pagpapasya kung ano ang iiwanan, paghahasa ng isang gawain',
+    vi: 'cắt tỉa, quyết định bỏ điều gì, mài giũa một nghề',
+    th: 'การตัดแต่ง ตัดสินใจว่าจะปล่อยอะไร ฝนทักษะหนึ่งให้คม',
+    hi: 'काट-छाँट, क्या छोड़ना है तय करना, एक शिल्प को धार देना',
+    ar: 'التشذيب، اتخاذ قرار بما تتركه، صقل حرفة واحدة',
   },
   water: {
     en: 'reflection, listening, letting ideas marinate before acting',
@@ -302,6 +779,20 @@ const ELEMENT_DIRECTION = {
     zh: '反思、倾听、行动前让想法发酵',
     es: 'reflexión, escuchar, dejar madurar las ideas antes de actuar',
     pt: 'reflexão, escutar, deixar as ideias amadurecerem antes de agir',
+    fr: 'réflexion, écoute, laisser mûrir les idées avant d\'agir',
+    de: 'Nachdenken, Zuhören, Ideen reifen lassen, bevor man handelt',
+    it: 'riflessione, ascolto, lasciar maturare le idee prima di agire',
+    ru: 'рефлексия, слушание, дать идеям выстояться перед действием',
+    tr: 'düşünme, dinleme, harekete geçmeden önce fikirleri demlendirme',
+    nl: 'reflectie, luisteren, ideeën laten rijpen voor je handelt',
+    pl: 'refleksja, słuchanie, pozwalanie pomysłom dojrzewać przed działaniem',
+    sv: 'eftertanke, lyssnande, låta idéer få mogna före handling',
+    id: 'refleksi, mendengarkan, membiarkan ide matang sebelum bertindak',
+    fil: 'pagninilay, pakikinig, hahayaang mahinog ang mga ideya bago kumilos',
+    vi: 'phản tỉnh, lắng nghe, để ý tưởng chín muồi trước khi hành động',
+    th: 'การไตร่ตรอง การฟัง ปล่อยให้ความคิดสุกก่อนลงมือ',
+    hi: 'चिंतन, सुनना, कार्य से पहले विचारों को पकने देना',
+    ar: 'التأمل، الإصغاء، ترك الأفكار تنضج قبل التصرف',
   },
 };
 
@@ -312,11 +803,109 @@ const ELEMENT_LOCAL = {
   zh: { wood: '木', fire: '火', earth: '土', metal: '金', water: '水' },
   es: { wood: 'madera', fire: 'fuego', earth: 'tierra', metal: 'metal', water: 'agua' },
   pt: { wood: 'madeira', fire: 'fogo', earth: 'terra', metal: 'metal', water: 'água' },
+  fr: { wood: 'bois', fire: 'feu', earth: 'terre', metal: 'métal', water: 'eau' },
+  de: { wood: 'Holz', fire: 'Feuer', earth: 'Erde', metal: 'Metall', water: 'Wasser' },
+  it: { wood: 'legno', fire: 'fuoco', earth: 'terra', metal: 'metallo', water: 'acqua' },
+  ru: { wood: 'дерево', fire: 'огонь', earth: 'земля', metal: 'металл', water: 'вода' },
+  tr: { wood: 'ağaç', fire: 'ateş', earth: 'toprak', metal: 'metal', water: 'su' },
+  nl: { wood: 'hout', fire: 'vuur', earth: 'aarde', metal: 'metaal', water: 'water' },
+  pl: { wood: 'drewno', fire: 'ogień', earth: 'ziemia', metal: 'metal', water: 'woda' },
+  sv: { wood: 'trä', fire: 'eld', earth: 'jord', metal: 'metall', water: 'vatten' },
+  id: { wood: 'kayu', fire: 'api', earth: 'tanah', metal: 'logam', water: 'air' },
+  fil: { wood: 'kahoy', fire: 'apoy', earth: 'lupa', metal: 'metal', water: 'tubig' },
+  vi: { wood: 'mộc', fire: 'hỏa', earth: 'thổ', metal: 'kim', water: 'thủy' },
+  th: { wood: 'ไม้', fire: 'ไฟ', earth: 'ดิน', metal: 'โลหะ', water: 'น้ำ' },
+  hi: { wood: 'लकड़ी', fire: 'अग्नि', earth: 'पृथ्वी', metal: 'धातु', water: 'जल' },
+  ar: { wood: 'الخشب', fire: 'النار', earth: 'الأرض', metal: 'المعدن', water: 'الماء' },
 };
 
-const MISSING_JOIN = { en: ' and ', ko: '과 ', ja: 'と', zh: '和', es: ' y ', pt: ' e ' };
+const MISSING_JOIN = {
+  en: ' and ', ko: '과 ', ja: 'と', zh: '和',
+  es: ' y ', pt: ' e ', fr: ' et ', de: ' und ', it: ' e ',
+  ru: ' и ', tr: ' ve ', nl: ' en ', pl: ' i ', sv: ' och ',
+  id: ' dan ', fil: ' at ', vi: ' và ', th: ' และ ', hi: ' और ', ar: ' و',
+};
 
-const SUPPORTED = new Set(['en', 'ko', 'ja', 'zh', 'es', 'pt']);
+const SUPPORTED = new Set([
+  'en', 'ko', 'ja', 'zh', 'es', 'pt',
+  'fr', 'de', 'it', 'ru', 'tr',
+  'nl', 'pl', 'sv', 'id', 'fil',
+  'vi', 'th', 'hi', 'ar',
+]);
+
+// Reading template per language. {DM}=Day Master, {AR}=archetype, {SN}=strong name,
+// {SP}=strong pct, {WN}=weak name, {WP}=weak pct, {MS}=missing clause,
+// {ST}=strong trait, {WT}=weak trait, {GD}=god clause, {DR}=direction
+const READING_TEMPLATE = {
+  en: `Your Day Master is {DM} — {AR}\n\nLooking at your Five Elements, {SN} dominates at {SP}%, while {WN} sits at {WP}%{MS}. This means you naturally {ST}, but the path forward asks for {WT}.\n\n{GD}Forward note: this season favors {DR}. Lean into your {SN} nature, but consciously practice the {WN} side. The combination is where your real power lives.`,
+  ko: `당신의 일주(日主)는 {DM} — {AR}\n\n오행을 보면 {SN}이(가) {SP}%로 가장 강하고, {WN}이(가) {WP}%로 약합니다{MS}. 즉 자연스럽게 {ST}, 그러나 앞으로의 길은 {WT}을(를) 요구합니다.\n\n{GD}앞으로의 한 마디: 이 시기는 {DR}에 유리합니다. {SN}의 본성에 기대되, {WN} 면을 의식적으로 연습하세요. 그 조합 안에 진짜 힘이 있습니다.`,
+  ja: `あなたの日主は {DM} — {AR}\n\n五行を見ると、{SN}が{SP}%で最も強く、{WN}が{WP}%で弱いです{MS}。つまり自然に{ST}ですが、これから進む道は{WT}を求めます。\n\n{GD}これからの一言: この時期は{DR}に有利です。{SN}の本性に頼りつつ、{WN}の側を意識的に練習してください。その組み合わせの中に真の力があります。`,
+  zh: `你的日主是 {DM} — {AR}\n\n观察五行,{SN}最强为{SP}%,{WN}最弱为{WP}%{MS}。这意味着你天然{ST},而前路要求{WT}。\n\n{GD}前路一句: 此时机有利于{DR}。倚仗{SN}的本性,同时刻意练习{WN}的一面。两者的结合处,才是真正的力量所在。`,
+  es: `Tu Maestro del Día es {DM} — {AR}\n\nMirando tus Cinco Elementos, {SN} domina con {SP}%, mientras {WN} está en {WP}%{MS}. Esto significa que naturalmente {ST}, pero el camino por delante pide {WT}.\n\n{GD}Nota hacia adelante: esta temporada favorece {DR}. Apóyate en tu naturaleza de {SN}, pero practica conscientemente el lado de {WN}. La combinación es donde vive tu verdadero poder.`,
+  pt: `Seu Mestre do Dia é {DM} — {AR}\n\nOlhando seus Cinco Elementos, {SN} domina com {SP}%, enquanto {WN} fica em {WP}%{MS}. Isso significa que você naturalmente {ST}, mas o caminho à frente pede {WT}.\n\n{GD}Nota para o futuro: esta temporada favorece {DR}. Apoie-se na sua natureza de {SN}, mas pratique conscientemente o lado de {WN}. A combinação é onde vive seu verdadeiro poder.`,
+  fr: `Ton Maître du Jour est {DM} — {AR}\n\nEn regardant tes Cinq Éléments, {SN} domine à {SP}%, tandis que {WN} est à {WP}%{MS}. Cela signifie que tu {ST} naturellement, mais le chemin à venir demande {WT}.\n\n{GD}Note pour la suite : cette saison favorise {DR}. Appuie-toi sur ta nature de {SN}, mais pratique consciemment le côté {WN}. La combinaison est où vit ta vraie puissance.`,
+  de: `Dein Tagesmeister ist {DM} — {AR}\n\nIn deinen Fünf Elementen dominiert {SN} mit {SP}%, während {WN} bei {WP}% liegt{MS}. Das heißt, du {ST} natürlich, aber der Weg nach vorn verlangt {WT}.\n\n{GD}Vorwärts: Diese Saison begünstigt {DR}. Stütze dich auf deine {SN}-Natur, aber übe bewusst die {WN}-Seite. In der Kombination lebt deine wahre Kraft.`,
+  it: `Il tuo Maestro del Giorno è {DM} — {AR}\n\nGuardando i tuoi Cinque Elementi, {SN} domina al {SP}%, mentre {WN} si trova al {WP}%{MS}. Significa che naturalmente {ST}, ma la via davanti chiede {WT}.\n\n{GD}Nota in avanti: questa stagione favorisce {DR}. Affidati alla tua natura di {SN}, ma pratica consapevolmente il lato {WN}. La combinazione è dove vive il tuo vero potere.`,
+  ru: `Твой Хозяин Дня — {DM} — {AR}\n\nВ Пяти Элементах {SN} доминирует на {SP}%, а {WN} находится на {WP}%{MS}. Значит, ты естественно {ST}, но путь вперёд требует {WT}.\n\n{GD}На будущее: этот сезон благоприятствует {DR}. Опирайся на природу {SN}, но осознанно тренируй сторону {WN}. В сочетании живёт твоя истинная сила.`,
+  tr: `Gün Üstadın {DM} — {AR}\n\nBeş Element'ine bakınca {SN} %{SP} ile baskın, {WN} %{WP}'de duruyor{MS}. Yani doğal olarak {ST}, ama önündeki yol {WT} istiyor.\n\n{GD}İleriye not: bu dönem {DR}'ı destekler. {SN} doğana yaslan, ama {WN} tarafını bilinçli çalış. Gerçek gücün, ikisinin birleştiği yerde yaşar.`,
+  nl: `Jouw Dagmeester is {DM} — {AR}\n\nIn je Vijf Elementen domineert {SN} op {SP}%, terwijl {WN} op {WP}% staat{MS}. Dat betekent dat je vanzelf {ST}, maar het pad vooruit vraagt om {WT}.\n\n{GD}Vooruit: dit seizoen begunstigt {DR}. Leun op je {SN}-natuur, maar oefen bewust de {WN}-kant. In de combinatie woont je echte kracht.`,
+  pl: `Twój Mistrz Dnia to {DM} — {AR}\n\nW Pięciu Żywiołach {SN} dominuje przy {SP}%, a {WN} jest na {WP}%{MS}. Oznacza to, że naturalnie {ST}, lecz droga przed tobą wymaga {WT}.\n\n{GD}Na przyszłość: ten sezon sprzyja {DR}. Opieraj się na naturze {SN}, lecz świadomie ćwicz stronę {WN}. W połączeniu mieszka twoja prawdziwa moc.`,
+  sv: `Din Dagsmästare är {DM} — {AR}\n\nI dina Fem Element dominerar {SN} på {SP}%, medan {WN} ligger på {WP}%{MS}. Det betyder att du naturligt {ST}, men vägen framåt kräver {WT}.\n\n{GD}Framåt: den här säsongen gynnar {DR}. Luta dig mot din {SN}-natur, men öva medvetet {WN}-sidan. I kombinationen lever din verkliga kraft.`,
+  id: `Penguasa Harimu adalah {DM} — {AR}\n\nDi Lima Elemenmu, {SN} mendominasi pada {SP}%, sementara {WN} ada di {WP}%{MS}. Artinya kau secara alami {ST}, namun jalan ke depan menuntut {WT}.\n\n{GD}Catatan ke depan: musim ini menguntungkan {DR}. Bersandarlah pada sifat {SN}-mu, tetapi latih sisi {WN} dengan sadar. Pada perpaduannya kekuatan sejatimu tinggal.`,
+  fil: `Ang Panginoon ng Iyong Araw ay {DM} — {AR}\n\nSa iyong Limang Elemento, ang {SN} ang nangingibabaw sa {SP}%, samantalang ang {WN} ay nasa {WP}%{MS}. Ibig sabihin, ikaw ay likas na {ST}, ngunit hinihiling ng landas sa hinaharap ang {WT}.\n\n{GD}Pasulong: pinapaboran ng panahong ito ang {DR}. Sumandig ka sa likas na {SN} mo, ngunit sadyaing sanayin ang panig ng {WN}. Sa pagsasanib ng dalawa nakatira ang iyong tunay na lakas.`,
+  vi: `Nhật Chủ của bạn là {DM} — {AR}\n\nNhìn vào Ngũ Hành, {SN} chiếm {SP}%, trong khi {WN} ở mức {WP}%{MS}. Nghĩa là bạn tự nhiên {ST}, nhưng con đường phía trước đòi hỏi {WT}.\n\n{GD}Hướng tới: mùa này thuận lợi cho {DR}. Tựa vào bản tính {SN}, nhưng có ý thức rèn luyện phía {WN}. Sức mạnh thật của bạn sống trong sự kết hợp đó.`,
+  th: `เจ้าวันเกิดของคุณคือ {DM} — {AR}\n\nในปัญจธาตุของคุณ {SN} โดดเด่นที่ {SP}% ขณะที่ {WN} อยู่ที่ {WP}%{MS} หมายความว่าคุณ {ST} โดยธรรมชาติ แต่ทางข้างหน้าต้องการ {WT}\n\n{GD}คำแนะนำสำหรับอนาคต: ฤดูนี้เอื้อต่อ {DR} พึ่งพาธรรมชาติ {SN} แต่ฝึกฝนด้าน {WN} อย่างมีสติ การผสมผสานคือที่อยู่ของพลังที่แท้จริงของคุณ`,
+  hi: `आपके दिन के स्वामी {DM} हैं — {AR}\n\nआपके पंच तत्वों में {SN} {SP}% पर हावी है, जबकि {WN} {WP}% पर है{MS}। यानी आप स्वाभाविक रूप से {ST}, परंतु आगे का मार्ग {WT} माँगता है।\n\n{GD}आगे का संकेत: यह ऋतु {DR} के अनुकूल है। अपने {SN} स्वभाव पर टिकें, लेकिन सचेत रूप से {WN} पक्ष का अभ्यास करें। उसी संयोजन में आपकी सच्ची शक्ति बसती है।`,
+  ar: `سيد يومك هو {DM} — {AR}\n\nبالنظر إلى عناصرك الخمسة، يهيمن {SN} بنسبة {SP}٪، بينما يقف {WN} عند {WP}٪{MS}. هذا يعني أنك بطبيعتك {ST}، لكن الطريق أمامك يطلب {WT}.\n\n{GD}ملاحظة للأمام: هذا الموسم يفضّل {DR}. اتكئ على طبيعتك {SN}، لكن مارس بوعي جانب {WN}. في المزيج تسكن قوتك الحقيقية.`,
+};
+
+// Ten God clause template per language ({TG}=god name, {GM}=god meaning)
+const GOD_CLAUSE = {
+  en: `Your strongest Ten God is {TG} — {GM}. This shapes how others meet you and how your fortune moves.\n\n`,
+  ko: `가장 강한 십신은 {TG} — {GM}. 이것이 타인이 당신을 만나는 방식과 운의 흐름을 형성합니다.\n\n`,
+  ja: `最も強い十神は{TG} — {GM}。これが他者があなたと出会う仕方と運の流れを形作ります。\n\n`,
+  zh: `最强的十神是{TG} — {GM}。这塑造了他人遇见你的方式以及运势的流向。\n\n`,
+  es: `Tu Dios más fuerte de los Diez es {TG} — {GM}. Esto da forma a cómo otros te encuentran y cómo se mueve tu fortuna.\n\n`,
+  pt: `Seu Deus mais forte dos Dez é {TG} — {GM}. Isso molda como os outros encontram você e como sua fortuna se move.\n\n`,
+  fr: `Ton Dieu le plus fort des Dix est {TG} — {GM}. Cela façonne comment les autres te rencontrent et comment ta fortune avance.\n\n`,
+  de: `Dein stärkster der Zehn Götter ist {TG} — {GM}. Das prägt, wie andere dir begegnen und wie sich dein Glück bewegt.\n\n`,
+  it: `Il tuo Dio più forte dei Dieci è {TG} — {GM}. Plasma come gli altri ti incontrano e come si muove la tua fortuna.\n\n`,
+  ru: `Самый сильный из Десяти Богов — {TG} — {GM}. Это формирует, как другие встречают тебя и как движется удача.\n\n`,
+  tr: `En güçlü On Tanrı'n {TG} — {GM}. Bu, başkalarının seninle nasıl tanıştığını ve şansının nasıl aktığını şekillendirir.\n\n`,
+  nl: `Je sterkste van de Tien Goden is {TG} — {GM}. Dit bepaalt hoe anderen je ontmoeten en hoe je fortuin beweegt.\n\n`,
+  pl: `Twój najsilniejszy z Dziesięciu Bogów to {TG} — {GM}. To kształtuje, jak inni cię spotykają i jak płynie twoja fortuna.\n\n`,
+  sv: `Din starkaste av de Tio Gudarna är {TG} — {GM}. Detta formar hur andra möter dig och hur din lycka rör sig.\n\n`,
+  id: `Dewa Sepuluh terkuatmu adalah {TG} — {GM}. Ini membentuk cara orang lain menemui kamu dan arah keberuntunganmu.\n\n`,
+  fil: `Ang iyong pinakamalakas sa Sampung Diyos ay {TG} — {GM}. Hinuhubog nito kung paano ka sasalubungin ng iba at kung paano gumagalaw ang iyong kapalaran.\n\n`,
+  vi: `Thập Thần mạnh nhất của bạn là {TG} — {GM}. Điều này định hình cách người khác gặp bạn và hướng vận may chuyển động.\n\n`,
+  th: `เทพสิบที่แข็งแกร่งที่สุดของคุณคือ {TG} — {GM} สิ่งนี้กำหนดวิธีที่คนอื่นพบคุณและทิศทางของโชค\n\n`,
+  hi: `आपका सबसे प्रबल दस देवता {TG} है — {GM}। यह तय करता है कि दूसरे आपसे कैसे मिलते हैं और भाग्य कैसे चलता है।\n\n`,
+  ar: `أقوى آلهتك العشرة هو {TG} — {GM}. هذا يصوغ كيف يلاقيك الآخرون وكيف يتحرك حظك.\n\n`,
+};
+
+// Missing clause template per language ({M}=missing list)
+const MISSING_CLAUSE = {
+  en: missingCount => missingCount > 1 ? ` ({M} are entirely missing)` : ` ({M} is entirely missing)`,
+  ko: () => ` ({M}이(가) 완전히 부재)`,
+  ja: () => ` ({M}が完全に不在)`,
+  zh: () => `(${'{M}'}完全缺失)`,
+  es: missingCount => missingCount > 1 ? ` ({M} están completamente ausentes)` : ` ({M} está completamente ausente)`,
+  pt: missingCount => missingCount > 1 ? ` ({M} estão completamente ausentes)` : ` ({M} está completamente ausente)`,
+  fr: missingCount => missingCount > 1 ? ` ({M} sont entièrement absents)` : ` ({M} est entièrement absent)`,
+  de: () => ` ({M} fehlt vollständig)`,
+  it: missingCount => missingCount > 1 ? ` ({M} sono completamente assenti)` : ` ({M} è completamente assente)`,
+  ru: () => ` ({M} полностью отсутствует)`,
+  tr: () => ` ({M} tamamen yok)`,
+  nl: () => ` ({M} ontbreekt volledig)`,
+  pl: () => ` ({M} całkowicie brakuje)`,
+  sv: () => ` ({M} saknas helt)`,
+  id: () => ` ({M} sama sekali tidak ada)`,
+  fil: () => ` (ang {M} ay ganap na wala)`,
+  vi: () => ` ({M} hoàn toàn vắng mặt)`,
+  th: () => ` ({M} ขาดหายไปสิ้นเชิง)`,
+  hi: () => ` ({M} पूरी तरह से अनुपस्थित है)`,
+  ar: () => ` ({M} غائب تماماً)`,
+};
 
 function pickTopGod(saju) {
   const gods = Object.values(saju.tenGods).filter(Boolean);
@@ -336,10 +925,7 @@ function pct(saju) {
 }
 
 /**
- * 룰 기반 reading 생성 — LLM 없이.
- * @param {Object} saju - birthInfoToFourPillars() 결과
- * @param {string} lang - 'en' | 'ko' | 'ja' | 'zh' | 'es' | 'pt'
- * @returns {string} 300~500자 reading
+ * 룰 기반 reading 생성 — LLM 없이. 20 languages.
  */
 export function generateReading(saju, lang = 'en') {
   const L = SUPPORTED.has(lang) ? lang : 'en';
@@ -366,74 +952,24 @@ export function generateReading(saju, lang = 'en') {
   const strongName = E[strongest[0]];
   const weakName = E[weakest[0]];
 
-  if (L === 'en') {
-    let out = `Your Day Master is ${dayMaster} — ${archetype}\n\n`;
-    out += `Looking at your Five Elements, ${strongName} dominates at ${strongest[1]}%, while ${weakName} sits at ${weakest[1]}%`;
-    if (missingKeys.length > 0) out += ` (${missing} ${missingKeys.length > 1 ? 'are' : 'is'} entirely missing)`;
-    out += `. This means you naturally ${strongTrait}, but the path forward asks for ${weakTrait}.\n\n`;
-    if (topGod && godMeaning) {
-      out += `Your strongest Ten God is ${topGod} — ${godMeaning}. This shapes how others meet you and how your fortune moves.\n\n`;
-    }
-    out += `Forward note: this season favors ${direction}. Lean into your ${strongName} nature, but consciously practice the ${weakName} side. The combination is where your real power lives.`;
-    return out;
-  }
+  const msClause = missingKeys.length > 0
+    ? MISSING_CLAUSE[L](missingKeys.length).replace('{M}', missing)
+    : '';
 
-  if (L === 'ko') {
-    let out = `당신의 일주(日主)는 ${dayMaster} — ${archetype}\n\n`;
-    out += `오행을 보면 ${strongName}이(가) ${strongest[1]}%로 가장 강하고, ${weakName}이(가) ${weakest[1]}%로 약합니다`;
-    if (missingKeys.length > 0) out += ` (${missing}이(가) 완전히 부재)`;
-    out += `. 즉 자연스럽게 ${strongTrait}, 그러나 앞으로의 길은 ${weakTrait}을(를) 요구합니다.\n\n`;
-    if (topGod && godMeaning) {
-      out += `가장 강한 십신은 ${topGod} — ${godMeaning}. 이것이 타인이 당신을 만나는 방식과 운의 흐름을 형성합니다.\n\n`;
-    }
-    out += `앞으로의 한 마디: 이 시기는 ${direction}에 유리합니다. ${strongName}의 본성에 기대되, ${weakName} 면을 의식적으로 연습하세요. 그 조합 안에 진짜 힘이 있습니다.`;
-    return out;
-  }
+  const gdClause = (topGod && godMeaning)
+    ? GOD_CLAUSE[L].replace('{TG}', topGod).replace('{GM}', godMeaning)
+    : '';
 
-  if (L === 'ja') {
-    let out = `あなたの日主は ${dayMaster} — ${archetype}\n\n`;
-    out += `五行を見ると、${strongName}が${strongest[1]}%で最も強く、${weakName}が${weakest[1]}%で弱いです`;
-    if (missingKeys.length > 0) out += ` (${missing}が完全に不在)`;
-    out += `。つまり自然に${strongTrait}ですが、これから進む道は${weakTrait}を求めます。\n\n`;
-    if (topGod && godMeaning) {
-      out += `最も強い十神は${topGod} — ${godMeaning}。これが他者があなたと出会う仕方と運の流れを形作ります。\n\n`;
-    }
-    out += `これからの一言: この時期は${direction}に有利です。${strongName}の本性に頼りつつ、${weakName}の側を意識的に練習してください。その組み合わせの中に真の力があります。`;
-    return out;
-  }
-
-  if (L === 'zh') {
-    let out = `你的日主是 ${dayMaster} — ${archetype}\n\n`;
-    out += `观察五行,${strongName}最强为${strongest[1]}%,${weakName}最弱为${weakest[1]}%`;
-    if (missingKeys.length > 0) out += `(${missing}完全缺失)`;
-    out += `。这意味着你天然${strongTrait},而前路要求${weakTrait}。\n\n`;
-    if (topGod && godMeaning) {
-      out += `最强的十神是${topGod} — ${godMeaning}。这塑造了他人遇见你的方式以及运势的流向。\n\n`;
-    }
-    out += `前路一句: 此时机有利于${direction}。倚仗${strongName}的本性,同时刻意练习${weakName}的一面。两者的结合处,才是真正的力量所在。`;
-    return out;
-  }
-
-  if (L === 'es') {
-    let out = `Tu Maestro del Día es ${dayMaster} — ${archetype}\n\n`;
-    out += `Mirando tus Cinco Elementos, ${strongName} domina con ${strongest[1]}%, mientras ${weakName} está en ${weakest[1]}%`;
-    if (missingKeys.length > 0) out += ` (${missing} ${missingKeys.length > 1 ? 'están' : 'está'} completamente ausente${missingKeys.length > 1 ? 's' : ''})`;
-    out += `. Esto significa que naturalmente ${strongTrait}, pero el camino por delante pide ${weakTrait}.\n\n`;
-    if (topGod && godMeaning) {
-      out += `Tu Dios más fuerte de los Diez es ${topGod} — ${godMeaning}. Esto da forma a cómo otros te encuentran y cómo se mueve tu fortuna.\n\n`;
-    }
-    out += `Nota hacia adelante: esta temporada favorece ${direction}. Apóyate en tu naturaleza de ${strongName}, pero practica conscientemente el lado de ${weakName}. La combinación es donde vive tu verdadero poder.`;
-    return out;
-  }
-
-  // pt
-  let out = `Seu Mestre do Dia é ${dayMaster} — ${archetype}\n\n`;
-  out += `Olhando os seus Cinco Elementos, ${strongName} domina com ${strongest[1]}%, enquanto ${weakName} fica em ${weakest[1]}%`;
-  if (missingKeys.length > 0) out += ` (${missing} ${missingKeys.length > 1 ? 'estão' : 'está'} completamente ausente${missingKeys.length > 1 ? 's' : ''})`;
-  out += `. Isso significa que você naturalmente ${strongTrait}, mas o caminho à frente pede ${weakTrait}.\n\n`;
-  if (topGod && godMeaning) {
-    out += `Seu Deus mais forte dos Dez é ${topGod} — ${godMeaning}. Isso molda como os outros encontram você e como sua fortuna se move.\n\n`;
-  }
-  out += `Nota para o futuro: esta temporada favorece ${direction}. Apoie-se na sua natureza de ${strongName}, mas pratique conscientemente o lado de ${weakName}. A combinação é onde vive o seu verdadeiro poder.`;
-  return out;
+  return READING_TEMPLATE[L]
+    .replace('{DM}', dayMaster)
+    .replace('{AR}', archetype)
+    .replace(/\{SN\}/g, strongName)
+    .replace('{SP}', strongest[1])
+    .replace(/\{WN\}/g, weakName)
+    .replace('{WP}', weakest[1])
+    .replace('{MS}', msClause)
+    .replace('{ST}', strongTrait)
+    .replace('{WT}', weakTrait)
+    .replace('{GD}', gdClause)
+    .replace('{DR}', direction);
 }
