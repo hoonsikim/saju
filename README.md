@@ -8,6 +8,7 @@ Korean Four Pillars of Destiny (사주, 四柱) — global edition.
 - **Pricing (planned)**: Free tier (basic reading) → Premium ($5~9 per detailed reading or $9/mo membership)
 - **Stack**: Static frontend + Cloudflare Worker calling Claude API for reading generation
 - **Live URL**: https://hoonsikim.github.io/saju (landing live D+1, free reading live D+3)
+- **Accuracy**: matches Posteller (포스텔러 만세력 2.2) — Korea's #1 fortune app — 100% on benchmark case (1990-12-20 16:30 KST: 庚午 / 戊子 / 己未 / 壬申). See `test/saju.test.js`.
 
 ## Why this exists
 

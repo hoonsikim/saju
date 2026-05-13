@@ -87,6 +87,26 @@ function assertContains(name, actual, expected) {
   console.log(`  strongest: ${strength.strongest} / weakest: ${strength.weakest} / missing: [${strength.missing.join(', ')}]`);
 }
 
+// === Case 6 (★): 포스텔러 만세력 ground truth — 1990-12-20 16:30 KST 서울
+// 한국 1위 사주앱과 100% 일치 검증.
+// 포스텔러 출력: Year 庚午 / Month 戊子 / Day 己未 / Hour 壬申
+//                 5행: wood 0%, fire 12.5%, earth 37.5%, metal 25%, water 25%
+{
+  const r = birthInfoToFourPillars({ year: 1990, month: 12, day: 20, hour: 16, minute: 30 });
+  assert('포스텔러 1990-12-20 16:30 — Year 庚午', r.pillars.year.ganZhi, '庚午');
+  assert('포스텔러 1990-12-20 16:30 — Month 戊子', r.pillars.month.ganZhi, '戊子');
+  assert('포스텔러 1990-12-20 16:30 — Day 己未', r.pillars.day.ganZhi, '己未');
+  assert('포스텔러 1990-12-20 16:30 — Hour 壬申', r.pillars.hour.ganZhi, '壬申');
+  assert('포스텔러 1990-12-20 16:30 — Day Master 己', r.dayMaster, '己');
+  const total = Object.values(r.elements).reduce((a, b) => a + b, 0);
+  const pct = e => Math.round((r.elements[e] / total) * 1000) / 10;
+  assert('포스텔러 5행 wood 0%', pct('wood'), 0);
+  assert('포스텔러 5행 fire 12.5%', pct('fire'), 12.5);
+  assert('포스텔러 5행 earth 37.5%', pct('earth'), 37.5);
+  assert('포스텔러 5행 metal 25%', pct('metal'), 25);
+  assert('포스텔러 5행 water 25%', pct('water'), 25);
+}
+
 // === 결과
 console.log(`\n${passed + failed} tests · ${passed} passed · ${failed} failed`);
 process.exit(failed > 0 ? 1 : 0);
