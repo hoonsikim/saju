@@ -213,8 +213,10 @@
         resultElements: 'Five Elements Balance',
         resultDayMaster: 'Day Master',
         resultReading: 'Reading',
-        shareBtn: 'Copy share text',
+        shareBtn: 'Share my reading',
         shareBtnCopied: '✓ Copied!',
+        shareBtnShared: '✓ Shared',
+        shareTitle: 'My Korean Saju reading',
         resetBtn: 'New reading',
         upgradeNoteHtml: 'This is a rule-based reading. <strong>Deeper LLM-powered reading coming this week</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20premium%20waitlist">notify me</a> when it\'s live.',
         explainerH2: 'The Four Pillars (四柱)',
@@ -253,8 +255,10 @@
         resultElements: '오행 균형',
         resultDayMaster: '일간(日干)',
         resultReading: '풀이',
-        shareBtn: '공유 문구 복사',
+        shareBtn: '내 사주 공유하기',
         shareBtnCopied: '✓ 복사 완료',
+        shareBtnShared: '✓ 공유 완료',
+        shareTitle: '내 사주 풀이',
         resetBtn: '다시 풀이',
         upgradeNoteHtml: '룰 기반 풀이입니다. <strong>이번 주 LLM 심층 풀이 오픈</strong> — 오픈하면 <a href="mailto:h.company.sean@gmail.com?subject=Saju%20premium%20waitlist">알림 받기</a>.',
         explainerH2: '사주팔자 (四柱)',
@@ -293,8 +297,10 @@
         resultElements: '五行のバランス',
         resultDayMaster: '日主',
         resultReading: 'リーディング',
-        shareBtn: 'シェア文をコピー',
+        shareBtn: '四柱をシェア',
         shareBtnCopied: '✓ コピー完了',
+        shareBtnShared: '✓ シェア完了',
+        shareTitle: '私の四柱推命',
         resetBtn: '新しいリーディング',
         upgradeNoteHtml: 'ルールベースのリーディングです。<strong>今週中にLLM版を公開予定</strong> — 公開時に<a href="mailto:h.company.sean@gmail.com?subject=Saju%20premium%20waitlist">通知を受け取る</a>。',
         explainerH2: '四柱について (四柱)',
@@ -333,8 +339,10 @@
         resultElements: '五行平衡',
         resultDayMaster: '日主',
         resultReading: '解读',
-        shareBtn: '复制分享文案',
+        shareBtn: '分享我的八字',
         shareBtnCopied: '✓ 已复制',
+        shareBtnShared: '✓ 已分享',
+        shareTitle: '我的四柱八字',
         resetBtn: '重新解读',
         upgradeNoteHtml: '这是规则解读。<strong>本周内将上线LLM深度解读</strong> — 上线时<a href="mailto:h.company.sean@gmail.com?subject=Saju%20premium%20waitlist">提醒我</a>。',
         explainerH2: '四柱八字 (四柱)',
@@ -604,19 +612,40 @@
       const reading = document.getElementById('reading-text').textContent;
       const pillars = Array.from(document.querySelectorAll('.pillar-cell .pillar-chars')).map(e => e.textContent).join(' / ');
       const shareUrl = window.location.href;
-      const text = `My Korean Saju reading:\n\n${pillars}\n\n${reading}\n\nSee my full reading: ${shareUrl}`;
       const btn = document.getElementById('share-btn');
       const lang = document.getElementById('language').value;
       const t = CHROME[lang] || CHROME.en;
-      try {
-        await navigator.clipboard.writeText(text);
-        btn.dataset.copied = '1';
-        btn.textContent = t.shareBtnCopied;
+      const text = `${t.shareTitle}\n\n${pillars}\n\n${reading}`;
+      const shareData = { title: t.shareTitle, text, url: shareUrl };
+
+      const restoreLabel = (delayMs) => {
         setTimeout(() => {
           delete btn.dataset.copied;
           const curLang = document.getElementById('language').value;
           btn.textContent = (CHROME[curLang] || CHROME.en).shareBtn;
-        }, 2000);
+        }, delayMs);
+      };
+
+      const canNativeShare = typeof navigator.share === 'function'
+        && (typeof navigator.canShare !== 'function' || navigator.canShare(shareData));
+
+      if (canNativeShare) {
+        try {
+          await navigator.share(shareData);
+          btn.dataset.copied = '1';
+          btn.textContent = t.shareBtnShared;
+          restoreLabel(2000);
+          return;
+        } catch (err) {
+          if (err && err.name === 'AbortError') return;
+        }
+      }
+
+      try {
+        await navigator.clipboard.writeText(`${text}\n\n${shareUrl}`);
+        btn.dataset.copied = '1';
+        btn.textContent = t.shareBtnCopied;
+        restoreLabel(2000);
       } catch (err) {
         alert('Copy failed: ' + err.message);
       }
