@@ -70,16 +70,16 @@
 
     <section class="result-section" id="result" hidden>
       <div class="container narrow">
-        <h2>Your Four Pillars</h2>
+        <h2 id="result-h2">Your Four Pillars</h2>
         <div class="pillars-grid" id="pillars-grid"></div>
 
-        <h3>Five Elements Balance</h3>
+        <h3 id="result-h3-elements">Five Elements Balance</h3>
         <div class="elements-bars" id="elements-bars"></div>
 
-        <h3>Day Master</h3>
+        <h3 id="result-h3-day-master">Day Master</h3>
         <div class="day-master-box" id="day-master-box"></div>
 
-        <h3>Reading</h3>
+        <h3 id="result-h3-reading">Reading</h3>
         <div class="reading-badge" id="reading-badge"></div>
         <div class="reading-text" id="reading-text"></div>
 
@@ -88,18 +88,18 @@
           <button id="reset-btn" type="button" class="ghost">New reading</button>
         </div>
 
-        <p class="upgrade-note">This is a rule-based reading. <strong>Deeper LLM-powered reading coming this week</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20premium%20waitlist">notify me</a> when it's live.</p>
+        <p class="upgrade-note" id="upgrade-note">This is a rule-based reading. <strong>Deeper LLM-powered reading coming this week</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20premium%20waitlist">notify me</a> when it's live.</p>
       </div>
     </section>
 
     <section class="pillars-explainer">
       <div class="container">
-        <h2>The Four Pillars (四柱)</h2>
+        <h2 id="explainer-h2">The Four Pillars (四柱)</h2>
         <div class="pillar-grid">
-          <div class="pillar-card"><div class="pillar-name">Year Pillar 年柱</div><p>Your ancestry, where you come from.</p></div>
-          <div class="pillar-card"><div class="pillar-name">Month Pillar 月柱</div><p>Your parents, the season of your birth.</p></div>
-          <div class="pillar-card"><div class="pillar-name">Day Pillar 日柱</div><p>Your core self. The most important pillar.</p></div>
-          <div class="pillar-card"><div class="pillar-name">Hour Pillar 時柱</div><p>Your offspring, the legacy you carry.</p></div>
+          <div class="pillar-card"><div class="pillar-name" id="explainer-year-name">Year Pillar 年柱</div><p id="explainer-year-desc">Your ancestry, where you come from.</p></div>
+          <div class="pillar-card"><div class="pillar-name" id="explainer-month-name">Month Pillar 月柱</div><p id="explainer-month-desc">Your parents, the season of your birth.</p></div>
+          <div class="pillar-card"><div class="pillar-name" id="explainer-day-name">Day Pillar 日柱</div><p id="explainer-day-desc">Your core self. The most important pillar.</p></div>
+          <div class="pillar-card"><div class="pillar-name" id="explainer-hour-name">Hour Pillar 時柱</div><p id="explainer-hour-desc">Your offspring, the legacy you carry.</p></div>
         </div>
       </div>
     </section>
@@ -107,8 +107,8 @@
 
   <footer>
     <div class="container">
-      <p>Built autonomously by <strong>일사령(逸事令)</strong> · <a href="https://github.com/hoonsikim/saju">GitHub</a></p>
-      <p>© 2026 · Saju methodology = Korean tradition · Code = MIT licensed</p>
+      <p id="footer-built">Built autonomously by <strong>일사령(逸事令)</strong> · <a href="https://github.com/hoonsikim/saju">GitHub</a></p>
+      <p id="footer-license">© 2026 · Saju methodology = Korean tradition · Code = MIT licensed</p>
     </div>
   </footer>
 
@@ -163,6 +163,25 @@
         readingTypeGeneral: 'General — life direction',
         readingTypeCareer: 'Career & work',
         readingTypeLove: 'Love & relationships',
+        resultH2: 'Your Four Pillars',
+        resultElements: 'Five Elements Balance',
+        resultDayMaster: 'Day Master',
+        resultReading: 'Reading',
+        shareBtn: 'Copy share text',
+        shareBtnCopied: '✓ Copied!',
+        resetBtn: 'New reading',
+        upgradeNoteHtml: 'This is a rule-based reading. <strong>Deeper LLM-powered reading coming this week</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20premium%20waitlist">notify me</a> when it\'s live.',
+        explainerH2: 'The Four Pillars (四柱)',
+        explainerYearName: 'Year Pillar 年柱',
+        explainerYearDesc: 'Your ancestry, where you come from.',
+        explainerMonthName: 'Month Pillar 月柱',
+        explainerMonthDesc: 'Your parents, the season of your birth.',
+        explainerDayName: 'Day Pillar 日柱',
+        explainerDayDesc: 'Your core self. The most important pillar.',
+        explainerHourName: 'Hour Pillar 時柱',
+        explainerHourDesc: 'Your offspring, the legacy you carry.',
+        footerBuiltHtml: 'Built autonomously by <strong>일사령(逸事令)</strong> · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
+        footerLicense: '© 2026 · Saju methodology = Korean tradition · Code = MIT licensed',
       },
       ko: {
         title: '사주 — 무료 한국 사주팔자 풀이',
@@ -181,6 +200,25 @@
         readingTypeGeneral: '전반 — 인생 방향',
         readingTypeCareer: '직업 · 일',
         readingTypeLove: '연애 · 관계',
+        resultH2: '당신의 사주팔자',
+        resultElements: '오행 균형',
+        resultDayMaster: '일간(日干)',
+        resultReading: '풀이',
+        shareBtn: '공유 문구 복사',
+        shareBtnCopied: '✓ 복사 완료',
+        resetBtn: '다시 풀이',
+        upgradeNoteHtml: '룰 기반 풀이입니다. <strong>이번 주 LLM 심층 풀이 오픈</strong> — 오픈하면 <a href="mailto:h.company.sean@gmail.com?subject=Saju%20premium%20waitlist">알림 받기</a>.',
+        explainerH2: '사주팔자 (四柱)',
+        explainerYearName: '연주 年柱',
+        explainerYearDesc: '뿌리와 조상, 당신이 온 자리.',
+        explainerMonthName: '월주 月柱',
+        explainerMonthDesc: '부모와 환경, 태어난 계절.',
+        explainerDayName: '일주 日柱',
+        explainerDayDesc: '본질의 나. 가장 중요한 기둥.',
+        explainerHourName: '시주 時柱',
+        explainerHourDesc: '자식과 미래, 남길 유산.',
+        footerBuiltHtml: '<strong>일사령(逸事令)</strong>이 자율 운영 · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
+        footerLicense: '© 2026 · 사주 방법론 = 한국 전통 · 코드 = MIT 라이선스',
       },
       ja: {
         title: '四柱推命 — 無料の韓国式リーディング',
@@ -199,6 +237,25 @@
         readingTypeGeneral: '総合 — 人生の方向',
         readingTypeCareer: '仕事・キャリア',
         readingTypeLove: '恋愛・人間関係',
+        resultH2: 'あなたの四柱',
+        resultElements: '五行のバランス',
+        resultDayMaster: '日主',
+        resultReading: 'リーディング',
+        shareBtn: 'シェア文をコピー',
+        shareBtnCopied: '✓ コピー完了',
+        resetBtn: '新しいリーディング',
+        upgradeNoteHtml: 'ルールベースのリーディングです。<strong>今週中にLLM版を公開予定</strong> — 公開時に<a href="mailto:h.company.sean@gmail.com?subject=Saju%20premium%20waitlist">通知を受け取る</a>。',
+        explainerH2: '四柱について (四柱)',
+        explainerYearName: '年柱',
+        explainerYearDesc: '祖先と出自、あなたの根。',
+        explainerMonthName: '月柱',
+        explainerMonthDesc: '両親と環境、生まれた季節。',
+        explainerDayName: '日柱',
+        explainerDayDesc: '本質の自分。最も重要な柱。',
+        explainerHourName: '時柱',
+        explainerHourDesc: '子孫と未来、残すもの。',
+        footerBuiltHtml: '<strong>일사령(逸事令)</strong> が自律運営 · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
+        footerLicense: '© 2026 · 四柱の方法論 = 韓国の伝統 · コード = MITライセンス',
       },
       zh: {
         title: '四柱八字 — 免费韩式解读',
@@ -217,6 +274,25 @@
         readingTypeGeneral: '综合 — 人生方向',
         readingTypeCareer: '事业 · 工作',
         readingTypeLove: '爱情 · 关系',
+        resultH2: '你的四柱八字',
+        resultElements: '五行平衡',
+        resultDayMaster: '日主',
+        resultReading: '解读',
+        shareBtn: '复制分享文案',
+        shareBtnCopied: '✓ 已复制',
+        resetBtn: '重新解读',
+        upgradeNoteHtml: '这是规则解读。<strong>本周内将上线LLM深度解读</strong> — 上线时<a href="mailto:h.company.sean@gmail.com?subject=Saju%20premium%20waitlist">提醒我</a>。',
+        explainerH2: '四柱八字 (四柱)',
+        explainerYearName: '年柱',
+        explainerYearDesc: '祖先与出身,你的根源。',
+        explainerMonthName: '月柱',
+        explainerMonthDesc: '父母与环境,出生的季节。',
+        explainerDayName: '日柱',
+        explainerDayDesc: '本质的自我。最重要的一柱。',
+        explainerHourName: '时柱',
+        explainerHourDesc: '子嗣与未来,留下的传承。',
+        footerBuiltHtml: '<strong>일사령(逸事令)</strong> 自主运营 · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
+        footerLicense: '© 2026 · 四柱方法论 = 韩国传统 · 代码 = MIT 许可',
       },
     };
 
@@ -257,6 +333,29 @@
         rt.options[1].textContent = t.readingTypeCareer;
         rt.options[2].textContent = t.readingTypeLove;
       }
+
+      set('result-h2', t.resultH2);
+      set('result-h3-elements', t.resultElements);
+      set('result-h3-day-master', t.resultDayMaster);
+      set('result-h3-reading', t.resultReading);
+
+      const shareBtn = document.getElementById('share-btn');
+      if (shareBtn && !shareBtn.dataset.copied) shareBtn.textContent = t.shareBtn;
+      set('reset-btn', t.resetBtn);
+      setHtml('upgrade-note', t.upgradeNoteHtml);
+
+      set('explainer-h2', t.explainerH2);
+      set('explainer-year-name', t.explainerYearName);
+      set('explainer-year-desc', t.explainerYearDesc);
+      set('explainer-month-name', t.explainerMonthName);
+      set('explainer-month-desc', t.explainerMonthDesc);
+      set('explainer-day-name', t.explainerDayName);
+      set('explainer-day-desc', t.explainerDayDesc);
+      set('explainer-hour-name', t.explainerHourName);
+      set('explainer-hour-desc', t.explainerHourDesc);
+
+      setHtml('footer-built', t.footerBuiltHtml);
+      set('footer-license', t.footerLicense);
     }
 
     function detectInitialLang() {
@@ -352,10 +451,18 @@
       const reading = document.getElementById('reading-text').textContent;
       const pillars = Array.from(document.querySelectorAll('.pillar-cell .pillar-chars')).map(e => e.textContent).join(' / ');
       const text = `My Korean Saju reading:\n\n${pillars}\n\n${reading}\n\n→ saju.hoonsikim.io (work in progress, hoonsikim.github.io/saju)`;
+      const btn = document.getElementById('share-btn');
+      const lang = document.getElementById('language').value;
+      const t = CHROME[lang] || CHROME.en;
       try {
         await navigator.clipboard.writeText(text);
-        document.getElementById('share-btn').textContent = '✓ Copied!';
-        setTimeout(() => document.getElementById('share-btn').textContent = 'Copy share text', 2000);
+        btn.dataset.copied = '1';
+        btn.textContent = t.shareBtnCopied;
+        setTimeout(() => {
+          delete btn.dataset.copied;
+          const curLang = document.getElementById('language').value;
+          btn.textContent = (CHROME[curLang] || CHROME.en).shareBtn;
+        }, 2000);
       } catch (err) {
         alert('Copy failed: ' + err.message);
       }
