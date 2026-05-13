@@ -330,6 +330,54 @@ section { padding: 64px 0; }
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
 }
 
+.upsell {
+  margin-top: 48px;
+  padding-top: 36px;
+  border-top: 1px solid var(--border);
+}
+.upsell-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.upsell-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 24px 22px;
+}
+.upsell-title {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent-glow);
+  margin-bottom: 10px;
+}
+.upsell-desc {
+  font-size: 14px;
+  color: var(--text-sub);
+  line-height: 1.6;
+  margin: 0 0 16px;
+}
+.upsell-cta {
+  display: inline-block;
+  padding: 10px 18px;
+  background: transparent;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+.upsell-cta:hover { background: var(--accent); color: var(--bg); }
+
+@media (max-width: 600px) {
+  .upsell-row { grid-template-columns: 1fr; }
+}
+
 .upgrade-note {
   text-align: center;
   font-size: 14px;
