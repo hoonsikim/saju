@@ -10,4 +10,5 @@ build/
 .wrangler/
 .dev.vars
 .omc/state/
+.omc/sessions/
 .gstack/

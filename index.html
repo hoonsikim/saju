@@ -536,32 +536,55 @@
       }
     }
 
+    const INVALIDATABLE_INPUT_IDS = ['birth-date', 'birth-time'];
+
     function validateBirthInput(input, lang) {
       const t = CHROME[lang] || CHROME.en;
       const { year, month, day, hour, minute } = input;
       if (![year, month, day].every(Number.isFinite) || month < 1 || month > 12 || day < 1 || day > 31) {
-        return t.errorInvalidDate;
+        return { message: t.errorInvalidDate, fields: ['birth-date'] };
       }
       if (year < 1900 || year > 2030) {
-        return t.errorYearRange;
+        return { message: t.errorYearRange, fields: ['birth-date'] };
       }
       if (!Number.isFinite(hour) || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-        return t.errorInvalidTime;
+        return { message: t.errorInvalidTime, fields: ['birth-time'] };
       }
       return null;
     }
 
-    function showFormError(message) {
+    function showFormError({ message, fields }) {
       const el = document.getElementById('form-error');
       el.textContent = message;
       el.hidden = false;
+      clearInvalidFields();
+      const targets = Array.isArray(fields) ? fields : [];
+      targets.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) input.classList.add('input-invalid');
+      });
+      const firstField = targets[0] && document.getElementById(targets[0]);
+      if (firstField) firstField.focus({ preventScroll: true });
+    }
+
+    function clearInvalidFields() {
+      INVALIDATABLE_INPUT_IDS.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) input.classList.remove('input-invalid');
+      });
     }
 
     function hideFormError() {
       const el = document.getElementById('form-error');
       el.textContent = '';
       el.hidden = true;
+      clearInvalidFields();
     }
+
+    INVALIDATABLE_INPUT_IDS.forEach(id => {
+      const input = document.getElementById(id);
+      if (input) input.addEventListener('input', () => input.classList.remove('input-invalid'));
+    });
 
     document.getElementById('saju-form').addEventListener('submit', async e => {
       e.preventDefault();
@@ -576,9 +599,9 @@
         language: lang, readingType,
       };
 
-      const errorMessage = validateBirthInput(input, lang);
-      if (errorMessage) {
-        showFormError(errorMessage);
+      const validation = validateBirthInput(input, lang);
+      if (validation) {
+        showFormError(validation);
         document.getElementById('form-error').scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
       }
