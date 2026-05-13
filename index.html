@@ -442,6 +442,39 @@
       }
     }
 
+    const READING_TYPE_CODE = { general: 'g', career: 'c', love: 'l' };
+    const READING_TYPE_DECODE = { g: 'general', c: 'career', l: 'love' };
+
+    function encodeBirthToUrl({ year, month, day, hour, minute, readingType }) {
+      const pad = n => String(n).padStart(2, '0');
+      const b = `${year}${pad(month)}${pad(day)}${pad(hour)}${pad(minute)}`;
+      const url = new URL(window.location.href);
+      url.searchParams.set('b', b);
+      url.searchParams.set('t', READING_TYPE_CODE[readingType] || 'g');
+      window.history.replaceState({}, '', url.toString());
+    }
+
+    function decodeBirthFromUrl() {
+      const url = new URL(window.location.href);
+      const b = url.searchParams.get('b');
+      const t = url.searchParams.get('t');
+      if (!b || !/^\d{12}$/.test(b)) return null;
+      const year = +b.slice(0, 4);
+      const month = +b.slice(4, 6);
+      const day = +b.slice(6, 8);
+      const hour = +b.slice(8, 10);
+      const minute = +b.slice(10, 12);
+      if (year < 1900 || year > 2030) return null;
+      if (month < 1 || month > 12) return null;
+      if (day < 1 || day > 31) return null;
+      if (hour < 0 || hour > 23) return null;
+      if (minute < 0 || minute > 59) return null;
+      return {
+        year, month, day, hour, minute,
+        readingType: READING_TYPE_DECODE[t] || 'general',
+      };
+    }
+
     const initialLang = detectInitialLang();
     const langSelect = document.getElementById('language');
     langSelect.value = initialLang;
@@ -452,6 +485,19 @@
       applyChrome(lang);
       persistLang(lang);
     });
+
+    function applyBirthFromUrlIfAny() {
+      const birth = decodeBirthFromUrl();
+      if (!birth) return false;
+      const pad = n => String(n).padStart(2, '0');
+      document.getElementById('birth-date').value =
+        `${birth.year}-${pad(birth.month)}-${pad(birth.day)}`;
+      document.getElementById('birth-time').value =
+        `${pad(birth.hour)}:${pad(birth.minute)}`;
+      const rtSel = document.getElementById('reading-type');
+      if (rtSel) rtSel.value = birth.readingType;
+      return true;
+    }
 
     async function fetchLLMReading(input) {
       if (!WORKER_URL) return null;
@@ -482,6 +528,8 @@
         language: lang, readingType,
       };
 
+      encodeBirthToUrl(input);
+
       const saju = birthInfoToFourPillars(input);
       lastSaju = saju;
 
@@ -505,9 +553,20 @@
       submitBtn.textContent = T.submit;
     });
 
+    if (applyBirthFromUrlIfAny()) {
+      requestAnimationFrame(() => {
+        document.getElementById('saju-form')
+          .dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+      });
+    }
+
     document.getElementById('reset-btn').addEventListener('click', () => {
       document.getElementById('result').hidden = true;
       document.getElementById('card-preview').hidden = true;
+      const url = new URL(window.location.href);
+      url.searchParams.delete('b');
+      url.searchParams.delete('t');
+      window.history.replaceState({}, '', url.toString());
       document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth' });
     });
 
@@ -544,7 +603,8 @@
     document.getElementById('share-btn').addEventListener('click', async () => {
       const reading = document.getElementById('reading-text').textContent;
       const pillars = Array.from(document.querySelectorAll('.pillar-cell .pillar-chars')).map(e => e.textContent).join(' / ');
-      const text = `My Korean Saju reading:\n\n${pillars}\n\n${reading}\n\n→ saju.hoonsikim.io (work in progress, hoonsikim.github.io/saju)`;
+      const shareUrl = window.location.href;
+      const text = `My Korean Saju reading:\n\n${pillars}\n\n${reading}\n\nSee my full reading: ${shareUrl}`;
       const btn = document.getElementById('share-btn');
       const lang = document.getElementById('language').value;
       const t = CHROME[lang] || CHROME.en;
