@@ -8,6 +8,14 @@
   <meta property="og:title" content="Saju — Free Korean Four Pillars Reading">
   <meta property="og:description" content="Authentic Korean fortune. Real Day Master, Five Elements, Ten Gods. Instant, free.">
   <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://hoonsikim.github.io/saju/">
+  <link rel="canonical" href="https://hoonsikim.github.io/saju/">
+  <link rel="alternate" hreflang="en" href="https://hoonsikim.github.io/saju/?lang=en">
+  <link rel="alternate" hreflang="ko" href="https://hoonsikim.github.io/saju/?lang=ko">
+  <link rel="alternate" hreflang="ja" href="https://hoonsikim.github.io/saju/?lang=ja">
+  <link rel="alternate" hreflang="zh" href="https://hoonsikim.github.io/saju/?lang=zh">
+  <link rel="alternate" hreflang="x-default" href="https://hoonsikim.github.io/saju/">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -15,29 +23,29 @@
     <section class="hero">
       <div class="container">
         <p class="kicker">사주 · 四柱 · Sa-ju</p>
-        <h1>Your fate, in the language Korea has used for 1,000 years.</h1>
-        <p class="lead">Authentic <strong>Korean Four Pillars of Destiny</strong> — Year, Month, Day, Hour. Five Elements in balance. Ten Gods at work.</p>
-        <p class="lead-sub">Not Western astrology pretending to be Eastern. The real thing. <strong>Free. Instant. No signup.</strong></p>
+        <h1 id="hero-h1">Your fate, in the language Korea has used for 1,000 years.</h1>
+        <p class="lead" id="hero-lead">Authentic <strong>Korean Four Pillars of Destiny</strong> — Year, Month, Day, Hour. Five Elements in balance. Ten Gods at work.</p>
+        <p class="lead-sub" id="hero-lead-sub">Not Western astrology pretending to be Eastern. The real thing. <strong>Free. Instant. No signup.</strong></p>
       </div>
     </section>
 
     <section class="form-section">
       <div class="container narrow">
-        <h2>Get your free reading</h2>
+        <h2 id="form-h2">Get your free reading</h2>
         <form id="saju-form" autocomplete="off">
           <div class="row">
             <label>
-              <span>Birth date</span>
+              <span id="label-birth-date">Birth date</span>
               <input type="date" id="birth-date" required min="1900-01-01" max="2026-12-31" value="1990-01-01">
             </label>
             <label>
-              <span>Birth time (local)</span>
+              <span id="label-birth-time">Birth time (local)</span>
               <input type="time" id="birth-time" value="12:00">
             </label>
           </div>
           <div class="row">
             <label>
-              <span>Language</span>
+              <span id="label-language">Language</span>
               <select id="language">
                 <option value="en">English</option>
                 <option value="ko">한국어</option>
@@ -46,7 +54,7 @@
               </select>
             </label>
             <label>
-              <span>Reading style</span>
+              <span id="label-reading-type">Reading style</span>
               <select id="reading-type">
                 <option value="general">General — life direction</option>
                 <option value="career">Career &amp; work</option>
@@ -54,7 +62,7 @@
               </select>
             </label>
           </div>
-          <p class="hint">Don't know your birth time? Use 12:00 — gives a less precise Hour pillar but everything else stays accurate.</p>
+          <p class="hint" id="form-hint">Don't know your birth time? Use 12:00 — gives a less precise Hour pillar but everything else stays accurate.</p>
           <button type="submit" id="submit-btn">Read my Saju →</button>
         </form>
       </div>
@@ -130,10 +138,159 @@
     };
     const UI_TEXT = {
       en: { loading: 'Reading…', submit: 'Read my Saju →', placeholder: 'Generating reading…', badgeLlm: '🌙 LLM reading (Claude Haiku 4.5)', badgeRule: '⚡ Instant rule-based reading — LLM coming soon' },
-      ko: { loading: '읽는 중…', submit: 'Saju 다시 보기 →', placeholder: '리딩 생성 중…', badgeLlm: '🌙 LLM 리딩 (Claude Haiku 4.5)', badgeRule: '⚡ 즉시 룰 기반 리딩 — LLM 리딩은 곧' },
+      ko: { loading: '읽는 중…', submit: '내 사주 보기 →', placeholder: '리딩 생성 중…', badgeLlm: '🌙 LLM 리딩 (Claude Haiku 4.5)', badgeRule: '⚡ 즉시 룰 기반 리딩 — LLM 리딩은 곧' },
       ja: { loading: '読み込み中…', submit: '四柱を読む →', placeholder: 'リーディング生成中…', badgeLlm: '🌙 LLMリーディング (Claude Haiku 4.5)', badgeRule: '⚡ 即時ルールベースリーディング — LLMは間もなく' },
       zh: { loading: '解读中…', submit: '解读我的四柱 →', placeholder: '生成解读中…', badgeLlm: '🌙 LLM解读 (Claude Haiku 4.5)', badgeRule: '⚡ 即时规则解读 — LLM版本即将上线' },
     };
+
+    const LOCALE_TAG = { en: 'en_US', ko: 'ko_KR', ja: 'ja_JP', zh: 'zh_CN' };
+
+    const CHROME = {
+      en: {
+        title: 'Saju — Free Korean Four Pillars Reading',
+        description: 'Authentic Korean Saju (四柱) reading. Free. Instant. Real Korean methodology — Year/Month/Day/Hour pillars + Five Elements + Ten Gods.',
+        ogTitle: 'Saju — Free Korean Four Pillars Reading',
+        ogDescription: 'Authentic Korean fortune. Real Day Master, Five Elements, Ten Gods. Instant, free.',
+        h1: 'Your fate, in the language Korea has used for 1,000 years.',
+        leadHtml: 'Authentic <strong>Korean Four Pillars of Destiny</strong> — Year, Month, Day, Hour. Five Elements in balance. Ten Gods at work.',
+        leadSubHtml: 'Not Western astrology pretending to be Eastern. The real thing. <strong>Free. Instant. No signup.</strong>',
+        formH2: 'Get your free reading',
+        labelBirthDate: 'Birth date',
+        labelBirthTime: 'Birth time (local)',
+        labelLanguage: 'Language',
+        labelReadingType: 'Reading style',
+        hint: "Don't know your birth time? Use 12:00 — gives a less precise Hour pillar but everything else stays accurate.",
+        readingTypeGeneral: 'General — life direction',
+        readingTypeCareer: 'Career & work',
+        readingTypeLove: 'Love & relationships',
+      },
+      ko: {
+        title: '사주 — 무료 한국 사주팔자 풀이',
+        description: '진짜 한국식 사주(四柱) 풀이. 무료. 즉시. 연·월·일·시주 + 오행 균형 + 십신 자동 분석.',
+        ogTitle: '사주 — 무료 한국 사주팔자 풀이',
+        ogDescription: '진짜 한국 명리. 일간·오행·십신 분석. 즉시, 무료.',
+        h1: '1,000년 동안 한국이 써 온 언어로, 당신의 운명을.',
+        leadHtml: '진짜 <strong>한국 사주팔자</strong> — 연주·월주·일주·시주. 오행 균형. 십신 분석.',
+        leadSubHtml: '서양 점성술을 동양처럼 포장한 게 아닙니다. 진짜 한국식. <strong>무료. 즉시. 가입 없음.</strong>',
+        formH2: '무료 풀이 받기',
+        labelBirthDate: '생년월일',
+        labelBirthTime: '태어난 시각 (현지)',
+        labelLanguage: '언어',
+        labelReadingType: '풀이 종류',
+        hint: '태어난 시각을 모르세요? 12:00을 사용하세요 — 시주만 덜 정확하고 나머지는 정확합니다.',
+        readingTypeGeneral: '전반 — 인생 방향',
+        readingTypeCareer: '직업 · 일',
+        readingTypeLove: '연애 · 관계',
+      },
+      ja: {
+        title: '四柱推命 — 無料の韓国式リーディング',
+        description: '本格的な韓国式四柱推命。無料・即時。年・月・日・時柱 + 五行 + 十神を自動分析。',
+        ogTitle: '四柱推命 — 無料の韓国式リーディング',
+        ogDescription: '本物の韓国式占い。日主・五行・十神を分析。即時・無料。',
+        h1: '韓国が1,000年使ってきた言葉で、あなたの運命を。',
+        leadHtml: '本格的な<strong>韓国式四柱推命</strong> — 年・月・日・時の柱。五行のバランス。十神の働き。',
+        leadSubHtml: '東洋風に見せかけた西洋占星術ではありません。本物です。<strong>無料・即時・登録不要。</strong>',
+        formH2: '無料リーディングを受ける',
+        labelBirthDate: '生年月日',
+        labelBirthTime: '出生時刻 (現地)',
+        labelLanguage: '言語',
+        labelReadingType: 'リーディング種類',
+        hint: '出生時刻が分かりませんか? 12:00を使ってください — 時柱だけ精度が下がり、他は正確のままです。',
+        readingTypeGeneral: '総合 — 人生の方向',
+        readingTypeCareer: '仕事・キャリア',
+        readingTypeLove: '恋愛・人間関係',
+      },
+      zh: {
+        title: '四柱八字 — 免费韩式解读',
+        description: '正宗韩式四柱八字解读。免费・即时。年・月・日・时柱 + 五行 + 十神自动分析。',
+        ogTitle: '四柱八字 — 免费韩式解读',
+        ogDescription: '正宗韩式命理。日主・五行・十神分析。即时・免费。',
+        h1: '用韩国沿用1,000年的语言,解读你的命运。',
+        leadHtml: '正宗<strong>韩式四柱八字</strong> — 年柱・月柱・日柱・时柱。五行平衡。十神作用。',
+        leadSubHtml: '不是伪装东方的西方占星术。是真东西。<strong>免费・即时・无需注册。</strong>',
+        formH2: '获取免费解读',
+        labelBirthDate: '出生日期',
+        labelBirthTime: '出生时间 (当地)',
+        labelLanguage: '语言',
+        labelReadingType: '解读类型',
+        hint: '不知道出生时间? 用12:00 — 仅时柱精度下降,其他保持准确。',
+        readingTypeGeneral: '综合 — 人生方向',
+        readingTypeCareer: '事业 · 工作',
+        readingTypeLove: '爱情 · 关系',
+      },
+    };
+
+    function setMeta(selector, attr, value) {
+      const el = document.querySelector(selector);
+      if (el) el.setAttribute(attr, value);
+    }
+
+    function applyChrome(lang) {
+      const t = CHROME[lang] || CHROME.en;
+      document.documentElement.lang = lang;
+      document.title = t.title;
+      setMeta('meta[name="description"]', 'content', t.description);
+      setMeta('meta[property="og:title"]', 'content', t.ogTitle);
+      setMeta('meta[property="og:description"]', 'content', t.ogDescription);
+      setMeta('meta[property="og:locale"]', 'content', LOCALE_TAG[lang] || 'en_US');
+
+      const set = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+      const setHtml = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+      set('hero-h1', t.h1);
+      setHtml('hero-lead', t.leadHtml);
+      setHtml('hero-lead-sub', t.leadSubHtml);
+      set('form-h2', t.formH2);
+      set('label-birth-date', t.labelBirthDate);
+      set('label-birth-time', t.labelBirthTime);
+      set('label-language', t.labelLanguage);
+      set('label-reading-type', t.labelReadingType);
+      set('form-hint', t.hint);
+
+      const submitBtn = document.getElementById('submit-btn');
+      if (submitBtn && !submitBtn.disabled) {
+        submitBtn.textContent = (UI_TEXT[lang] || UI_TEXT.en).submit;
+      }
+
+      const rt = document.getElementById('reading-type');
+      if (rt && rt.options.length === 3) {
+        rt.options[0].textContent = t.readingTypeGeneral;
+        rt.options[1].textContent = t.readingTypeCareer;
+        rt.options[2].textContent = t.readingTypeLove;
+      }
+    }
+
+    function detectInitialLang() {
+      const url = new URL(window.location.href);
+      const fromUrl = url.searchParams.get('lang');
+      if (fromUrl && CHROME[fromUrl]) return fromUrl;
+      try {
+        const stored = localStorage.getItem('saju.lang');
+        if (stored && CHROME[stored]) return stored;
+      } catch {}
+      const nav = (navigator.language || 'en').slice(0, 2).toLowerCase();
+      if (CHROME[nav]) return nav;
+      return 'en';
+    }
+
+    function persistLang(lang) {
+      try { localStorage.setItem('saju.lang', lang); } catch {}
+      const url = new URL(window.location.href);
+      if (url.searchParams.get('lang') !== lang) {
+        url.searchParams.set('lang', lang);
+        window.history.replaceState({}, '', url.toString());
+      }
+    }
+
+    const initialLang = detectInitialLang();
+    const langSelect = document.getElementById('language');
+    langSelect.value = initialLang;
+    applyChrome(initialLang);
+    persistLang(initialLang);
+    langSelect.addEventListener('change', () => {
+      const lang = langSelect.value;
+      applyChrome(lang);
+      persistLang(lang);
+    });
 
     async function fetchLLMReading(input) {
       if (!WORKER_URL) return null;
