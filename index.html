@@ -116,9 +116,11 @@
         <div class="reading-text" id="reading-text"></div>
 
         <div class="actions">
-          <button id="share-btn" type="button">Copy share text</button>
+          <button id="card-btn" type="button">Download share card</button>
+          <button id="share-btn" type="button" class="ghost">Copy share text</button>
           <button id="reset-btn" type="button" class="ghost">New reading</button>
         </div>
+        <div class="card-preview" id="card-preview" hidden></div>
 
         <p class="upgrade-note" id="upgrade-note">This is a rule-based reading. <strong>Deeper LLM-powered reading coming this week</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20premium%20waitlist">notify me</a> when it's live.</p>
       </div>
@@ -147,6 +149,7 @@
   <script type="module">
     import { birthInfoToFourPillars, elementBalance } from './src/saju.browser.js';
     import { generateReading } from './src/reading-rules.js';
+    import { generateShareCard, downloadBlob, copyBlobToClipboard } from './src/share-card.js';
 
     // Cloudflare Worker URL — set after `wrangler deploy`.
     // Empty = use client-side rule-based reading only.
@@ -460,6 +463,7 @@
       };
 
       const saju = birthInfoToFourPillars(input);
+      lastSaju = saju;
 
       const T = UI_TEXT[lang] || UI_TEXT.en;
       const submitBtn = document.getElementById('submit-btn');
@@ -483,7 +487,38 @@
 
     document.getElementById('reset-btn').addEventListener('click', () => {
       document.getElementById('result').hidden = true;
+      document.getElementById('card-preview').hidden = true;
       document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    let lastSaju = null;
+
+    document.getElementById('card-btn').addEventListener('click', async () => {
+      if (!lastSaju) return;
+      const lang = document.getElementById('language').value;
+      const btn = document.getElementById('card-btn');
+      const originalText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = '...';
+      try {
+        const blob = await generateShareCard(lastSaju, lang);
+        // Show preview
+        const preview = document.getElementById('card-preview');
+        preview.innerHTML = `<img src="${URL.createObjectURL(blob)}" alt="Saju share card" style="max-width:100%;border-radius:12px;margin-top:20px;">`;
+        preview.hidden = false;
+        // Try clipboard first, then download
+        const copied = await copyBlobToClipboard(blob);
+        if (copied) {
+          btn.textContent = '✓ Copied to clipboard';
+        } else {
+          downloadBlob(blob, `saju-${lastSaju.dayMaster}-${Date.now()}.png`);
+          btn.textContent = '✓ Downloaded';
+        }
+        setTimeout(() => { btn.disabled = false; btn.textContent = originalText; }, 2500);
+      } catch (e) {
+        btn.textContent = '⚠ ' + e.message;
+        setTimeout(() => { btn.disabled = false; btn.textContent = originalText; }, 3000);
+      }
     });
 
     document.getElementById('share-btn').addEventListener('click', async () => {

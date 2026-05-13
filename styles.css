@@ -304,6 +304,17 @@ section { padding: 64px 0; }
 }
 .actions button.ghost:hover { border-color: var(--accent); color: var(--accent); }
 
+.card-preview {
+  text-align: center;
+  margin-top: 8px;
+}
+.card-preview img {
+  max-width: 100%;
+  width: 540px;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
 .upgrade-note {
   text-align: center;
   font-size: 14px;
