@@ -5,17 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Saju — Free Korean Four Pillars Reading</title>
   <meta name="description" content="Authentic Korean Saju (四柱) reading. Free. Instant. Real Korean methodology — Year/Month/Day/Hour pillars + Five Elements + Ten Gods.">
+  <meta name="keywords" content="Korean Saju, Four Pillars of Destiny, Saju reading, Saju calculator, Korean fortune telling, BaZi, Day Master, Five Elements, Ten Gods, Korean astrology, 사주, 四柱推命, 八字">
   <meta property="og:title" content="Saju — Free Korean Four Pillars Reading">
   <meta property="og:description" content="Authentic Korean fortune. Real Day Master, Five Elements, Ten Gods. Instant, free.">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="en_US">
   <meta property="og:url" content="https://hoonsikim.github.io/saju/">
+  <meta property="og:site_name" content="Saju">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Saju — Free Korean Four Pillars Reading">
+  <meta name="twitter:description" content="Authentic Korean fortune. Real Day Master, Five Elements, Ten Gods. Instant, free.">
   <link rel="canonical" href="https://hoonsikim.github.io/saju/">
   <link rel="alternate" hreflang="en" href="https://hoonsikim.github.io/saju/?lang=en">
   <link rel="alternate" hreflang="ko" href="https://hoonsikim.github.io/saju/?lang=ko">
   <link rel="alternate" hreflang="ja" href="https://hoonsikim.github.io/saju/?lang=ja">
   <link rel="alternate" hreflang="zh" href="https://hoonsikim.github.io/saju/?lang=zh">
   <link rel="alternate" hreflang="x-default" href="https://hoonsikim.github.io/saju/">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Saju",
+    "alternateName": ["사주", "四柱推命", "八字"],
+    "url": "https://hoonsikim.github.io/saju/",
+    "description": "Authentic Korean Saju (Four Pillars of Destiny) reading. Free, instant, no signup. Year/Month/Day/Hour pillars, Five Elements balance, Ten Gods analysis.",
+    "applicationCategory": "LifestyleApplication",
+    "applicationSubCategory": "Fortune Telling",
+    "operatingSystem": "Web",
+    "browserRequirements": "Requires JavaScript. Modern browser.",
+    "inLanguage": ["en", "ko", "ja", "zh"],
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "Hoonsi Kim",
+      "url": "https://github.com/hoonsikim"
+    },
+    "keywords": "Korean Saju, Four Pillars of Destiny, BaZi, Day Master, Five Elements, Ten Gods, 사주, 四柱推命"
+  }
+  </script>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -149,6 +181,7 @@
       en: {
         title: 'Saju — Free Korean Four Pillars Reading',
         description: 'Authentic Korean Saju (四柱) reading. Free. Instant. Real Korean methodology — Year/Month/Day/Hour pillars + Five Elements + Ten Gods.',
+        keywords: 'Korean Saju, Four Pillars of Destiny, Saju reading, Saju calculator, Korean fortune telling, BaZi, Day Master, Five Elements, Ten Gods, Korean astrology, 사주',
         ogTitle: 'Saju — Free Korean Four Pillars Reading',
         ogDescription: 'Authentic Korean fortune. Real Day Master, Five Elements, Ten Gods. Instant, free.',
         h1: 'Your fate, in the language Korea has used for 1,000 years.',
@@ -186,6 +219,7 @@
       ko: {
         title: '사주 — 무료 한국 사주팔자 풀이',
         description: '진짜 한국식 사주(四柱) 풀이. 무료. 즉시. 연·월·일·시주 + 오행 균형 + 십신 자동 분석.',
+        keywords: '사주, 사주팔자, 무료 사주, 사주풀이, 무료 사주풀이, 일간, 오행, 십신, 만세력, 한국 명리, 명리학, 사주 계산, 사주 보기',
         ogTitle: '사주 — 무료 한국 사주팔자 풀이',
         ogDescription: '진짜 한국 명리. 일간·오행·십신 분석. 즉시, 무료.',
         h1: '1,000년 동안 한국이 써 온 언어로, 당신의 운명을.',
@@ -223,6 +257,7 @@
       ja: {
         title: '四柱推命 — 無料の韓国式リーディング',
         description: '本格的な韓国式四柱推命。無料・即時。年・月・日・時柱 + 五行 + 十神を自動分析。',
+        keywords: '四柱推命, 韓国式四柱推命, 無料四柱推命, 無料占い, 日主, 五行, 十神, 命理, 八字, サジュ, 사주',
         ogTitle: '四柱推命 — 無料の韓国式リーディング',
         ogDescription: '本物の韓国式占い。日主・五行・十神を分析。即時・無料。',
         h1: '韓国が1,000年使ってきた言葉で、あなたの運命を。',
@@ -260,6 +295,7 @@
       zh: {
         title: '四柱八字 — 免费韩式解读',
         description: '正宗韩式四柱八字解读。免费・即时。年・月・日・时柱 + 五行 + 十神自动分析。',
+        keywords: '四柱八字, 韩式八字, 免费八字, 免费算命, 日主, 五行, 十神, 命理, 八字算命, 韩国命理, 사주',
         ogTitle: '四柱八字 — 免费韩式解读',
         ogDescription: '正宗韩式命理。日主・五行・十神分析。即时・免费。',
         h1: '用韩国沿用1,000年的语言,解读你的命运。',
@@ -306,9 +342,12 @@
       document.documentElement.lang = lang;
       document.title = t.title;
       setMeta('meta[name="description"]', 'content', t.description);
+      setMeta('meta[name="keywords"]', 'content', t.keywords);
       setMeta('meta[property="og:title"]', 'content', t.ogTitle);
       setMeta('meta[property="og:description"]', 'content', t.ogDescription);
       setMeta('meta[property="og:locale"]', 'content', LOCALE_TAG[lang] || 'en_US');
+      setMeta('meta[name="twitter:title"]', 'content', t.ogTitle);
+      setMeta('meta[name="twitter:description"]', 'content', t.ogDescription);
 
       const set = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
       const setHtml = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
