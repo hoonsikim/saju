@@ -12,9 +12,16 @@
   <meta property="og:locale" content="en_US">
   <meta property="og:url" content="https://hoonsikim.github.io/saju/">
   <meta property="og:site_name" content="Saju">
+  <meta property="og:image" content="https://hoonsikim.github.io/saju/og-en.svg">
+  <meta property="og:image:type" content="image/svg+xml">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Saju — Four Pillars of Destiny. Authentic Korean methodology. Free.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Saju — Free Korean Four Pillars Reading">
   <meta name="twitter:description" content="Authentic Korean fortune. Real Day Master, Five Elements, Ten Gods. Instant, free.">
+  <meta name="twitter:image" content="https://hoonsikim.github.io/saju/og-en.svg">
+  <meta name="twitter:image:alt" content="Saju — Four Pillars of Destiny. Authentic Korean methodology. Free.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="canonical" href="https://hoonsikim.github.io/saju/">
   <link rel="alternate" hreflang="en" href="https://hoonsikim.github.io/saju/?lang=en">
@@ -188,6 +195,8 @@
         keywords: 'Korean Saju, Four Pillars of Destiny, Saju reading, Saju calculator, Korean fortune telling, BaZi, Day Master, Five Elements, Ten Gods, Korean astrology, 사주',
         ogTitle: 'Saju — Free Korean Four Pillars Reading',
         ogDescription: 'Authentic Korean fortune. Real Day Master, Five Elements, Ten Gods. Instant, free.',
+        ogImage: 'https://hoonsikim.github.io/saju/og-en.svg',
+        ogImageAlt: 'Saju — Four Pillars of Destiny. Authentic Korean methodology. Free.',
         h1: 'Your fate, in the language Korea has used for 1,000 years.',
         leadHtml: 'Authentic <strong>Korean Four Pillars of Destiny</strong> — Year, Month, Day, Hour. Five Elements in balance. Ten Gods at work.',
         leadSubHtml: 'Not Western astrology pretending to be Eastern. The real thing. <strong>Free. Instant. No signup.</strong>',
@@ -226,6 +235,8 @@
         keywords: '사주, 사주팔자, 무료 사주, 사주풀이, 무료 사주풀이, 일간, 오행, 십신, 만세력, 한국 명리, 명리학, 사주 계산, 사주 보기',
         ogTitle: '사주 — 무료 한국 사주팔자 풀이',
         ogDescription: '진짜 한국 명리. 일간·오행·십신 분석. 즉시, 무료.',
+        ogImage: 'https://hoonsikim.github.io/saju/og-ko.svg',
+        ogImageAlt: '사주 — 무료 한국식 사주팔자. 일간·오행·십신.',
         h1: '1,000년 동안 한국이 써 온 언어로, 당신의 운명을.',
         leadHtml: '진짜 <strong>한국 사주팔자</strong> — 연주·월주·일주·시주. 오행 균형. 십신 분석.',
         leadSubHtml: '서양 점성술을 동양처럼 포장한 게 아닙니다. 진짜 한국식. <strong>무료. 즉시. 가입 없음.</strong>',
@@ -264,6 +275,8 @@
         keywords: '四柱推命, 韓国式四柱推命, 無料四柱推命, 無料占い, 日主, 五行, 十神, 命理, 八字, サジュ, 사주',
         ogTitle: '四柱推命 — 無料の韓国式リーディング',
         ogDescription: '本物の韓国式占い。日主・五行・十神を分析。即時・無料。',
+        ogImage: 'https://hoonsikim.github.io/saju/og-ja.svg',
+        ogImageAlt: '四柱推命 — 本格的な韓国式。日主・五行・十神。無料・即時。',
         h1: '韓国が1,000年使ってきた言葉で、あなたの運命を。',
         leadHtml: '本格的な<strong>韓国式四柱推命</strong> — 年・月・日・時の柱。五行のバランス。十神の働き。',
         leadSubHtml: '東洋風に見せかけた西洋占星術ではありません。本物です。<strong>無料・即時・登録不要。</strong>',
@@ -302,6 +315,8 @@
         keywords: '四柱八字, 韩式八字, 免费八字, 免费算命, 日主, 五行, 十神, 命理, 八字算命, 韩国命理, 사주',
         ogTitle: '四柱八字 — 免费韩式解读',
         ogDescription: '正宗韩式命理。日主・五行・十神分析。即时・免费。',
+        ogImage: 'https://hoonsikim.github.io/saju/og-zh.svg',
+        ogImageAlt: '四柱八字 — 正宗韩式命理。日主・五行・十神。免费・即时。',
         h1: '用韩国沿用1,000年的语言,解读你的命运。',
         leadHtml: '正宗<strong>韩式四柱八字</strong> — 年柱・月柱・日柱・时柱。五行平衡。十神作用。',
         leadSubHtml: '不是伪装东方的西方占星术。是真东西。<strong>免费・即时・无需注册。</strong>',
@@ -352,6 +367,10 @@
       setMeta('meta[property="og:locale"]', 'content', LOCALE_TAG[lang] || 'en_US');
       setMeta('meta[name="twitter:title"]', 'content', t.ogTitle);
       setMeta('meta[name="twitter:description"]', 'content', t.ogDescription);
+      setMeta('meta[property="og:image"]', 'content', t.ogImage);
+      setMeta('meta[property="og:image:alt"]', 'content', t.ogImageAlt);
+      setMeta('meta[name="twitter:image"]', 'content', t.ogImage);
+      setMeta('meta[name="twitter:image:alt"]', 'content', t.ogImageAlt);
 
       const set = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
       const setHtml = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };

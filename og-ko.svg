@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0a0a0a"/>
+      <stop offset="1" stop-color="#1a1410"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="32" y="32" width="1136" height="566" fill="none" stroke="#d4af37" stroke-width="2" opacity="0.55"/>
+  <text x="60" y="110" font-family="'Noto Serif KR', 'Nanum Myeongjo', serif" font-size="30" fill="#d4af37" letter-spacing="14">무 료 사 주 팔 자</text>
+  <text x="600" y="340" text-anchor="middle" font-family="'Noto Serif KR', 'Nanum Myeongjo', serif" font-size="240" font-weight="700" fill="#d4af37" letter-spacing="40">사주</text>
+  <text x="600" y="410" text-anchor="middle" font-family="'Noto Serif KR', 'Songti SC', serif" font-size="56" fill="#e8d9a8" opacity="0.85">四柱八字</text>
+  <text x="600" y="490" text-anchor="middle" font-family="'Noto Serif KR', serif" font-size="32" fill="#cfcfcf">정통 한국식 명리. 무료. 즉시.</text>
+  <text x="600" y="550" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="#888" letter-spacing="2">hoonsikim.github.io/saju</text>
+</svg>
