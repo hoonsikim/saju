@@ -144,3 +144,26 @@ export function fortuneVerdict(score) {
   if (score >= 35) return 'caution';
   return 'rest';
 }
+
+/**
+ * 사용자 생일 + 시작일 → 7일간의 일운 미리보기. (src/daily-fortune.js와 동일 로직)
+ *
+ * @param {Object} birth - 생년월일시 ({year, month, day, hour, minute?})
+ * @param {Date} [fromDate] - 7일 구간의 첫날 (기본: 오늘)
+ * @returns {Object} { days: Array<dailyFortune & {weekday, offset}>, best: {date, score, index} }
+ */
+export function weeklyForecast(birth, fromDate = new Date()) {
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate() + i);
+    days.push({ ...dailyFortune(birth, d), weekday: d.getDay(), offset: i });
+  }
+  let best = days[0];
+  for (const day of days) {
+    if (day.score > best.score) best = day;
+  }
+  return {
+    days,
+    best: { date: best.date, score: best.score, index: best.offset },
+  };
+}

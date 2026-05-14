@@ -1,4 +1,4 @@
-import { dailyFortune, fortuneVerdict } from '../src/daily-fortune.js';
+import { dailyFortune, fortuneVerdict, weeklyForecast } from '../src/daily-fortune.js';
 
 let passed = 0;
 let failed = 0;
@@ -105,6 +105,63 @@ const AXES = ['wealth', 'career', 'love', 'health', 'social'];
     }
   }
   assert('365일 sweep 모두 유효', allValid);
+}
+
+// === Case 9: weeklyForecast — 7일 구조 + 각 날 유효한 dailyFortune 형태
+{
+  const w = weeklyForecast(BIRTH, new Date(2026, 4, 15, 12));
+  assert('weeklyForecast.days 길이 7', w.days.length === 7, `got ${w.days.length}`);
+  assert('각 날 score [5,99]', w.days.every(d => d.score >= 5 && d.score <= 99),
+    JSON.stringify(w.days.map(d => d.score)));
+  assert('각 날 theme/luckiest 유효', w.days.every(d => VALID_THEMES.includes(d.theme) && AXES.includes(d.luckiest)));
+  assert('offset 0..6 순서대로', w.days.every((d, i) => d.offset === i));
+  assert('weekday 0..6 범위', w.days.every(d => d.weekday >= 0 && d.weekday <= 6));
+  console.log(`  week scores: ${w.days.map(d => d.score).join(', ')}`);
+}
+
+// === Case 10: weeklyForecast — 연속 7일이라 첫날 dailyFortune과 정렬
+{
+  const from = new Date(2026, 4, 15, 12);
+  const w = weeklyForecast(BIRTH, from);
+  const day0 = dailyFortune(BIRTH, from);
+  assert('days[0] = 시작일 dailyFortune', w.days[0].date === day0.date && w.days[0].score === day0.score);
+  const expectedDates = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(2026, 4, 15 + i, 12);
+    expectedDates.push(dailyFortune(BIRTH, d).date);
+  }
+  assert('7일 날짜 연속·정확', w.days.every((d, i) => d.date === expectedDates[i]),
+    JSON.stringify(w.days.map(d => d.date)));
+  assert('weekday 연속 (각 = (이전+1)%7)',
+    w.days.every((d, i) => i === 0 || d.weekday === (w.days[i - 1].weekday + 1) % 7));
+}
+
+// === Case 11: weeklyForecast.best — 7일 중 최고 score 정확히 지목
+{
+  const w = weeklyForecast(BIRTH, new Date(2026, 4, 15, 12));
+  const maxScore = Math.max(...w.days.map(d => d.score));
+  assert('best.score = 7일 최대값', w.best.score === maxScore, `best=${w.best.score} max=${maxScore}`);
+  assert('best.index가 그 날을 가리킴', w.days[w.best.index].score === w.best.score && w.days[w.best.index].date === w.best.date);
+}
+
+// === Case 12: weeklyForecast — 월 경계 overflow 정규화 (5/28 시작 → 6월로 넘어감)
+{
+  const w = weeklyForecast(BIRTH, new Date(2026, 4, 28, 12));
+  assert('월말 시작도 7일 모두 유효', w.days.length === 7 && w.days.every(d => d.score >= 5 && d.score <= 99));
+  assert('5/28 시작 → 6/03 종료 (월 경계 정규화)',
+    w.days[0].date === '2026-05-28' && w.days[6].date === '2026-06-03',
+    `${w.days[0].date} .. ${w.days[6].date}`);
+}
+
+// === Case 13: weeklyForecast — 결정론
+{
+  const d = new Date(2026, 4, 15, 12);
+  const w1 = weeklyForecast(BIRTH, d);
+  const w2 = weeklyForecast(BIRTH, new Date(2026, 4, 15, 12));
+  assert('weeklyForecast 결정론 — days score 동일',
+    w1.days.every((day, i) => day.score === w2.days[i].score && day.date === w2.days[i].date));
+  assert('weeklyForecast 결정론 — best 동일',
+    w1.best.score === w2.best.score && w1.best.index === w2.best.index);
 }
 
 console.log(`\n${passed + failed} tests · ${passed} passed · ${failed} failed`);

@@ -169,3 +169,30 @@ export function fortuneVerdict(score) {
   if (score >= 35) return 'caution';
   return 'rest';
 }
+
+/**
+ * 사용자 생일 + 시작일 → 7일간의 일운 미리보기.
+ *
+ * dailyFortune을 연속 7일 호출 — 엔진 재활용, 백엔드 0.
+ * "내일 다시 오세요"(약한 훅)를 "이번 주 최고의 날은 X"(구체적 재방문 이유)로 전환.
+ *
+ * @param {Object} birth - 생년월일시 ({year, month, day, hour, minute?})
+ * @param {Date} [fromDate] - 7일 구간의 첫날 (기본: 오늘)
+ * @returns {Object} { days: Array<dailyFortune & {weekday, offset}>, best: {date, score, index} }
+ */
+export function weeklyForecast(birth, fromDate = new Date()) {
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    // Date 생성자가 월·연 경계 overflow를 자동 정규화 (day 32 → 다음 달)
+    const d = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate() + i);
+    days.push({ ...dailyFortune(birth, d), weekday: d.getDay(), offset: i });
+  }
+  let best = days[0];
+  for (const day of days) {
+    if (day.score > best.score) best = day;
+  }
+  return {
+    days,
+    best: { date: best.date, score: best.score, index: best.offset },
+  };
+}
