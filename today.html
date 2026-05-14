@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Today's Fortune — Korean Saju Daily Reading</title>
+  <meta name="description" content="Your Korean Saju daily fortune — today's Day Pillar against your Day Master, scored across five axes: wealth, career, love, health, social. Free, instant, comes back every day.">
+  <meta name="keywords" content="daily fortune, today's fortune, 오늘의 운세, 일진, Korean fortune, Saju daily, 今日の運勢, 今日运势, BaZi daily, Day Master">
+  <meta property="og:title" content="Today's Fortune — Korean Saju Daily Reading">
+  <meta property="og:description" content="Your fortune for today, from real Korean Saju. Five axes. Free, instant, every day.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://hoonsikim.github.io/saju/today.html">
+  <meta property="og:site_name" content="Saju">
+  <meta property="og:image" content="https://hoonsikim.github.io/saju/og-en.svg">
+  <meta property="og:image:type" content="image/svg+xml">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Today's Fortune — Korean Saju Daily Reading">
+  <meta name="twitter:description" content="Your fortune for today, from real Korean Saju. Five axes. Free, instant, every day.">
+  <meta name="twitter:image" content="https://hoonsikim.github.io/saju/og-en.svg">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="canonical" href="https://hoonsikim.github.io/saju/today.html">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .verdict-card { text-align: center; padding: 32px 16px; background: linear-gradient(135deg, rgba(212,165,116,0.08), rgba(212,165,116,0.02)); border: 1px solid rgba(212,165,116,0.3); border-radius: 16px; margin: 8px 0 24px; }
+    .verdict-date { font-size: 0.95rem; color: var(--text-sub); letter-spacing: 0.04em; margin-bottom: 8px; }
+    .verdict-score { font-size: 4.5rem; font-weight: 700; font-family: var(--font-serif); color: var(--accent); line-height: 1; }
+    .verdict-label { font-size: 1.4rem; color: var(--accent-glow); margin: 8px 0 12px; letter-spacing: 0.04em; }
+    .verdict-meta { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; font-size: 0.9rem; color: var(--text-sub); margin-top: 8px; }
+    .verdict-meta .day-pillar { font-family: var(--font-han); color: var(--accent); font-size: 1.1rem; }
+    .axes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-top: 16px; }
+    .axis-card { background: var(--bg-card); padding: 16px 12px; border-radius: 10px; border: 1px solid var(--border); text-align: center; }
+    .axis-card.luckiest { border-color: var(--accent); background: linear-gradient(180deg, rgba(212,165,116,0.1), var(--bg-card)); }
+    .axis-name { font-size: 0.78rem; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .axis-value { font-size: 1.6rem; color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; }
+    .axis-star { font-size: 0.72rem; color: var(--accent-glow); margin-top: 4px; }
+    .come-back { text-align: center; font-size: 14px; color: var(--text-sub); margin: 24px 0 0; }
+    .come-back strong { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="container">
+        <p class="kicker">오늘의 운세 · 今日の運勢 · Today's Fortune</p>
+        <h1 id="hero-h1">Your fortune for today — from real Korean Saju.</h1>
+        <p class="lead" id="hero-lead">Today's <strong>Day Pillar</strong> meets your <strong>Day Master</strong>. Scored across five axes — wealth, career, love, health, social.</p>
+        <p class="lead-sub" id="hero-lead-sub"><a href="./" id="back-link">← Full Saju reading</a> · <strong>Free. Instant. New every day.</strong></p>
+      </div>
+    </section>
+
+    <section class="form-section">
+      <div class="container narrow">
+        <h2 id="form-h2">Enter your birth date</h2>
+        <form id="saju-form" autocomplete="off">
+          <div class="row">
+            <label>
+              <span id="label-birth-date">Birth date</span>
+              <input type="date" id="birth-date" required min="1900-01-01" max="2026-12-31" value="1990-01-01">
+            </label>
+            <label>
+              <span id="label-birth-time">Birth time (local)</span>
+              <input type="time" id="birth-time" value="12:00">
+            </label>
+          </div>
+          <div class="row row-single">
+            <label>
+              <span id="label-language">Language</span>
+              <select id="language">
+                <option value="en">English</option>
+                <option value="ko">한국어</option>
+                <option value="ja">日本語</option>
+                <option value="zh">中文</option>
+                <option value="es">Español</option>
+              </select>
+            </label>
+          </div>
+          <p class="hint" id="form-hint">Don't know your exact birth time? 12:00 keeps the Day Pillar — the only one today's fortune uses — accurate.</p>
+          <p class="form-error" id="form-error" role="alert" hidden></p>
+          <button type="submit" id="submit-btn">See today's fortune →</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="result-section" id="result" hidden>
+      <div class="container narrow">
+        <div class="verdict-card">
+          <div class="verdict-date" id="verdict-date"></div>
+          <div class="verdict-score" id="verdict-score">--</div>
+          <div class="verdict-label" id="verdict-label"></div>
+          <div class="verdict-meta">
+            <span id="verdict-theme"></span>
+            <span class="day-pillar" id="verdict-day-pillar"></span>
+          </div>
+        </div>
+
+        <h3 id="axes-h3">Five axes</h3>
+        <div class="axes-grid" id="axes-grid"></div>
+
+        <div class="actions">
+          <button id="share-btn" type="button">Share today's fortune</button>
+          <button id="card-btn" type="button" class="ghost">Download card</button>
+          <button id="reset-btn" type="button" class="ghost">New birth date</button>
+        </div>
+
+        <p class="come-back" id="come-back">Your fortune shifts with each day's pillar. <strong>Bookmark this and come back tomorrow.</strong></p>
+        <p class="upgrade-note" id="upgrade-note">Rule-based daily reading. <strong>LLM-deep daily guidance coming soon</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Daily%20Deep%20%E2%80%94%20notify%20me">notify me</a> when it's live.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p id="footer-built">Built autonomously by <strong>일사령(逸事令)</strong> · <a href="https://github.com/hoonsikim/saju">GitHub</a></p>
+      <p id="footer-license">© 2026 · Saju methodology = Korean tradition · Code = MIT licensed</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { dailyFortune, fortuneVerdict } from './src/daily-fortune.browser.js';
+
+    const VERDICT_LABEL = {
+      en: { excellent: 'Excellent day', good: 'Good day', fair: 'Steady day', caution: 'Tread carefully', rest: 'Rest & recharge' },
+      ko: { excellent: '대길', good: '길', fair: '평', caution: '주의', rest: '휴식' },
+      ja: { excellent: '大吉', good: '吉', fair: '平', caution: '注意', rest: '休息' },
+      zh: { excellent: '大吉', good: '吉', fair: '平', caution: '注意', rest: '休息' },
+      es: { excellent: 'Día excelente', good: 'Buen día', fair: 'Día estable', caution: 'Día de cautela', rest: 'Día de descanso' },
+    };
+
+    const THEME_LABEL = {
+      en: { wealth: 'Wealth & opportunity', officer: 'Duty & achievement', output: 'Expression & action', resource: 'Learning & rest', peer: 'Allies & teamwork' },
+      ko: { wealth: '재물·기회의 날', officer: '책임·성취의 날', output: '표현·활동의 날', resource: '학습·휴식의 날', peer: '동료·협력의 날' },
+      ja: { wealth: '財運・機会の日', officer: '責任・達成の日', output: '表現・活動の日', resource: '学び・休息の日', peer: '仲間・協力の日' },
+      zh: { wealth: '财运·机会之日', officer: '责任·成就之日', output: '表达·行动之日', resource: '学习·休息之日', peer: '同伴·协作之日' },
+      es: { wealth: 'Riqueza y oportunidad', officer: 'Deber y logro', output: 'Expresión y acción', resource: 'Aprendizaje y descanso', peer: 'Aliados y colaboración' },
+    };
+
+    const AXIS_NAME = {
+      en: { wealth: 'Wealth', career: 'Career', love: 'Love', health: 'Health', social: 'Social' },
+      ko: { wealth: '재물', career: '일·직장', love: '애정', health: '건강', social: '인간관계' },
+      ja: { wealth: '金運', career: '仕事', love: '恋愛', health: '健康', social: '人間関係' },
+      zh: { wealth: '财运', career: '事业', love: '爱情', health: '健康', social: '人际' },
+      es: { wealth: 'Riqueza', career: 'Carrera', love: 'Amor', health: 'Salud', social: 'Social' },
+    };
+
+    const AXIS_ORDER = ['wealth', 'career', 'love', 'health', 'social'];
+
+    const CHROME = {
+      en: {
+        title: "Today's Fortune — Korean Saju Daily Reading",
+        h1: 'Your fortune for today — from real Korean Saju.',
+        leadHtml: "Today's <strong>Day Pillar</strong> meets your <strong>Day Master</strong>. Scored across five axes — wealth, career, love, health, social.",
+        leadSubHtml: '<a href="./" id="back-link">← Full Saju reading</a> · <strong>Free. Instant. New every day.</strong>',
+        formH2: 'Enter your birth date',
+        labelBirthDate: 'Birth date', labelBirthTime: 'Birth time (local)', labelLanguage: 'Language',
+        hint: "Don't know your exact birth time? 12:00 keeps the Day Pillar — the only one today's fortune uses — accurate.",
+        submit: "See today's fortune →", loading: 'Reading…',
+        errorInvalidDate: 'Please enter a valid birth date.',
+        errorYearRange: 'Birth year must be between 1900 and 2030.',
+        errorInvalidTime: 'Please enter a valid birth time (00:00–23:59).',
+        axesH3: 'Five axes', luckiest: '★ luckiest',
+        shareBtn: "Share today's fortune", shareBtnShared: '✓ Shared', shareBtnCopied: '✓ Copied!',
+        shareTitle: 'My Korean Saju daily fortune',
+        cardBtn: 'Download card', cardBtnDone: '✓ Saved',
+        resetBtn: 'New birth date',
+        comeBackHtml: 'Your fortune shifts with each day\'s pillar. <strong>Bookmark this and come back tomorrow.</strong>',
+        upgradeNoteHtml: 'Rule-based daily reading. <strong>LLM-deep daily guidance coming soon</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Daily%20Deep%20%E2%80%94%20notify%20me">notify me</a> when it\'s live.',
+        footerBuiltHtml: 'Built autonomously by <strong>일사령(逸事令)</strong> · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
+        footerLicense: '© 2026 · Saju methodology = Korean tradition · Code = MIT licensed',
+      },
+      ko: {
+        title: '오늘의 운세 — 무료 한국식 사주 일진 풀이',
+        h1: '오늘 당신의 운세 — 진짜 한국 사주로.',
+        leadHtml: '오늘의 <strong>일진(日辰)</strong>과 당신의 <strong>일간(日干)</strong>이 만납니다. 재물·일·애정·건강·인간관계 5축으로 풀이.',
+        leadSubHtml: '<a href="./" id="back-link">← 전체 사주 풀이</a> · <strong>무료. 즉시. 매일 새로.</strong>',
+        formH2: '생년월일을 입력하세요',
+        labelBirthDate: '생년월일', labelBirthTime: '태어난 시각 (현지)', labelLanguage: '언어',
+        hint: '태어난 시각을 모르세요? 12:00로 두면 오늘의 운세가 쓰는 일주(日柱)는 정확합니다.',
+        submit: '오늘의 운세 보기 →', loading: '풀이 중…',
+        errorInvalidDate: '생년월일을 올바르게 입력해 주세요.',
+        errorYearRange: '출생 연도는 1900~2030 사이여야 합니다.',
+        errorInvalidTime: '올바른 시각을 입력해 주세요 (00:00~23:59).',
+        axesH3: '5 축', luckiest: '★ 으뜸',
+        shareBtn: '오늘의 운세 공유', shareBtnShared: '✓ 공유 완료', shareBtnCopied: '✓ 복사 완료',
+        shareTitle: '내 오늘의 사주 운세',
+        cardBtn: '카드 저장', cardBtnDone: '✓ 저장 완료',
+        resetBtn: '다른 생년월일',
+        comeBackHtml: '운세는 매일의 일진에 따라 달라집니다. <strong>북마크해 두고 내일 다시 오세요.</strong>',
+        upgradeNoteHtml: '룰 기반 일진 풀이입니다. <strong>LLM 심층 데일리 가이드 곧 오픈</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Daily%20Deep%20%E2%80%94%20notify%20me">알림 받기</a>.',
+        footerBuiltHtml: '<strong>일사령(逸事令)</strong>이 자율 운영 · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
+        footerLicense: '© 2026 · 사주 방법론 = 한국 전통 · 코드 = MIT 라이선스',
+      },
+      ja: {
+        title: '今日の運勢 — 無料・韓国式四柱の日運リーディング',
+        h1: 'あなたの今日の運勢 — 本物の韓国式四柱で。',
+        leadHtml: '今日の<strong>日柱</strong>とあなたの<strong>日主</strong>が出会う。金運・仕事・恋愛・健康・人間関係の5軸で読み解きます。',
+        leadSubHtml: '<a href="./" id="back-link">← 四柱フルリーディング</a> · <strong>無料・即時・毎日更新。</strong>',
+        formH2: '生年月日を入力',
+        labelBirthDate: '生年月日', labelBirthTime: '出生時刻 (現地)', labelLanguage: '言語',
+        hint: '出生時刻が分かりませんか? 12:00で今日の運勢が使う日柱は正確のままです。',
+        submit: '今日の運勢を見る →', loading: '読み込み中…',
+        errorInvalidDate: '生年月日を正しく入力してください。',
+        errorYearRange: '出生年は1900〜2030の範囲で入力してください。',
+        errorInvalidTime: '正しい出生時刻を入力してください (00:00〜23:59)。',
+        axesH3: '5軸', luckiest: '★ 最強',
+        shareBtn: '今日の運勢をシェア', shareBtnShared: '✓ シェア完了', shareBtnCopied: '✓ コピー完了',
+        shareTitle: '私の今日の四柱運勢',
+        cardBtn: 'カード保存', cardBtnDone: '✓ 保存完了',
+        resetBtn: '別の生年月日',
+        comeBackHtml: '運勢は毎日の日柱で変わります。<strong>ブックマークして明日また来てください。</strong>',
+        upgradeNoteHtml: 'ルールベースの日運です。<strong>LLM深層デイリーガイドを準備中</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Daily%20Deep%20%E2%80%94%20notify%20me">通知を受け取る</a>。',
+        footerBuiltHtml: '<strong>일사령(逸事令)</strong> が自律運営 · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
+        footerLicense: '© 2026 · 四柱の方法論 = 韓国の伝統 · コード = MITライセンス',
+      },
+      zh: {
+        title: '今日运势 — 免费韩式四柱日运解读',
+        h1: '你今天的运势 — 来自真正的韩式四柱。',
+        leadHtml: '今天的<strong>日柱</strong>遇上你的<strong>日主</strong>。从财运・事业・爱情・健康・人际 五轴解读。',
+        leadSubHtml: '<a href="./" id="back-link">← 完整四柱解读</a> · <strong>免费・即时・每日更新。</strong>',
+        formH2: '输入你的出生日期',
+        labelBirthDate: '出生日期', labelBirthTime: '出生时间 (当地)', labelLanguage: '语言',
+        hint: '不知道出生时间? 用12:00,今日运势所用的日柱保持准确。',
+        submit: '查看今日运势 →', loading: '解读中…',
+        errorInvalidDate: '请正确输入出生日期。',
+        errorYearRange: '出生年份须在1900~2030之间。',
+        errorInvalidTime: '请输入正确的出生时间 (00:00~23:59)。',
+        axesH3: '五轴', luckiest: '★ 最旺',
+        shareBtn: '分享今日运势', shareBtnShared: '✓ 已分享', shareBtnCopied: '✓ 已复制',
+        shareTitle: '我的今日四柱运势',
+        cardBtn: '保存卡片', cardBtnDone: '✓ 已保存',
+        resetBtn: '换出生日期',
+        comeBackHtml: '运势随每日的日柱而变。<strong>收藏本页,明天再来。</strong>',
+        upgradeNoteHtml: '规则日运解读。<strong>LLM深度每日指引即将上线</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Daily%20Deep%20%E2%80%94%20notify%20me">提醒我</a>。',
+        footerBuiltHtml: '<strong>일사령(逸事令)</strong> 自主运营 · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
+        footerLicense: '© 2026 · 四柱方法论 = 韩国传统 · 代码 = MIT 许可',
+      },
+      es: {
+        title: 'Fortuna de Hoy — Lectura Diaria de Saju Coreano',
+        h1: 'Tu fortuna para hoy — del auténtico Saju coreano.',
+        leadHtml: 'El <strong>Pilar del Día</strong> de hoy se encuentra con tu <strong>Maestro del Día</strong>. Puntuado en cinco ejes — riqueza, carrera, amor, salud y vida social.',
+        leadSubHtml: '<a href="./" id="back-link">← Lectura completa de Saju</a> · <strong>Gratis. Instantáneo. Nuevo cada día.</strong>',
+        formH2: 'Introduce tu fecha de nacimiento',
+        labelBirthDate: 'Fecha de nacimiento', labelBirthTime: 'Hora de nacimiento (local)', labelLanguage: 'Idioma',
+        hint: '¿No sabes la hora exacta? Con 12:00 el Pilar del Día — el único que usa la fortuna de hoy — queda preciso.',
+        submit: 'Ver la fortuna de hoy →', loading: 'Leyendo…',
+        errorInvalidDate: 'Introduce una fecha de nacimiento válida.',
+        errorYearRange: 'El año de nacimiento debe estar entre 1900 y 2030.',
+        errorInvalidTime: 'Introduce una hora de nacimiento válida (00:00–23:59).',
+        axesH3: 'Cinco ejes', luckiest: '★ más afortunado',
+        shareBtn: 'Compartir la fortuna de hoy', shareBtnShared: '✓ Compartido', shareBtnCopied: '✓ ¡Copiado!',
+        shareTitle: 'Mi fortuna diaria de Saju coreano',
+        cardBtn: 'Descargar tarjeta', cardBtnDone: '✓ Guardado',
+        resetBtn: 'Otra fecha',
+        comeBackHtml: 'Tu fortuna cambia con el pilar de cada día. <strong>Guarda esta página y vuelve mañana.</strong>',
+        upgradeNoteHtml: 'Lectura diaria basada en reglas. <strong>Guía diaria profunda con IA muy pronto</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Daily%20Deep%20%E2%80%94%20notify%20me">avísame</a> cuando esté disponible.',
+        footerBuiltHtml: 'Creado de forma autónoma por <strong>일사령(逸事令)</strong> · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
+        footerLicense: '© 2026 · Metodología Saju = tradición coreana · Código = licencia MIT',
+      },
+    };
+
+    const LOCALE_TAG = { en: 'en_US', ko: 'ko_KR', ja: 'ja_JP', zh: 'zh_CN', es: 'es_ES' };
+
+    function setMeta(selector, attr, value) {
+      const el = document.querySelector(selector);
+      if (el) el.setAttribute(attr, value);
+    }
+
+    function track(name, params) {
+      try {
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', name, params || {});
+        } else {
+          (window.dataLayer = window.dataLayer || []).push({ event: name, ...(params || {}) });
+        }
+      } catch {}
+    }
+
+    function applyChrome(lang) {
+      const t = CHROME[lang] || CHROME.en;
+      document.documentElement.lang = lang;
+      document.title = t.title;
+      setMeta('meta[name="description"]', 'content', t.leadHtml.replace(/<[^>]+>/g, ''));
+      setMeta('meta[property="og:title"]', 'content', t.title);
+      setMeta('meta[property="og:locale"]', 'content', LOCALE_TAG[lang] || 'en_US');
+      setMeta('meta[name="twitter:title"]', 'content', t.title);
+
+      const set = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+      const setHtml = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+      set('hero-h1', t.h1);
+      setHtml('hero-lead', t.leadHtml);
+      setHtml('hero-lead-sub', t.leadSubHtml);
+      set('form-h2', t.formH2);
+      set('label-birth-date', t.labelBirthDate);
+      set('label-birth-time', t.labelBirthTime);
+      set('label-language', t.labelLanguage);
+      set('form-hint', t.hint);
+
+      const submitBtn = document.getElementById('submit-btn');
+      if (submitBtn && !submitBtn.disabled) submitBtn.textContent = t.submit;
+
+      set('axes-h3', t.axesH3);
+      const shareBtn = document.getElementById('share-btn');
+      if (shareBtn && !shareBtn.dataset.copied) shareBtn.textContent = t.shareBtn;
+      const cardBtn = document.getElementById('card-btn');
+      if (cardBtn && !cardBtn.dataset.saved) cardBtn.textContent = t.cardBtn;
+      set('reset-btn', t.resetBtn);
+      setHtml('come-back', t.comeBackHtml);
+      setHtml('upgrade-note', t.upgradeNoteHtml);
+      setHtml('footer-built', t.footerBuiltHtml);
+      set('footer-license', t.footerLicense);
+
+      if (!document.getElementById('result').hidden && lastFortune) {
+        renderResult(lastFortune, lang);
+      }
+    }
+
+    function detectInitialLang() {
+      const url = new URL(window.location.href);
+      const fromUrl = url.searchParams.get('lang');
+      if (fromUrl && CHROME[fromUrl]) return fromUrl;
+      try {
+        const stored = localStorage.getItem('saju.lang');
+        if (stored && CHROME[stored]) return stored;
+      } catch {}
+      const nav = (navigator.language || 'en').slice(0, 2).toLowerCase();
+      if (CHROME[nav]) return nav;
+      return 'en';
+    }
+
+    function persistLang(lang) {
+      try { localStorage.setItem('saju.lang', lang); } catch {}
+      const url = new URL(window.location.href);
+      if (url.searchParams.get('lang') !== lang) {
+        url.searchParams.set('lang', lang);
+        window.history.replaceState({}, '', url.toString());
+      }
+    }
+
+    function encodeBirthToUrl({ year, month, day, hour, minute }) {
+      const pad = n => String(n).padStart(2, '0');
+      const b = `${year}${pad(month)}${pad(day)}${pad(hour)}${pad(minute)}`;
+      const url = new URL(window.location.href);
+      url.searchParams.set('b', b);
+      window.history.replaceState({}, '', url.toString());
+    }
+
+    function decodeBirthFromUrl() {
+      const url = new URL(window.location.href);
+      const b = url.searchParams.get('b');
+      if (!b || !/^\d{12}$/.test(b)) return null;
+      const year = +b.slice(0, 4), month = +b.slice(4, 6), day = +b.slice(6, 8);
+      const hour = +b.slice(8, 10), minute = +b.slice(10, 12);
+      if (year < 1900 || year > 2030 || month < 1 || month > 12 || day < 1 || day > 31) return null;
+      if (hour < 0 || hour > 23 || minute < 0 || minute > 59) return null;
+      return { year, month, day, hour, minute };
+    }
+
+    function applyBirthFromUrlIfAny() {
+      const birth = decodeBirthFromUrl();
+      if (!birth) return false;
+      const pad = n => String(n).padStart(2, '0');
+      document.getElementById('birth-date').value = `${birth.year}-${pad(birth.month)}-${pad(birth.day)}`;
+      document.getElementById('birth-time').value = `${pad(birth.hour)}:${pad(birth.minute)}`;
+      return true;
+    }
+
+    function readBirth() {
+      const date = document.getElementById('birth-date').value.split('-').map(Number);
+      const time = document.getElementById('birth-time').value.split(':').map(Number);
+      return {
+        year: date[0], month: date[1], day: date[2],
+        hour: time[0], minute: Number.isFinite(time[1]) ? time[1] : 0,
+      };
+    }
+
+    function validateBirth(b, lang) {
+      const t = CHROME[lang] || CHROME.en;
+      if (![b.year, b.month, b.day].every(Number.isFinite) || b.month < 1 || b.month > 12 || b.day < 1 || b.day > 31) {
+        return t.errorInvalidDate;
+      }
+      if (b.year < 1900 || b.year > 2030) return t.errorYearRange;
+      if (!Number.isFinite(b.hour) || b.hour < 0 || b.hour > 23 || b.minute < 0 || b.minute > 59) {
+        return t.errorInvalidTime;
+      }
+      return null;
+    }
+
+    function showFormError(message) {
+      const el = document.getElementById('form-error');
+      el.textContent = message;
+      el.hidden = false;
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function hideFormError() {
+      const el = document.getElementById('form-error');
+      el.textContent = '';
+      el.hidden = true;
+    }
+
+    function renderResult(fortune, lang) {
+      const t = CHROME[lang] || CHROME.en;
+      const verdict = fortuneVerdict(fortune.score);
+      const verdictLabel = (VERDICT_LABEL[lang] || VERDICT_LABEL.en)[verdict];
+      const themeLabel = (THEME_LABEL[lang] || THEME_LABEL.en)[fortune.theme];
+      const axisName = AXIS_NAME[lang] || AXIS_NAME.en;
+
+      document.getElementById('verdict-date').textContent = fortune.date;
+      document.getElementById('verdict-score').textContent = fortune.score;
+      document.getElementById('verdict-label').textContent = verdictLabel;
+      document.getElementById('verdict-theme').textContent = themeLabel;
+      document.getElementById('verdict-day-pillar').textContent = fortune.dayGanZhi || '';
+
+      const axesHtml = AXIS_ORDER.map(key => {
+        const isLuckiest = key === fortune.luckiest;
+        return `
+          <div class="axis-card${isLuckiest ? ' luckiest' : ''}">
+            <div class="axis-name">${axisName[key]}</div>
+            <div class="axis-value">${fortune.axes[key]}</div>
+            ${isLuckiest ? `<div class="axis-star">${t.luckiest}</div>` : ''}
+          </div>`;
+      }).join('');
+      document.getElementById('axes-grid').innerHTML = axesHtml;
+    }
+
+    let lastFortune = null;
+
+    const initialLang = detectInitialLang();
+    const langSelect = document.getElementById('language');
+    langSelect.value = initialLang;
+    applyChrome(initialLang);
+    persistLang(initialLang);
+    langSelect.addEventListener('change', () => {
+      applyChrome(langSelect.value);
+      persistLang(langSelect.value);
+    });
+
+    document.getElementById('saju-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const lang = langSelect.value;
+      const birth = readBirth();
+      const err = validateBirth(birth, lang);
+      if (err) { showFormError(err); return; }
+      hideFormError();
+      encodeBirthToUrl(birth);
+      const fortune = dailyFortune(birth);
+      lastFortune = fortune;
+      renderResult(fortune, lang);
+      track('daily_reading_generated', { score: fortune.score, theme: fortune.theme, lang });
+      const r = document.getElementById('result');
+      r.hidden = false;
+      r.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    if (applyBirthFromUrlIfAny()) {
+      requestAnimationFrame(() => {
+        document.getElementById('saju-form')
+          .dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+      });
+    }
+
+    document.getElementById('reset-btn').addEventListener('click', () => {
+      document.getElementById('result').hidden = true;
+      hideFormError();
+      const url = new URL(window.location.href);
+      url.searchParams.delete('b');
+      window.history.replaceState({}, '', url.toString());
+      document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    document.getElementById('share-btn').addEventListener('click', async () => {
+      const lang = langSelect.value;
+      const t = CHROME[lang] || CHROME.en;
+      const btn = document.getElementById('share-btn');
+      if (!lastFortune) return;
+      const verdictLabel = (VERDICT_LABEL[lang] || VERDICT_LABEL.en)[fortuneVerdict(lastFortune.score)];
+      const shareUrl = window.location.href;
+      const text = `${t.shareTitle} (${lastFortune.date}): ${lastFortune.score} — ${verdictLabel}`;
+      const shareData = { title: t.shareTitle, text, url: shareUrl };
+
+      const restoreLabel = (delayMs) => {
+        setTimeout(() => {
+          delete btn.dataset.copied;
+          btn.textContent = (CHROME[langSelect.value] || CHROME.en).shareBtn;
+        }, delayMs);
+      };
+
+      const canNative = typeof navigator.share === 'function'
+        && (typeof navigator.canShare !== 'function' || navigator.canShare(shareData));
+
+      if (canNative) {
+        try {
+          await navigator.share(shareData);
+          btn.dataset.copied = '1';
+          btn.textContent = t.shareBtnShared;
+          track('daily_share', { method: 'native', lang });
+          restoreLabel(2000);
+          return;
+        } catch (err) {
+          if (err && err.name === 'AbortError') return;
+        }
+      }
+
+      try {
+        await navigator.clipboard.writeText(`${text}\n\n${shareUrl}`);
+        btn.dataset.copied = '1';
+        btn.textContent = t.shareBtnCopied;
+        track('daily_share', { method: 'clipboard', lang });
+        restoreLabel(2000);
+      } catch (err) {
+        alert('Copy failed: ' + err.message);
+      }
+    });
+
+    function escapeXml(s) {
+      return String(s).replace(/[<>&'"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;' }[c]));
+    }
+
+    function buildFortuneCardSvg({ score, label, date, dayPillar, theme, brandUrl }) {
+      const W = 1200, H = 630;
+      const fontStack = "'Noto Serif KR','Songti SC','Yu Mincho','Hiragino Mincho ProN',serif";
+      return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0a0f"/>
+      <stop offset="100%" stop-color="#1a1410"/>
+    </linearGradient>
+  </defs>
+  <rect width="${W}" height="${H}" fill="url(#bg)"/>
+  <rect x="20" y="20" width="${W - 40}" height="${H - 40}" fill="none" stroke="#d4a574" stroke-opacity="0.5" stroke-width="2" rx="16"/>
+  <text x="${W / 2}" y="110" text-anchor="middle" font-family="${fontStack}" font-size="30" fill="#a0a0b0" letter-spacing="4">${escapeXml(date)}</text>
+  <text x="${W / 2}" y="320" text-anchor="middle" font-family="${fontStack}" font-size="220" font-weight="700" fill="#d4a574">${escapeXml(String(score))}</text>
+  <text x="${W / 2}" y="400" text-anchor="middle" font-family="${fontStack}" font-size="52" fill="#f4d4a4" letter-spacing="4">${escapeXml(label)}</text>
+  <text x="${W / 2}" y="475" text-anchor="middle" font-family="${fontStack}" font-size="30" fill="#a0a0b0">${escapeXml(theme)}</text>
+  <text x="${W / 2}" y="540" text-anchor="middle" font-family="${fontStack}" font-size="64" fill="#d4a574">${escapeXml(dayPillar)}</text>
+  <text x="${W / 2}" y="595" text-anchor="middle" font-family="${fontStack}" font-size="18" fill="#d4a574" letter-spacing="2">${escapeXml(brandUrl)}</text>
+</svg>`;
+    }
+
+    function svgToPng(svgString, width, height) {
+      return new Promise((resolve, reject) => {
+        const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+        const svgUrl = URL.createObjectURL(svgBlob);
+        const img = new Image();
+        img.decoding = 'sync';
+        img.onload = () => {
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#0a0a0f';
+            ctx.fillRect(0, 0, width, height);
+            ctx.drawImage(img, 0, 0, width, height);
+            canvas.toBlob((blob) => {
+              URL.revokeObjectURL(svgUrl);
+              if (blob) resolve(blob);
+              else reject(new Error('toBlob returned null'));
+            }, 'image/png');
+          } catch (err) {
+            URL.revokeObjectURL(svgUrl);
+            reject(err);
+          }
+        };
+        img.onerror = () => {
+          URL.revokeObjectURL(svgUrl);
+          reject(new Error('SVG image load failed'));
+        };
+        img.src = svgUrl;
+      });
+    }
+
+    document.getElementById('card-btn').addEventListener('click', async () => {
+      const lang = langSelect.value;
+      const t = CHROME[lang] || CHROME.en;
+      const btn = document.getElementById('card-btn');
+      if (!lastFortune) return;
+
+      const verdictLabel = (VERDICT_LABEL[lang] || VERDICT_LABEL.en)[fortuneVerdict(lastFortune.score)];
+      const themeLabel = (THEME_LABEL[lang] || THEME_LABEL.en)[lastFortune.theme];
+      const svg = buildFortuneCardSvg({
+        score: lastFortune.score,
+        label: verdictLabel,
+        date: lastFortune.date,
+        dayPillar: lastFortune.dayGanZhi || '',
+        theme: themeLabel,
+        brandUrl: 'hoonsikim.github.io/saju/today',
+      });
+
+      const pngBlob = await svgToPng(svg, 1200, 630).catch(() => null);
+      const blob = pngBlob || new Blob([svg], { type: 'image/svg+xml' });
+      const ext = pngBlob ? 'png' : 'svg';
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `saju-today-${lastFortune.date}-${lastFortune.score}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      track('daily_card_download', { score: lastFortune.score, ext, lang });
+
+      btn.dataset.saved = '1';
+      btn.textContent = t.cardBtnDone;
+      setTimeout(() => {
+        delete btn.dataset.saved;
+        btn.textContent = (CHROME[langSelect.value] || CHROME.en).cardBtn;
+      }, 2000);
+    });
+  </script>
+</body>
+</html>
