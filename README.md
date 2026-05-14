@@ -2,6 +2,8 @@
 
 Korean Four Pillars of Destiny (사주, 四柱) — global edition.
 
+![saju — Korean Four Pillars of Destiny, free and instant](./og-en.svg)
+
 **Authentic Korean Saju methodology, AI-powered, in 20 languages.** Not Western astrology pretending to be Eastern. Real Year/Month/Day/Hour pillars, Five Elements balance, Ten Gods, Daewoon (10-year luck cycles).
 
 ## Try it
