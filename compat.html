@@ -262,6 +262,16 @@
       if (el) el.setAttribute(attr, value);
     }
 
+    function track(name, params) {
+      try {
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', name, params || {});
+        } else {
+          (window.dataLayer = window.dataLayer || []).push({ event: name, ...(params || {}) });
+        }
+      } catch {}
+    }
+
     function applyChrome(lang) {
       const t = CHROME[lang] || CHROME.en;
       document.documentElement.lang = lang;
@@ -443,6 +453,7 @@
       encodePair({ a, b });
       const result = calcCompatibility(a, b);
       renderResult(result, lang);
+      track('compat_reading_generated', { score: result.score, lang });
       const r = document.getElementById('result');
       r.hidden = false;
       r.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -490,6 +501,7 @@
           await navigator.share(shareData);
           btn.dataset.copied = '1';
           btn.textContent = t.shareBtnShared;
+          track('compat_share', { method: 'native', lang });
           restoreLabel(2000);
           return;
         } catch (err) {
@@ -501,6 +513,7 @@
         await navigator.clipboard.writeText(`${text}\n\n${shareUrl}`);
         btn.dataset.copied = '1';
         btn.textContent = t.shareBtnCopied;
+        track('compat_share', { method: 'clipboard', lang });
         restoreLabel(2000);
       } catch (err) {
         alert('Copy failed: ' + err.message);
@@ -599,6 +612,7 @@
       a.click();
       document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(url), 1000);
+      track('compat_card_download', { score, ext, lang });
 
       btn.dataset.saved = '1';
       btn.textContent = t.cardBtnDone;

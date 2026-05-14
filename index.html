@@ -479,6 +479,16 @@
       if (el) el.setAttribute(attr, value);
     }
 
+    function track(name, params) {
+      try {
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', name, params || {});
+        } else {
+          (window.dataLayer = window.dataLayer || []).push({ event: name, ...(params || {}) });
+        }
+      } catch {}
+    }
+
     function applyChrome(lang) {
       const t = CHROME[lang] || CHROME.en;
       document.documentElement.lang = lang;
@@ -722,6 +732,7 @@
 
       // 1) Render structure immediately (instant)
       renderResult(saju, lang, null);
+      track('saju_reading_generated', { dayMaster: saju.dayMaster, readingType, lang });
       document.getElementById('result').hidden = false;
       document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
@@ -776,6 +787,7 @@
           downloadBlob(blob, `saju-${lastSaju.dayMaster}-${Date.now()}.png`);
           btn.textContent = '✓ Downloaded';
         }
+        track('saju_card_download', { dayMaster: lastSaju.dayMaster, method: copied ? 'clipboard' : 'download', lang });
         setTimeout(() => { btn.disabled = false; btn.textContent = originalText; }, 2500);
       } catch (e) {
         btn.textContent = '⚠ ' + e.message;
@@ -809,6 +821,7 @@
           await navigator.share(shareData);
           btn.dataset.copied = '1';
           btn.textContent = t.shareBtnShared;
+          track('saju_share', { method: 'native', lang });
           restoreLabel(2000);
           return;
         } catch (err) {
@@ -820,6 +833,7 @@
         await navigator.clipboard.writeText(`${text}\n\n${shareUrl}`);
         btn.dataset.copied = '1';
         btn.textContent = t.shareBtnCopied;
+        track('saju_share', { method: 'clipboard', lang });
         restoreLabel(2000);
       } catch (err) {
         alert('Copy failed: ' + err.message);
