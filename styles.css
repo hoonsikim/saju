@@ -466,6 +466,14 @@ footer {
 }
 footer p { margin: 4px 0; }
 footer a { color: var(--accent); }
+.footer-nav {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 0 0 12px;
+}
+.footer-nav .current { color: var(--text); font-weight: 600; }
 
 /* mobile */
 @media (max-width: 600px) {
