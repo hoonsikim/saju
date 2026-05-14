@@ -38,6 +38,15 @@
     .axis-star { font-size: 0.72rem; color: var(--accent-glow); margin-top: 4px; }
     .come-back { text-align: center; font-size: 14px; color: var(--text-sub); margin: 24px 0 0; }
     .come-back strong { color: var(--accent); }
+    .week-strip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 12px; }
+    .week-day { background: var(--bg-card); padding: 10px 4px; border-radius: 8px; border: 1px solid var(--border); text-align: center; }
+    .week-day.today-col { box-shadow: inset 0 0 0 1px rgba(212,165,116,0.35); }
+    .week-day.best { border-color: var(--accent); background: linear-gradient(180deg, rgba(212,165,116,0.14), var(--bg-card)); }
+    .week-weekday { font-size: 0.7rem; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.04em; }
+    .week-score { font-size: 1.2rem; color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 4px; }
+    .week-day.best .week-score { color: var(--accent-glow); }
+    .week-best { text-align: center; font-size: 14px; color: var(--text-sub); margin: 12px 0 0; }
+    .week-best strong { color: var(--accent); }
   </style>
 </head>
 <body>
@@ -99,6 +108,10 @@
         <h3 id="axes-h3">Five axes</h3>
         <div class="axes-grid" id="axes-grid"></div>
 
+        <h3 id="week-h3">7-day forecast</h3>
+        <div class="week-strip" id="week-strip"></div>
+        <p class="week-best" id="week-best"></p>
+
         <div class="actions">
           <button id="share-btn" type="button">Share today's fortune</button>
           <button id="card-btn" type="button" class="ghost">Download card</button>
@@ -124,7 +137,7 @@
   </footer>
 
   <script type="module">
-    import { dailyFortune, fortuneVerdict } from './src/daily-fortune.browser.js';
+    import { dailyFortune, fortuneVerdict, weeklyForecast } from './src/daily-fortune.browser.js';
 
     const VERDICT_LABEL = {
       en: { excellent: 'Excellent day', good: 'Good day', fair: 'Steady day', caution: 'Tread carefully', rest: 'Rest & recharge' },
@@ -166,6 +179,9 @@
         errorYearRange: 'Birth year must be between 1900 and 2030.',
         errorInvalidTime: 'Please enter a valid birth time (00:00–23:59).',
         axesH3: 'Five axes', luckiest: '★ luckiest',
+        weekH3: '7-day forecast',
+        weekBestHtml: 'Your best day this week: <strong>{day}</strong> — score {score}. <strong>Plan around it.</strong>',
+        shareBestDay: 'Best day this week',
         shareBtn: "Share today's fortune", shareBtnShared: '✓ Shared', shareBtnCopied: '✓ Copied!',
         shareTitle: 'My Korean Saju daily fortune',
         cardBtn: 'Download card', cardBtnDone: '✓ Saved',
@@ -188,6 +204,9 @@
         errorYearRange: '출생 연도는 1900~2030 사이여야 합니다.',
         errorInvalidTime: '올바른 시각을 입력해 주세요 (00:00~23:59).',
         axesH3: '5 축', luckiest: '★ 으뜸',
+        weekH3: '이번 주 7일 운세',
+        weekBestHtml: '이번 주 최고의 날: <strong>{day}</strong> — {score}점. <strong>중요한 일은 그날에.</strong>',
+        shareBestDay: '이번 주 최고의 날',
         shareBtn: '오늘의 운세 공유', shareBtnShared: '✓ 공유 완료', shareBtnCopied: '✓ 복사 완료',
         shareTitle: '내 오늘의 사주 운세',
         cardBtn: '카드 저장', cardBtnDone: '✓ 저장 완료',
@@ -210,6 +229,9 @@
         errorYearRange: '出生年は1900〜2030の範囲で入力してください。',
         errorInvalidTime: '正しい出生時刻を入力してください (00:00〜23:59)。',
         axesH3: '5軸', luckiest: '★ 最強',
+        weekH3: '今週7日間の運勢',
+        weekBestHtml: '今週のベストデー: <strong>{day}</strong> — {score}点。<strong>大事な予定はこの日に。</strong>',
+        shareBestDay: '今週のベストデー',
         shareBtn: '今日の運勢をシェア', shareBtnShared: '✓ シェア完了', shareBtnCopied: '✓ コピー完了',
         shareTitle: '私の今日の四柱運勢',
         cardBtn: 'カード保存', cardBtnDone: '✓ 保存完了',
@@ -232,6 +254,9 @@
         errorYearRange: '出生年份须在1900~2030之间。',
         errorInvalidTime: '请输入正确的出生时间 (00:00~23:59)。',
         axesH3: '五轴', luckiest: '★ 最旺',
+        weekH3: '本周7日运势',
+        weekBestHtml: '本周最佳日: <strong>{day}</strong> — {score}分。<strong>重要安排放在这天。</strong>',
+        shareBestDay: '本周最佳日',
         shareBtn: '分享今日运势', shareBtnShared: '✓ 已分享', shareBtnCopied: '✓ 已复制',
         shareTitle: '我的今日四柱运势',
         cardBtn: '保存卡片', cardBtnDone: '✓ 已保存',
@@ -254,6 +279,9 @@
         errorYearRange: 'El año de nacimiento debe estar entre 1900 y 2030.',
         errorInvalidTime: 'Introduce una hora de nacimiento válida (00:00–23:59).',
         axesH3: 'Cinco ejes', luckiest: '★ más afortunado',
+        weekH3: 'Pronóstico de 7 días',
+        weekBestHtml: 'Tu mejor día de la semana: <strong>{day}</strong> — {score} puntos. <strong>Planifica en torno a él.</strong>',
+        shareBestDay: 'Mejor día de la semana',
         shareBtn: 'Compartir la fortuna de hoy', shareBtnShared: '✓ Compartido', shareBtnCopied: '✓ ¡Copiado!',
         shareTitle: 'Mi fortuna diaria de Saju coreano',
         cardBtn: 'Descargar tarjeta', cardBtnDone: '✓ Guardado',
@@ -306,6 +334,7 @@
       if (submitBtn && !submitBtn.disabled) submitBtn.textContent = t.submit;
 
       set('axes-h3', t.axesH3);
+      set('week-h3', t.weekH3);
       const shareBtn = document.getElementById('share-btn');
       if (shareBtn && !shareBtn.dataset.copied) shareBtn.textContent = t.shareBtn;
       const cardBtn = document.getElementById('card-btn');
@@ -318,6 +347,7 @@
 
       if (!document.getElementById('result').hidden && lastFortune) {
         renderResult(lastFortune, lang);
+        if (lastWeek) renderWeek(lastWeek, lang);
       }
     }
 
@@ -430,7 +460,35 @@
       document.getElementById('axes-grid').innerHTML = axesHtml;
     }
 
+    function dateFromIso(iso) {
+      const [y, m, d] = iso.split('-').map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    function renderWeek(week, lang) {
+      const t = CHROME[lang] || CHROME.en;
+      const locale = (LOCALE_TAG[lang] || 'en_US').replace('_', '-');
+      const cells = week.days.map(day => {
+        const wd = dateFromIso(day.date).toLocaleDateString(locale, { weekday: 'short' });
+        const isBest = day.offset === week.best.index;
+        const isToday = day.offset === 0;
+        return `
+          <div class="week-day${isBest ? ' best' : ''}${isToday ? ' today-col' : ''}">
+            <div class="week-weekday">${escapeXml(wd)}</div>
+            <div class="week-score">${day.score}</div>
+          </div>`;
+      }).join('');
+      document.getElementById('week-strip').innerHTML = cells;
+
+      const bestLabel = dateFromIso(week.best.date)
+        .toLocaleDateString(locale, { weekday: 'short', month: 'short', day: 'numeric' });
+      document.getElementById('week-best').innerHTML = t.weekBestHtml
+        .replace('{day}', escapeXml(bestLabel))
+        .replace('{score}', week.best.score);
+    }
+
     let lastFortune = null;
+    let lastWeek = null;
 
     const initialLang = detectInitialLang();
     const langSelect = document.getElementById('language');
@@ -453,6 +511,9 @@
       const fortune = dailyFortune(birth);
       lastFortune = fortune;
       renderResult(fortune, lang);
+      const week = weeklyForecast(birth);
+      lastWeek = week;
+      renderWeek(week, lang);
       track('daily_reading_generated', { score: fortune.score, theme: fortune.theme, lang });
       const r = document.getElementById('result');
       r.hidden = false;
@@ -482,7 +543,13 @@
       if (!lastFortune) return;
       const verdictLabel = (VERDICT_LABEL[lang] || VERDICT_LABEL.en)[fortuneVerdict(lastFortune.score)];
       const shareUrl = window.location.href;
-      const text = `${t.shareTitle} (${lastFortune.date}): ${lastFortune.score} — ${verdictLabel}`;
+      let text = `${t.shareTitle} (${lastFortune.date}): ${lastFortune.score} — ${verdictLabel}`;
+      if (lastWeek) {
+        const locale = (LOCALE_TAG[lang] || 'en_US').replace('_', '-');
+        const bestLabel = dateFromIso(lastWeek.best.date)
+          .toLocaleDateString(locale, { weekday: 'short', month: 'short', day: 'numeric' });
+        text += ` · ${t.shareBestDay}: ${bestLabel} (${lastWeek.best.score})`;
+      }
       const shareData = { title: t.shareTitle, text, url: shareUrl };
 
       const restoreLabel = (delayMs) => {
