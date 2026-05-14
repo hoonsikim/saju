@@ -112,6 +112,7 @@
 
         <div class="actions">
           <button id="share-btn" type="button">Share this match</button>
+          <button id="card-btn" type="button" class="ghost">Download card</button>
           <button id="reset-btn" type="button" class="ghost">New pair</button>
         </div>
 
@@ -171,6 +172,7 @@
         axesH3: 'Four axes',
         shareBtn: 'Share this match', shareBtnShared: '✓ Shared', shareBtnCopied: '✓ Copied!',
         shareTitle: 'Our Korean Saju compatibility',
+        cardBtn: 'Download card', cardBtnDone: '✓ Saved',
         resetBtn: 'New pair',
         upgradeNoteHtml: 'Rule-based engine. <strong>LLM-deep compatibility reading coming soon</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Compat%20Deep%20%E2%80%94%20notify%20me">notify me</a> when it\'s live.',
         footerBuiltHtml: 'Built autonomously by <strong>일사령(逸事令)</strong> · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
@@ -195,6 +197,7 @@
         axesH3: '4 축',
         shareBtn: '이 궁합 공유', shareBtnShared: '✓ 공유 완료', shareBtnCopied: '✓ 복사 완료',
         shareTitle: '우리 사주 궁합',
+        cardBtn: '카드 저장', cardBtnDone: '✓ 저장 완료',
         resetBtn: '다른 두 사람',
         upgradeNoteHtml: '룰 기반 풀이입니다. <strong>LLM 심층 궁합 풀이 곧 오픈</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Compat%20Deep%20%E2%80%94%20notify%20me">알림 받기</a>.',
         footerBuiltHtml: '<strong>일사령(逸事令)</strong>이 자율 운영 · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
@@ -219,6 +222,7 @@
         axesH3: '4軸',
         shareBtn: 'この相性をシェア', shareBtnShared: '✓ シェア完了', shareBtnCopied: '✓ コピー完了',
         shareTitle: '私たちの四柱相性',
+        cardBtn: 'カード保存', cardBtnDone: '✓ 保存完了',
         resetBtn: '別のペア',
         upgradeNoteHtml: 'ルールベースの相性です。<strong>LLM深層相性リーディングを準備中</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Compat%20Deep%20%E2%80%94%20notify%20me">通知を受け取る</a>。',
         footerBuiltHtml: '<strong>일사령(逸事令)</strong> が自律運営 · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
@@ -243,6 +247,7 @@
         axesH3: '四轴',
         shareBtn: '分享此合婚', shareBtnShared: '✓ 已分享', shareBtnCopied: '✓ 已复制',
         shareTitle: '我们的四柱合婚',
+        cardBtn: '保存卡片', cardBtnDone: '✓ 已保存',
         resetBtn: '换一对',
         upgradeNoteHtml: '规则解读。<strong>LLM深度合婚解读即将上线</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Compat%20Deep%20%E2%80%94%20notify%20me">提醒我</a>。',
         footerBuiltHtml: '<strong>일사령(逸事令)</strong> 自主运营 · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
@@ -287,6 +292,8 @@
       set('axes-h3', t.axesH3);
       const shareBtn = document.getElementById('share-btn');
       if (shareBtn && !shareBtn.dataset.copied) shareBtn.textContent = t.shareBtn;
+      const cardBtn = document.getElementById('card-btn');
+      if (cardBtn && !cardBtn.dataset.saved) cardBtn.textContent = t.cardBtn;
       set('reset-btn', t.resetBtn);
       setHtml('upgrade-note', t.upgradeNoteHtml);
       setHtml('footer-built', t.footerBuiltHtml);
@@ -498,6 +505,70 @@
       } catch (err) {
         alert('Copy failed: ' + err.message);
       }
+    });
+
+    function escapeXml(s) {
+      return String(s).replace(/[<>&'"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;' }[c]));
+    }
+
+    function buildCompatCardSvg({ score, label, pillarsA, pillarsB, tagline, brandUrl }) {
+      const W = 1200, H = 630;
+      const fontStack = "'Noto Serif KR','Songti SC','Yu Mincho','Hiragino Mincho ProN',serif";
+      return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0a0a"/>
+      <stop offset="100%" stop-color="#1a1410"/>
+    </linearGradient>
+  </defs>
+  <rect width="${W}" height="${H}" fill="url(#bg)"/>
+  <rect x="20" y="20" width="${W - 40}" height="${H - 40}" fill="none" stroke="#d4af37" stroke-opacity="0.5" stroke-width="2" rx="16"/>
+  <text x="${W / 2}" y="160" text-anchor="middle" font-family="${fontStack}" font-size="56" fill="#f4e6c1" letter-spacing="6">${escapeXml(label)}</text>
+  <text x="${W / 2}" y="340" text-anchor="middle" font-family="${fontStack}" font-size="240" font-weight="700" fill="#d4af37">${escapeXml(String(score))}</text>
+  <text x="${W / 2}" y="395" text-anchor="middle" font-family="${fontStack}" font-size="32" fill="#94a3b8" letter-spacing="4">/ 100</text>
+  <g font-family="${fontStack}" font-size="64" fill="#d4af37">
+    <text x="380" y="500" text-anchor="middle">${escapeXml(pillarsA)}</text>
+    <text x="${W / 2}" y="500" text-anchor="middle" fill="#94a3b8">×</text>
+    <text x="820" y="500" text-anchor="middle">${escapeXml(pillarsB)}</text>
+  </g>
+  <text x="${W / 2}" y="565" text-anchor="middle" font-family="${fontStack}" font-size="22" fill="#94a3b8">${escapeXml(tagline)}</text>
+  <text x="${W / 2}" y="600" text-anchor="middle" font-family="${fontStack}" font-size="18" fill="#d4af37" letter-spacing="2">${escapeXml(brandUrl)}</text>
+</svg>`;
+    }
+
+    document.getElementById('card-btn').addEventListener('click', () => {
+      const lang = langSelect.value;
+      const t = CHROME[lang] || CHROME.en;
+      const btn = document.getElementById('card-btn');
+      const score = document.getElementById('verdict-score').textContent;
+      const label = document.getElementById('verdict-label').textContent;
+      if (!score || score === '--') return;
+
+      const pillarsEl = document.getElementById('verdict-pillars');
+      const spans = pillarsEl.querySelectorAll('span');
+      const pillarsA = spans[0] ? spans[0].textContent : '';
+      const pillarsB = spans[2] ? spans[2].textContent : '';
+      const tagline = TAGLINE[lang] || TAGLINE.en;
+      const brandUrl = 'hoonsikim.github.io/saju/compat';
+
+      const svg = buildCompatCardSvg({ score, label, pillarsA, pillarsB, tagline, brandUrl });
+      const blob = new Blob([svg], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `saju-compat-${score}.svg`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+      btn.dataset.saved = '1';
+      btn.textContent = t.cardBtnDone;
+      setTimeout(() => {
+        delete btn.dataset.saved;
+        btn.textContent = (CHROME[langSelect.value] || CHROME.en).cardBtn;
+      }, 2000);
     });
   </script>
 </body>
