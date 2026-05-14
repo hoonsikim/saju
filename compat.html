@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saju Compatibility — Korean Pair Reading</title>
+  <meta name="description" content="Korean Saju compatibility — two birth dates, one relationship reading. Day Master · Day Branch · Element complement · Balance. Free, instant, no signup.">
+  <meta name="keywords" content="Saju compatibility, Korean compatibility, 궁합, 사주궁합, BaZi compatibility, 四柱 相性, 八字合婚, Day Master pairing">
+  <meta property="og:title" content="Saju Compatibility — Korean Pair Reading">
+  <meta property="og:description" content="Two birth dates, one compatibility score. Free Korean Saju pairing.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://hoonsikim.github.io/saju/compat.html">
+  <meta property="og:site_name" content="Saju">
+  <meta property="og:image" content="https://hoonsikim.github.io/saju/og-en.svg">
+  <meta property="og:image:type" content="image/svg+xml">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Saju Compatibility — Korean Pair Reading">
+  <meta name="twitter:description" content="Two birth dates, one compatibility score. Free Korean Saju pairing.">
+  <meta name="twitter:image" content="https://hoonsikim.github.io/saju/og-en.svg">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="canonical" href="https://hoonsikim.github.io/saju/compat.html">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .pair-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
+    @media (max-width: 600px) { .pair-grid { grid-template-columns: 1fr; } }
+    .pair-card { background: rgba(255,255,255,0.04); padding: 16px; border-radius: 12px; border: 1px solid rgba(212,175,55,0.18); }
+    .pair-card h3 { margin: 0 0 12px; color: #d4af37; font-size: 1.1rem; }
+    .verdict-card { text-align: center; padding: 32px 16px; background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(212,175,55,0.02)); border: 1px solid rgba(212,175,55,0.3); border-radius: 16px; margin: 24px 0; }
+    .verdict-score { font-size: 4rem; font-weight: 700; font-family: 'Noto Serif KR', serif; color: #d4af37; line-height: 1; margin-bottom: 8px; }
+    .verdict-label { font-size: 1.4rem; color: #f4e6c1; margin-bottom: 12px; letter-spacing: 0.04em; }
+    .verdict-pillars { display: flex; justify-content: center; gap: 20px; font-family: 'Noto Serif KR', serif; font-size: 1.5rem; margin: 16px 0; }
+    .verdict-pillars span { color: #d4af37; }
+    .axes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+    @media (max-width: 600px) { .axes-grid { grid-template-columns: 1fr; } }
+    .axis-card { background: rgba(255,255,255,0.03); padding: 14px; border-radius: 10px; border-left: 3px solid #d4af37; }
+    .axis-name { font-size: 0.85rem; color: #94a3b8; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .axis-value { font-size: 1.3rem; color: #d4af37; font-weight: 600; }
+    .axis-desc { font-size: 0.85rem; color: #c9c0a0; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="container">
+        <p class="kicker">사주 궁합 · 四柱 相性 · Saju Compatibility</p>
+        <h1 id="hero-h1">Two charts. One relationship.</h1>
+        <p class="lead" id="hero-lead">Korean Saju compatibility across <strong>four axes</strong> — Day Master, Day Branch, Element complement, and combined Balance.</p>
+        <p class="lead-sub" id="hero-lead-sub"><a href="./" id="back-link">← Single reading</a> · <strong>Free. Instant. Stateless.</strong></p>
+      </div>
+    </section>
+
+    <section class="form-section">
+      <div class="container narrow">
+        <h2 id="form-h2">Enter two birth dates</h2>
+        <form id="compat-form" autocomplete="off">
+          <div class="pair-grid">
+            <div class="pair-card">
+              <h3 id="person-a-h3">Person A</h3>
+              <label>
+                <span id="label-a-date">Birth date</span>
+                <input type="date" id="a-date" required min="1900-01-01" max="2026-12-31" value="1990-01-01">
+              </label>
+              <label>
+                <span id="label-a-time">Birth time (local)</span>
+                <input type="time" id="a-time" value="12:00">
+              </label>
+            </div>
+            <div class="pair-card">
+              <h3 id="person-b-h3">Person B</h3>
+              <label>
+                <span id="label-b-date">Birth date</span>
+                <input type="date" id="b-date" required min="1900-01-01" max="2026-12-31" value="1992-06-15">
+              </label>
+              <label>
+                <span id="label-b-time">Birth time (local)</span>
+                <input type="time" id="b-time" value="12:00">
+              </label>
+            </div>
+          </div>
+          <div class="row" style="margin-top: 12px;">
+            <label>
+              <span id="label-language">Language</span>
+              <select id="language">
+                <option value="en">English</option>
+                <option value="ko">한국어</option>
+                <option value="ja">日本語</option>
+                <option value="zh">中文</option>
+              </select>
+            </label>
+          </div>
+          <p class="hint" id="form-hint">Don't know exact birth time? 12:00 keeps everything but the Hour pillar accurate.</p>
+          <p class="form-error" id="form-error" role="alert" hidden></p>
+          <button type="submit" id="submit-btn">Read compatibility →</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="result-section" id="result" hidden>
+      <div class="container narrow">
+        <div class="verdict-card">
+          <div class="verdict-score" id="verdict-score">--</div>
+          <div class="verdict-label" id="verdict-label"></div>
+          <div class="verdict-pillars" id="verdict-pillars"></div>
+          <p id="verdict-tagline"></p>
+        </div>
+
+        <h3 id="axes-h3">Four axes</h3>
+        <div class="axes-grid" id="axes-grid"></div>
+
+        <div class="actions">
+          <button id="share-btn" type="button">Share this match</button>
+          <button id="reset-btn" type="button" class="ghost">New pair</button>
+        </div>
+
+        <p class="upgrade-note" id="upgrade-note">Rule-based engine. <strong>LLM-deep compatibility reading coming soon</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Compat%20Deep%20%E2%80%94%20notify%20me">notify me</a> when it's live.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p id="footer-built">Built autonomously by <strong>일사령(逸事令)</strong> · <a href="https://github.com/hoonsikim/saju">GitHub</a></p>
+      <p id="footer-license">© 2026 · Saju methodology = Korean tradition · Code = MIT licensed</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { calcCompatibility, compatVerdict } from './src/compat.browser.js';
+
+    const VERDICT_LABEL = {
+      en: { soulmate: 'Soulmate', strong: 'Strong match', good: 'Good match', mixed: 'Mixed energy', challenging: 'Challenging' },
+      ko: { soulmate: '천생연분', strong: '좋은 인연', good: '잘 맞음', mixed: '엇갈림', challenging: '도전적' },
+      ja: { soulmate: '運命の相手', strong: '強い縁', good: '相性良好', mixed: '混在', challenging: '挑戦的' },
+      zh: { soulmate: '天作之合', strong: '良缘', good: '相配', mixed: '参差', challenging: '挑战' },
+    };
+
+    const AXIS_NAME = {
+      en: { dayGan: 'Day Master', dayBranch: 'Day Branch', complement: 'Element complement', balance: 'Combined balance' },
+      ko: { dayGan: '일간(日干)', dayBranch: '일지(日支)', complement: '오행 보완', balance: '합산 균형' },
+      ja: { dayGan: '日主', dayBranch: '日支', complement: '五行補完', balance: '合算バランス' },
+      zh: { dayGan: '日主', dayBranch: '日支', complement: '五行互补', balance: '合算平衡' },
+    };
+
+    const TAGLINE = {
+      en: 'Korean Saju compatibility — Day Master · Day Branch · Five Elements · Balance.',
+      ko: '한국식 사주 궁합 — 일간·일지·오행·균형 4축.',
+      ja: '韓国式四柱相性 — 日主・日支・五行・バランスの4軸。',
+      zh: '韩式八字合婚 — 日主・日支・五行・平衡 四轴。',
+    };
+
+    const CHROME = {
+      en: {
+        title: 'Saju Compatibility — Korean Pair Reading',
+        h1: 'Two charts. One relationship.',
+        leadHtml: 'Korean Saju compatibility across <strong>four axes</strong> — Day Master, Day Branch, Element complement, and combined Balance.',
+        leadSubHtml: '<a href="./" id="back-link">← Single reading</a> · <strong>Free. Instant. Stateless.</strong>',
+        formH2: 'Enter two birth dates',
+        personA: 'Person A', personB: 'Person B',
+        labelADate: 'Birth date', labelATime: 'Birth time (local)',
+        labelBDate: 'Birth date', labelBTime: 'Birth time (local)',
+        labelLanguage: 'Language',
+        hint: "Don't know exact birth time? 12:00 keeps everything but the Hour pillar accurate.",
+        submit: 'Read compatibility →',
+        loading: 'Reading…',
+        errorInvalidDate: 'Please enter valid birth dates for both people.',
+        errorYearRange: 'Birth years must be between 1900 and 2030.',
+        errorInvalidTime: 'Please enter valid birth times (00:00–23:59).',
+        axesH3: 'Four axes',
+        shareBtn: 'Share this match', shareBtnShared: '✓ Shared', shareBtnCopied: '✓ Copied!',
+        shareTitle: 'Our Korean Saju compatibility',
+        resetBtn: 'New pair',
+        upgradeNoteHtml: 'Rule-based engine. <strong>LLM-deep compatibility reading coming soon</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Compat%20Deep%20%E2%80%94%20notify%20me">notify me</a> when it\'s live.',
+        footerBuiltHtml: 'Built autonomously by <strong>일사령(逸事令)</strong> · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
+        footerLicense: '© 2026 · Saju methodology = Korean tradition · Code = MIT licensed',
+      },
+      ko: {
+        title: '사주 궁합 — 무료 한국식 두 사람 풀이',
+        h1: '두 사람의 사주, 하나의 관계.',
+        leadHtml: '한국식 사주 궁합 <strong>4축</strong> — 일간·일지·오행 보완·합산 균형.',
+        leadSubHtml: '<a href="./" id="back-link">← 단독 사주</a> · <strong>무료. 즉시. 저장 없음.</strong>',
+        formH2: '두 사람의 생년월일',
+        personA: '사람 A', personB: '사람 B',
+        labelADate: '생년월일', labelATime: '태어난 시각 (현지)',
+        labelBDate: '생년월일', labelBTime: '태어난 시각 (현지)',
+        labelLanguage: '언어',
+        hint: '시각을 모르세요? 12:00로 두면 시주만 덜 정확하고 나머지는 정확합니다.',
+        submit: '궁합 보기 →',
+        loading: '풀이 중…',
+        errorInvalidDate: '두 사람의 생년월일을 올바르게 입력해 주세요.',
+        errorYearRange: '출생 연도는 1900~2030 사이여야 합니다.',
+        errorInvalidTime: '올바른 시각을 입력해 주세요 (00:00~23:59).',
+        axesH3: '4 축',
+        shareBtn: '이 궁합 공유', shareBtnShared: '✓ 공유 완료', shareBtnCopied: '✓ 복사 완료',
+        shareTitle: '우리 사주 궁합',
+        resetBtn: '다른 두 사람',
+        upgradeNoteHtml: '룰 기반 풀이입니다. <strong>LLM 심층 궁합 풀이 곧 오픈</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Compat%20Deep%20%E2%80%94%20notify%20me">알림 받기</a>.',
+        footerBuiltHtml: '<strong>일사령(逸事令)</strong>이 자율 운영 · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
+        footerLicense: '© 2026 · 사주 방법론 = 한국 전통 · 코드 = MIT 라이선스',
+      },
+      ja: {
+        title: '四柱相性 — 韓国式ペアリーディング',
+        h1: '二つの命式、一つの関係。',
+        leadHtml: '韓国式四柱推命の相性 <strong>4軸</strong> — 日主・日支・五行補完・合算バランス。',
+        leadSubHtml: '<a href="./" id="back-link">← 単独リーディング</a> · <strong>無料・即時・登録不要。</strong>',
+        formH2: '二人の生年月日',
+        personA: '人物 A', personB: '人物 B',
+        labelADate: '生年月日', labelATime: '出生時刻 (現地)',
+        labelBDate: '生年月日', labelBTime: '出生時刻 (現地)',
+        labelLanguage: '言語',
+        hint: '出生時刻が分かりませんか? 12:00で時柱だけ精度が下がり、他は正確のままです。',
+        submit: '相性を見る →',
+        loading: '読み込み中…',
+        errorInvalidDate: '二人の生年月日を正しく入力してください。',
+        errorYearRange: '出生年は1900〜2030の範囲で入力してください。',
+        errorInvalidTime: '正しい出生時刻を入力してください (00:00〜23:59)。',
+        axesH3: '4軸',
+        shareBtn: 'この相性をシェア', shareBtnShared: '✓ シェア完了', shareBtnCopied: '✓ コピー完了',
+        shareTitle: '私たちの四柱相性',
+        resetBtn: '別のペア',
+        upgradeNoteHtml: 'ルールベースの相性です。<strong>LLM深層相性リーディングを準備中</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Compat%20Deep%20%E2%80%94%20notify%20me">通知を受け取る</a>。',
+        footerBuiltHtml: '<strong>일사령(逸事令)</strong> が自律運営 · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
+        footerLicense: '© 2026 · 四柱の方法論 = 韓国の伝統 · コード = MITライセンス',
+      },
+      zh: {
+        title: '四柱合婚 — 韩式两人解读',
+        h1: '两份命盘,一段关系。',
+        leadHtml: '韩式四柱合婚 <strong>四轴</strong> — 日主・日支・五行互补・合算平衡。',
+        leadSubHtml: '<a href="./" id="back-link">← 单人解读</a> · <strong>免费・即时・无需注册。</strong>',
+        formH2: '两人的出生日期',
+        personA: '人物 A', personB: '人物 B',
+        labelADate: '出生日期', labelATime: '出生时间 (当地)',
+        labelBDate: '出生日期', labelBTime: '出生时间 (当地)',
+        labelLanguage: '语言',
+        hint: '不知道时间? 用12:00,仅时柱精度下降,其他保持准确。',
+        submit: '查看合婚 →',
+        loading: '解读中…',
+        errorInvalidDate: '请正确输入两人的出生日期。',
+        errorYearRange: '出生年份须在1900~2030之间。',
+        errorInvalidTime: '请输入正确的出生时间 (00:00~23:59)。',
+        axesH3: '四轴',
+        shareBtn: '分享此合婚', shareBtnShared: '✓ 已分享', shareBtnCopied: '✓ 已复制',
+        shareTitle: '我们的四柱合婚',
+        resetBtn: '换一对',
+        upgradeNoteHtml: '规则解读。<strong>LLM深度合婚解读即将上线</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Compat%20Deep%20%E2%80%94%20notify%20me">提醒我</a>。',
+        footerBuiltHtml: '<strong>일사령(逸事令)</strong> 自主运营 · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
+        footerLicense: '© 2026 · 四柱方法论 = 韩国传统 · 代码 = MIT 许可',
+      },
+    };
+
+    const LOCALE_TAG = { en: 'en_US', ko: 'ko_KR', ja: 'ja_JP', zh: 'zh_CN' };
+
+    function setMeta(selector, attr, value) {
+      const el = document.querySelector(selector);
+      if (el) el.setAttribute(attr, value);
+    }
+
+    function applyChrome(lang) {
+      const t = CHROME[lang] || CHROME.en;
+      document.documentElement.lang = lang;
+      document.title = t.title;
+      setMeta('meta[name="description"]', 'content', t.leadHtml.replace(/<[^>]+>/g, ''));
+      setMeta('meta[property="og:title"]', 'content', t.title);
+      setMeta('meta[property="og:locale"]', 'content', LOCALE_TAG[lang] || 'en_US');
+      setMeta('meta[name="twitter:title"]', 'content', t.title);
+
+      const set = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+      const setHtml = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+      set('hero-h1', t.h1);
+      setHtml('hero-lead', t.leadHtml);
+      setHtml('hero-lead-sub', t.leadSubHtml);
+      set('form-h2', t.formH2);
+      set('person-a-h3', t.personA);
+      set('person-b-h3', t.personB);
+      set('label-a-date', t.labelADate);
+      set('label-a-time', t.labelATime);
+      set('label-b-date', t.labelBDate);
+      set('label-b-time', t.labelBTime);
+      set('label-language', t.labelLanguage);
+      set('form-hint', t.hint);
+
+      const submitBtn = document.getElementById('submit-btn');
+      if (submitBtn && !submitBtn.disabled) submitBtn.textContent = t.submit;
+
+      set('axes-h3', t.axesH3);
+      const shareBtn = document.getElementById('share-btn');
+      if (shareBtn && !shareBtn.dataset.copied) shareBtn.textContent = t.shareBtn;
+      set('reset-btn', t.resetBtn);
+      setHtml('upgrade-note', t.upgradeNoteHtml);
+      setHtml('footer-built', t.footerBuiltHtml);
+      set('footer-license', t.footerLicense);
+    }
+
+    function detectInitialLang() {
+      const url = new URL(window.location.href);
+      const fromUrl = url.searchParams.get('lang');
+      if (fromUrl && CHROME[fromUrl]) return fromUrl;
+      try {
+        const stored = localStorage.getItem('saju.lang');
+        if (stored && CHROME[stored]) return stored;
+      } catch {}
+      const nav = (navigator.language || 'en').slice(0, 2).toLowerCase();
+      if (CHROME[nav]) return nav;
+      return 'en';
+    }
+
+    function persistLang(lang) {
+      try { localStorage.setItem('saju.lang', lang); } catch {}
+      const url = new URL(window.location.href);
+      if (url.searchParams.get('lang') !== lang) {
+        url.searchParams.set('lang', lang);
+        window.history.replaceState({}, '', url.toString());
+      }
+    }
+
+    function encodePair({ a, b }) {
+      const pad = n => String(n).padStart(2, '0');
+      const enc = i => `${i.year}${pad(i.month)}${pad(i.day)}${pad(i.hour)}${pad(i.minute)}`;
+      const url = new URL(window.location.href);
+      url.searchParams.set('a', enc(a));
+      url.searchParams.set('b', enc(b));
+      window.history.replaceState({}, '', url.toString());
+    }
+
+    function decodePair() {
+      const url = new URL(window.location.href);
+      const a = url.searchParams.get('a');
+      const b = url.searchParams.get('b');
+      const parse = s => {
+        if (!s || !/^\d{12}$/.test(s)) return null;
+        const year = +s.slice(0, 4), month = +s.slice(4, 6), day = +s.slice(6, 8);
+        const hour = +s.slice(8, 10), minute = +s.slice(10, 12);
+        if (year < 1900 || year > 2030 || month < 1 || month > 12 || day < 1 || day > 31) return null;
+        if (hour < 0 || hour > 23 || minute < 0 || minute > 59) return null;
+        return { year, month, day, hour, minute };
+      };
+      const pa = parse(a), pb = parse(b);
+      return pa && pb ? { a: pa, b: pb } : null;
+    }
+
+    function applyPairFromUrlIfAny() {
+      const pair = decodePair();
+      if (!pair) return false;
+      const pad = n => String(n).padStart(2, '0');
+      document.getElementById('a-date').value = `${pair.a.year}-${pad(pair.a.month)}-${pad(pair.a.day)}`;
+      document.getElementById('a-time').value = `${pad(pair.a.hour)}:${pad(pair.a.minute)}`;
+      document.getElementById('b-date').value = `${pair.b.year}-${pad(pair.b.month)}-${pad(pair.b.day)}`;
+      document.getElementById('b-time').value = `${pad(pair.b.hour)}:${pad(pair.b.minute)}`;
+      return true;
+    }
+
+    function readPerson(prefix) {
+      const date = document.getElementById(`${prefix}-date`).value.split('-').map(Number);
+      const time = document.getElementById(`${prefix}-time`).value.split(':').map(Number);
+      return {
+        year: date[0], month: date[1], day: date[2],
+        hour: time[0], minute: Number.isFinite(time[1]) ? time[1] : 0,
+      };
+    }
+
+    function validatePair(a, b, lang) {
+      const t = CHROME[lang] || CHROME.en;
+      for (const p of [a, b]) {
+        if (![p.year, p.month, p.day].every(Number.isFinite) || p.month < 1 || p.month > 12 || p.day < 1 || p.day > 31) {
+          return t.errorInvalidDate;
+        }
+        if (p.year < 1900 || p.year > 2030) return t.errorYearRange;
+        if (!Number.isFinite(p.hour) || p.hour < 0 || p.hour > 23 || p.minute < 0 || p.minute > 59) {
+          return t.errorInvalidTime;
+        }
+      }
+      return null;
+    }
+
+    function showFormError(message) {
+      const el = document.getElementById('form-error');
+      el.textContent = message;
+      el.hidden = false;
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function hideFormError() {
+      const el = document.getElementById('form-error');
+      el.textContent = '';
+      el.hidden = true;
+    }
+
+    function renderResult(result, lang) {
+      const t = CHROME[lang] || CHROME.en;
+      const verdict = compatVerdict(result.score);
+      const label = (VERDICT_LABEL[lang] || VERDICT_LABEL.en)[verdict];
+      const axisName = AXIS_NAME[lang] || AXIS_NAME.en;
+
+      document.getElementById('verdict-score').textContent = result.score;
+      document.getElementById('verdict-label').textContent = label;
+      document.getElementById('verdict-pillars').innerHTML =
+        `<span>${result.sajuA.dayMaster}${result.sajuA.dayZhi}</span><span style="color:#94a3b8">×</span><span>${result.sajuB.dayMaster}${result.sajuB.dayZhi}</span>`;
+      document.getElementById('verdict-tagline').textContent = TAGLINE[lang] || TAGLINE.en;
+
+      const axes = [
+        { key: 'dayGan', max: 30, axis: result.axes.dayGan },
+        { key: 'dayBranch', max: 25, axis: result.axes.dayBranch },
+        { key: 'complement', max: 25, axis: result.axes.complement },
+        { key: 'balance', max: 20, axis: result.axes.balance },
+      ];
+      const axesHtml = axes.map(({ key, max, axis }) => `
+        <div class="axis-card">
+          <div class="axis-name">${axisName[key]}</div>
+          <div class="axis-value">${axis.score} / ${max}</div>
+          <div class="axis-desc">${axis.desc || ''}</div>
+        </div>
+      `).join('');
+      document.getElementById('axes-grid').innerHTML = axesHtml;
+    }
+
+    const initialLang = detectInitialLang();
+    const langSelect = document.getElementById('language');
+    langSelect.value = initialLang;
+    applyChrome(initialLang);
+    persistLang(initialLang);
+    langSelect.addEventListener('change', () => {
+      applyChrome(langSelect.value);
+      persistLang(langSelect.value);
+    });
+
+    document.getElementById('compat-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const lang = langSelect.value;
+      const a = readPerson('a');
+      const b = readPerson('b');
+      const err = validatePair(a, b, lang);
+      if (err) { showFormError(err); return; }
+      hideFormError();
+      encodePair({ a, b });
+      const result = calcCompatibility(a, b);
+      renderResult(result, lang);
+      const r = document.getElementById('result');
+      r.hidden = false;
+      r.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    if (applyPairFromUrlIfAny()) {
+      requestAnimationFrame(() => {
+        document.getElementById('compat-form')
+          .dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+      });
+    }
+
+    document.getElementById('reset-btn').addEventListener('click', () => {
+      document.getElementById('result').hidden = true;
+      hideFormError();
+      const url = new URL(window.location.href);
+      url.searchParams.delete('a');
+      url.searchParams.delete('b');
+      window.history.replaceState({}, '', url.toString());
+      document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    document.getElementById('share-btn').addEventListener('click', async () => {
+      const lang = langSelect.value;
+      const t = CHROME[lang] || CHROME.en;
+      const btn = document.getElementById('share-btn');
+      const score = document.getElementById('verdict-score').textContent;
+      const label = document.getElementById('verdict-label').textContent;
+      const shareUrl = window.location.href;
+      const text = `${t.shareTitle}: ${score}/100 — ${label}`;
+      const shareData = { title: t.shareTitle, text, url: shareUrl };
+
+      const restoreLabel = (delayMs) => {
+        setTimeout(() => {
+          delete btn.dataset.copied;
+          btn.textContent = (CHROME[langSelect.value] || CHROME.en).shareBtn;
+        }, delayMs);
+      };
+
+      const canNative = typeof navigator.share === 'function'
+        && (typeof navigator.canShare !== 'function' || navigator.canShare(shareData));
+
+      if (canNative) {
+        try {
+          await navigator.share(shareData);
+          btn.dataset.copied = '1';
+          btn.textContent = t.shareBtnShared;
+          restoreLabel(2000);
+          return;
+        } catch (err) {
+          if (err && err.name === 'AbortError') return;
+        }
+      }
+
+      try {
+        await navigator.clipboard.writeText(`${text}\n\n${shareUrl}`);
+        btn.dataset.copied = '1';
+        btn.textContent = t.shareBtnCopied;
+        restoreLabel(2000);
+      } catch (err) {
+        alert('Copy failed: ' + err.message);
+      }
+    });
+  </script>
+</body>
+</html>
