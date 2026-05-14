@@ -35,6 +35,14 @@ Matches Posteller (포스텔러 만세력 2.2) — Korea's #1 fortune app — 10
 
 Static frontend (GitHub Pages) + a Four Pillars engine in plain JS. Optional Cloudflare Worker calls the Claude API for narrative reading generation; without it the site falls back to a built-in rule-based reading, so it works with zero backend.
 
+## Standalone engine
+
+The Four Pillars engine — `birthInfoToFourPillars`, Five Elements balance, Ten Gods — is also published as a standalone, single-dependency Gist you can drop into any project:
+
+**https://gist.github.com/hoonsikim/03a5faced1f270edbd4ca8d580f2edb5**
+
+Handles 立春 solar-term and 子時 day boundaries the way Korean 만세력 does — the part most JS bazi libraries get wrong.
+
 ## License
 
 MIT for code. Reading methodology = public-domain Korean tradition.
