@@ -537,7 +537,40 @@
 </svg>`;
     }
 
-    document.getElementById('card-btn').addEventListener('click', () => {
+    function svgToPng(svgString, width, height) {
+      return new Promise((resolve, reject) => {
+        const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+        const svgUrl = URL.createObjectURL(svgBlob);
+        const img = new Image();
+        img.decoding = 'sync';
+        img.onload = () => {
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#0a0a0a';
+            ctx.fillRect(0, 0, width, height);
+            ctx.drawImage(img, 0, 0, width, height);
+            canvas.toBlob((blob) => {
+              URL.revokeObjectURL(svgUrl);
+              if (blob) resolve(blob);
+              else reject(new Error('toBlob returned null'));
+            }, 'image/png');
+          } catch (err) {
+            URL.revokeObjectURL(svgUrl);
+            reject(err);
+          }
+        };
+        img.onerror = () => {
+          URL.revokeObjectURL(svgUrl);
+          reject(new Error('SVG image load failed'));
+        };
+        img.src = svgUrl;
+      });
+    }
+
+    document.getElementById('card-btn').addEventListener('click', async () => {
       const lang = langSelect.value;
       const t = CHROME[lang] || CHROME.en;
       const btn = document.getElementById('card-btn');
@@ -553,11 +586,15 @@
       const brandUrl = 'hoonsikim.github.io/saju/compat';
 
       const svg = buildCompatCardSvg({ score, label, pillarsA, pillarsB, tagline, brandUrl });
-      const blob = new Blob([svg], { type: 'image/svg+xml' });
+
+      const pngBlob = await svgToPng(svg, 1200, 630).catch(() => null);
+      const blob = pngBlob || new Blob([svg], { type: 'image/svg+xml' });
+      const ext = pngBlob ? 'png' : 'svg';
+
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `saju-compat-${score}.svg`;
+      a.download = `saju-compat-${score}.${ext}`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
