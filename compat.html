@@ -88,6 +88,9 @@
                 <option value="ko">한국어</option>
                 <option value="ja">日本語</option>
                 <option value="zh">中文</option>
+                <option value="es">Español</option>
+                <option value="pt">Português</option>
+                <option value="fr">Français</option>
               </select>
             </label>
           </div>
@@ -136,6 +139,9 @@
       ko: { soulmate: '천생연분', strong: '좋은 인연', good: '잘 맞음', mixed: '엇갈림', challenging: '도전적' },
       ja: { soulmate: '運命の相手', strong: '強い縁', good: '相性良好', mixed: '混在', challenging: '挑戦的' },
       zh: { soulmate: '天作之合', strong: '良缘', good: '相配', mixed: '参差', challenging: '挑战' },
+      es: { soulmate: 'Almas gemelas', strong: 'Conexión fuerte', good: 'Buena afinidad', mixed: 'Energía mixta', challenging: 'Desafiante' },
+      pt: { soulmate: 'Almas gêmeas', strong: 'Forte conexão', good: 'Boa afinidade', mixed: 'Energia mista', challenging: 'Desafiador' },
+      fr: { soulmate: 'Âmes sœurs', strong: 'Lien fort', good: 'Bonne affinité', mixed: 'Énergie mitigée', challenging: 'Difficile' },
     };
 
     const AXIS_NAME = {
@@ -143,6 +149,9 @@
       ko: { dayGan: '일간(日干)', dayBranch: '일지(日支)', complement: '오행 보완', balance: '합산 균형' },
       ja: { dayGan: '日主', dayBranch: '日支', complement: '五行補完', balance: '合算バランス' },
       zh: { dayGan: '日主', dayBranch: '日支', complement: '五行互补', balance: '合算平衡' },
+      es: { dayGan: 'Maestro del Día', dayBranch: 'Rama del Día', complement: 'Complemento de elementos', balance: 'Equilibrio combinado' },
+      pt: { dayGan: 'Mestre do Dia', dayBranch: 'Ramo do Dia', complement: 'Complemento de elementos', balance: 'Equilíbrio combinado' },
+      fr: { dayGan: 'Maître du Jour', dayBranch: 'Branche du Jour', complement: 'Complément des éléments', balance: 'Équilibre combiné' },
     };
 
     const TAGLINE = {
@@ -150,6 +159,9 @@
       ko: '한국식 사주 궁합 — 일간·일지·오행·균형 4축.',
       ja: '韓国式四柱相性 — 日主・日支・五行・バランスの4軸。',
       zh: '韩式八字合婚 — 日主・日支・五行・平衡 四轴。',
+      es: 'Compatibilidad de Saju coreano — Maestro del Día · Rama del Día · Cinco Elementos · Equilibrio.',
+      pt: 'Compatibilidade de Saju coreano — Mestre do Dia · Ramo do Dia · Cinco Elementos · Equilíbrio.',
+      fr: 'Compatibilité Saju coréen — Maître du Jour · Branche du Jour · Cinq Éléments · Équilibre.',
     };
 
     const CHROME = {
@@ -253,9 +265,84 @@
         footerBuiltHtml: '<strong>일사령(逸事令)</strong> 自主运营 · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
         footerLicense: '© 2026 · 四柱方法论 = 韩国传统 · 代码 = MIT 许可',
       },
+      es: {
+        title: 'Compatibilidad Saju — Lectura de Pareja Coreana',
+        h1: 'Dos cartas. Una relación.',
+        leadHtml: 'Compatibilidad de Saju coreano en <strong>cuatro ejes</strong> — Maestro del Día, Rama del Día, Complemento de elementos y Equilibrio combinado.',
+        leadSubHtml: '<a href="./" id="back-link">← Lectura individual</a> · <strong>Gratis. Instantáneo. Sin registro.</strong>',
+        formH2: 'Introduce dos fechas de nacimiento',
+        personA: 'Persona A', personB: 'Persona B',
+        labelADate: 'Fecha de nacimiento', labelATime: 'Hora de nacimiento (local)',
+        labelBDate: 'Fecha de nacimiento', labelBTime: 'Hora de nacimiento (local)',
+        labelLanguage: 'Idioma',
+        hint: '¿No sabes la hora exacta? Con 12:00 todo queda preciso salvo el pilar de la Hora.',
+        submit: 'Ver compatibilidad →',
+        loading: 'Leyendo…',
+        errorInvalidDate: 'Introduce fechas de nacimiento válidas para ambas personas.',
+        errorYearRange: 'Los años de nacimiento deben estar entre 1900 y 2030.',
+        errorInvalidTime: 'Introduce horas de nacimiento válidas (00:00–23:59).',
+        axesH3: 'Cuatro ejes',
+        shareBtn: 'Compartir esta afinidad', shareBtnShared: '✓ Compartido', shareBtnCopied: '✓ ¡Copiado!',
+        shareTitle: 'Nuestra compatibilidad de Saju coreano',
+        cardBtn: 'Descargar tarjeta', cardBtnDone: '✓ Guardado',
+        resetBtn: 'Nueva pareja',
+        upgradeNoteHtml: 'Motor basado en reglas. <strong>Lectura de compatibilidad profunda con IA muy pronto</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Compat%20Deep%20%E2%80%94%20notify%20me">avísame</a> cuando esté disponible.',
+        footerBuiltHtml: 'Creado de forma autónoma por <strong>일사령(逸事令)</strong> · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
+        footerLicense: '© 2026 · Metodología Saju = tradición coreana · Código = licencia MIT',
+      },
+      pt: {
+        title: 'Compatibilidade Saju — Leitura de Casal Coreana',
+        h1: 'Dois mapas. Uma relação.',
+        leadHtml: 'Compatibilidade de Saju coreano em <strong>quatro eixos</strong> — Mestre do Dia, Ramo do Dia, Complemento de elementos e Equilíbrio combinado.',
+        leadSubHtml: '<a href="./" id="back-link">← Leitura individual</a> · <strong>Grátis. Instantâneo. Sem cadastro.</strong>',
+        formH2: 'Insira duas datas de nascimento',
+        personA: 'Pessoa A', personB: 'Pessoa B',
+        labelADate: 'Data de nascimento', labelATime: 'Hora de nascimento (local)',
+        labelBDate: 'Data de nascimento', labelBTime: 'Hora de nascimento (local)',
+        labelLanguage: 'Idioma',
+        hint: 'Não sabe a hora exata? Com 12:00 tudo fica preciso, exceto o pilar da Hora.',
+        submit: 'Ver compatibilidade →',
+        loading: 'Lendo…',
+        errorInvalidDate: 'Insira datas de nascimento válidas para as duas pessoas.',
+        errorYearRange: 'Os anos de nascimento devem estar entre 1900 e 2030.',
+        errorInvalidTime: 'Insira horas de nascimento válidas (00:00–23:59).',
+        axesH3: 'Quatro eixos',
+        shareBtn: 'Compartilhar esta afinidade', shareBtnShared: '✓ Compartilhado', shareBtnCopied: '✓ Copiado!',
+        shareTitle: 'Nossa compatibilidade de Saju coreano',
+        cardBtn: 'Baixar cartão', cardBtnDone: '✓ Salvo',
+        resetBtn: 'Novo casal',
+        upgradeNoteHtml: 'Motor baseado em regras. <strong>Leitura de compatibilidade profunda com IA em breve</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Compat%20Deep%20%E2%80%94%20notify%20me">avise-me</a> quando estiver no ar.',
+        footerBuiltHtml: 'Criado de forma autônoma por <strong>일사령(逸事令)</strong> · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
+        footerLicense: '© 2026 · Metodologia Saju = tradição coreana · Código = licença MIT',
+      },
+      fr: {
+        title: 'Compatibilité Saju — Lecture de Couple Coréenne',
+        h1: 'Deux thèmes. Une relation.',
+        leadHtml: 'Compatibilité Saju coréen sur <strong>quatre axes</strong> — Maître du Jour, Branche du Jour, Complément des éléments et Équilibre combiné.',
+        leadSubHtml: '<a href="./" id="back-link">← Lecture individuelle</a> · <strong>Gratuit. Instantané. Sans inscription.</strong>',
+        formH2: 'Saisissez deux dates de naissance',
+        personA: 'Personne A', personB: 'Personne B',
+        labelADate: 'Date de naissance', labelATime: 'Heure de naissance (locale)',
+        labelBDate: 'Date de naissance', labelBTime: 'Heure de naissance (locale)',
+        labelLanguage: 'Langue',
+        hint: "Vous ne connaissez pas l'heure exacte ? 12:00 garde tout précis sauf le pilier de l'Heure.",
+        submit: 'Voir la compatibilité →',
+        loading: 'Lecture…',
+        errorInvalidDate: 'Veuillez saisir des dates de naissance valides pour les deux personnes.',
+        errorYearRange: 'Les années de naissance doivent être comprises entre 1900 et 2030.',
+        errorInvalidTime: 'Veuillez saisir des heures de naissance valides (00:00–23:59).',
+        axesH3: 'Quatre axes',
+        shareBtn: 'Partager cette affinité', shareBtnShared: '✓ Partagé', shareBtnCopied: '✓ Copié !',
+        shareTitle: 'Notre compatibilité Saju coréen',
+        cardBtn: 'Télécharger la carte', cardBtnDone: '✓ Enregistré',
+        resetBtn: 'Nouveau couple',
+        upgradeNoteHtml: 'Moteur basé sur des règles. <strong>Lecture de compatibilité approfondie par IA bientôt disponible</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Compat%20Deep%20%E2%80%94%20notify%20me">prévenez-moi</a> dès sa sortie.',
+        footerBuiltHtml: 'Créé de façon autonome par <strong>일사령(逸事令)</strong> · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
+        footerLicense: '© 2026 · Méthodologie Saju = tradition coréenne · Code = licence MIT',
+      },
     };
 
-    const LOCALE_TAG = { en: 'en_US', ko: 'ko_KR', ja: 'ja_JP', zh: 'zh_CN' };
+    const LOCALE_TAG = { en: 'en_US', ko: 'ko_KR', ja: 'ja_JP', zh: 'zh_CN', es: 'es_ES', pt: 'pt_BR', fr: 'fr_FR' };
 
     function setMeta(selector, attr, value) {
       const el = document.querySelector(selector);
