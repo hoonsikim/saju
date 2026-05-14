@@ -29,6 +29,22 @@ const LANGUAGE_NAMES = {
   ko: 'Korean (한국어, 자연스러운 평어로)',
   ja: 'Japanese (日本語、丁寧体で)',
   zh: '中文 (简体, 自然流畅)',
+  es: 'Spanish (español natural)',
+  pt: 'Portuguese (português natural)',
+  fr: 'French (français naturel)',
+  de: 'German (natürliches Deutsch)',
+  it: 'Italian (italiano naturale)',
+  ru: 'Russian (естественный русский)',
+  tr: 'Turkish (doğal Türkçe)',
+  nl: 'Dutch (natuurlijk Nederlands)',
+  pl: 'Polish (naturalny polski)',
+  sv: 'Swedish (naturlig svenska)',
+  id: 'Indonesian (Bahasa Indonesia yang alami)',
+  fil: 'Filipino (natural na Filipino)',
+  vi: 'Vietnamese (tiếng Việt tự nhiên)',
+  th: 'Thai (ภาษาไทยที่เป็นธรรมชาติ)',
+  hi: 'Hindi (स्वाभाविक हिन्दी)',
+  ar: 'Arabic (العربية الطبيعية)',
 };
 
 /**
@@ -50,7 +66,14 @@ export function userMessage(saju, options = {}) {
     Object.entries(balance).map(([k, v]) => [k, Math.round((v / total) * 100)])
   );
 
-  return `Birth: ${saju.input.year}-${String(saju.input.month).padStart(2, '0')}-${String(saju.input.day).padStart(2, '0')} ${String(saju.input.hour).padStart(2, '0')}:${String(saju.input.minute).padStart(2, '0')}
+  const genderLine = saju.input.gender
+    ? `\nGender: ${saju.input.gender}`
+    : '';
+  const cityLine = saju.input.city
+    ? `\nBirth city: ${saju.input.city}`
+    : '';
+
+  return `Birth: ${saju.input.year}-${String(saju.input.month).padStart(2, '0')}-${String(saju.input.day).padStart(2, '0')} ${String(saju.input.hour).padStart(2, '0')}:${String(saju.input.minute).padStart(2, '0')}${genderLine}${cityLine}
 
 Four Pillars (sequence: Year / Month / Day / Hour):
 - Year: ${saju.pillars.year.ganZhi} (${saju.pillars.year.ganElement} stem · ${saju.pillars.year.zhiElement} branch)

@@ -106,9 +106,11 @@ function analyzePillar(ganZhi) {
  * @param {number} birth.day - 양력 일 1~31
  * @param {number} birth.hour - 시 0~23 (현지 시각)
  * @param {number} [birth.minute=0] - 분 0~59
+ * @param {string} [birth.gender] - 'female' | 'male' | null. 대운 방향·리딩 맥락용.
+ * @param {string} [birth.city] - 출생 도시 (자유 입력). 진태양시 보정·리딩 맥락용.
  * @returns {Object} { pillars, dayMaster, elements, tenGods }
  */
-export function birthInfoToFourPillars({ year, month, day, hour, minute = 0 }) {
+export function birthInfoToFourPillars({ year, month, day, hour, minute = 0, gender = null, city = null }) {
   // lunar-javascript: Lunar.fromDate(jsDate) 또는 Solar 변환
   const jsDate = new Date(year, month - 1, day, hour, minute, 0);
   const lunar = Lunar.fromDate(jsDate);
@@ -141,7 +143,7 @@ export function birthInfoToFourPillars({ year, month, day, hour, minute = 0 }) {
   } : {};
 
   return {
-    input: { year, month, day, hour, minute },
+    input: { year, month, day, hour, minute, gender, city },
     pillars,
     dayMaster,
     dayMasterElement,

@@ -75,6 +75,33 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <header class="site-header">
+    <div class="lang-switch">
+      <span class="lang-icon" aria-hidden="true">🌐</span>
+      <select id="language" aria-label="Language">
+        <option value="en">English</option>
+        <option value="ko">한국어</option>
+        <option value="ja">日本語</option>
+        <option value="zh">中文</option>
+        <option value="es">Español</option>
+        <option value="pt">Português</option>
+        <option value="fr">Français</option>
+        <option value="de">Deutsch</option>
+        <option value="it">Italiano</option>
+        <option value="ru">Русский</option>
+        <option value="tr">Türkçe</option>
+        <option value="nl">Nederlands</option>
+        <option value="pl">Polski</option>
+        <option value="sv">Svenska</option>
+        <option value="id">Bahasa Indonesia</option>
+        <option value="fil">Filipino</option>
+        <option value="vi">Tiếng Việt</option>
+        <option value="th">ไทย</option>
+        <option value="hi">हिन्दी</option>
+        <option value="ar">العربية</option>
+      </select>
+    </div>
+  </header>
   <main>
     <section class="hero">
       <div class="container">
@@ -101,30 +128,19 @@
           </div>
           <div class="row">
             <label>
-              <span id="label-language">Language</span>
-              <select id="language">
-                <option value="en">English</option>
-                <option value="ko">한국어</option>
-                <option value="ja">日本語</option>
-                <option value="zh">中文</option>
-                <option value="es">Español</option>
-                <option value="pt">Português</option>
-                <option value="fr">Français</option>
-                <option value="de">Deutsch</option>
-                <option value="it">Italiano</option>
-                <option value="ru">Русский</option>
-                <option value="tr">Türkçe</option>
-                <option value="nl">Nederlands</option>
-                <option value="pl">Polski</option>
-                <option value="sv">Svenska</option>
-                <option value="id">Bahasa Indonesia</option>
-                <option value="fil">Filipino</option>
-                <option value="vi">Tiếng Việt</option>
-                <option value="th">ไทย</option>
-                <option value="hi">हिन्दी</option>
-                <option value="ar">العربية</option>
+              <span id="label-gender">Gender</span>
+              <select id="gender">
+                <option value="">Prefer not to say</option>
+                <option value="female">Female</option>
+                <option value="male">Male</option>
               </select>
             </label>
+            <label>
+              <span id="label-city">Birth city (optional)</span>
+              <input type="text" id="birth-city" autocomplete="off" placeholder="e.g. Seoul, Tokyo, New York">
+            </label>
+          </div>
+          <div class="row row-single">
             <label>
               <span id="label-reading-type">Reading style</span>
               <select id="reading-type">
@@ -206,6 +222,7 @@
     import { birthInfoToFourPillars, elementBalance } from './src/saju.browser.js';
     import { generateReading } from './src/reading-rules.js';
     import { generateShareCard, downloadBlob, copyBlobToClipboard } from './src/share-card.js';
+    import { ELEMENT_NAME, PILLAR_LABELS, UI_TEXT, LOCALE_TAG, RTL_LANGS, CHROME } from './src/i18n.js';
 
     // Cloudflare Worker URL — set after `wrangler deploy`.
     // Empty = use client-side rule-based reading only.
@@ -214,264 +231,6 @@
     const ELEMENT_COLOR = {
       wood: '#4ade80', fire: '#f97316', earth: '#d4a574',
       metal: '#94a3b8', water: '#3b82f6',
-    };
-    const ELEMENT_NAME = {
-      en: { wood: 'Wood', fire: 'Fire', earth: 'Earth', metal: 'Metal', water: 'Water' },
-      ko: { wood: '목(木)', fire: '화(火)', earth: '토(土)', metal: '금(金)', water: '수(水)' },
-      ja: { wood: '木', fire: '火', earth: '土', metal: '金', water: '水' },
-      zh: { wood: '木', fire: '火', earth: '土', metal: '金', water: '水' },
-      es: { wood: 'Madera', fire: 'Fuego', earth: 'Tierra', metal: 'Metal', water: 'Agua' },
-      pt: { wood: 'Madeira', fire: 'Fogo', earth: 'Terra', metal: 'Metal', water: 'Água' },
-      fr: { wood: 'Bois', fire: 'Feu', earth: 'Terre', metal: 'Métal', water: 'Eau' },
-      de: { wood: 'Holz', fire: 'Feuer', earth: 'Erde', metal: 'Metall', water: 'Wasser' },
-      it: { wood: 'Legno', fire: 'Fuoco', earth: 'Terra', metal: 'Metallo', water: 'Acqua' },
-      ru: { wood: 'Дерево', fire: 'Огонь', earth: 'Земля', metal: 'Металл', water: 'Вода' },
-      tr: { wood: 'Ağaç', fire: 'Ateş', earth: 'Toprak', metal: 'Metal', water: 'Su' },
-      nl: { wood: 'Hout', fire: 'Vuur', earth: 'Aarde', metal: 'Metaal', water: 'Water' },
-      pl: { wood: 'Drewno', fire: 'Ogień', earth: 'Ziemia', metal: 'Metal', water: 'Woda' },
-      sv: { wood: 'Trä', fire: 'Eld', earth: 'Jord', metal: 'Metall', water: 'Vatten' },
-      id: { wood: 'Kayu', fire: 'Api', earth: 'Tanah', metal: 'Logam', water: 'Air' },
-      fil: { wood: 'Kahoy', fire: 'Apoy', earth: 'Lupa', metal: 'Metal', water: 'Tubig' },
-      vi: { wood: 'Mộc', fire: 'Hỏa', earth: 'Thổ', metal: 'Kim', water: 'Thủy' },
-      th: { wood: 'ไม้', fire: 'ไฟ', earth: 'ดิน', metal: 'โลหะ', water: 'น้ำ' },
-      hi: { wood: 'लकड़ी', fire: 'अग्नि', earth: 'पृथ्वी', metal: 'धातु', water: 'जल' },
-      ar: { wood: 'الخشب', fire: 'النار', earth: 'الأرض', metal: 'المعدن', water: 'الماء' },
-    };
-    const PILLAR_LABELS = {
-      en: ['Year', 'Month', 'Day', 'Hour'],
-      ko: ['연주', '월주', '일주', '시주'],
-      ja: ['年柱', '月柱', '日柱', '時柱'],
-      zh: ['年柱', '月柱', '日柱', '时柱'],
-      es: ['Año', 'Mes', 'Día', 'Hora'],
-      pt: ['Ano', 'Mês', 'Dia', 'Hora'],
-      fr: ['Année', 'Mois', 'Jour', 'Heure'],
-      de: ['Jahr', 'Monat', 'Tag', 'Stunde'],
-      it: ['Anno', 'Mese', 'Giorno', 'Ora'],
-      ru: ['Год', 'Месяц', 'День', 'Час'],
-      tr: ['Yıl', 'Ay', 'Gün', 'Saat'],
-      nl: ['Jaar', 'Maand', 'Dag', 'Uur'],
-      pl: ['Rok', 'Miesiąc', 'Dzień', 'Godzina'],
-      sv: ['År', 'Månad', 'Dag', 'Timme'],
-      id: ['Tahun', 'Bulan', 'Hari', 'Jam'],
-      fil: ['Taon', 'Buwan', 'Araw', 'Oras'],
-      vi: ['Năm', 'Tháng', 'Ngày', 'Giờ'],
-      th: ['ปี', 'เดือน', 'วัน', 'ชั่วโมง'],
-      hi: ['वर्ष', 'मास', 'दिन', 'घंटा'],
-      ar: ['سنة', 'شهر', 'يوم', 'ساعة'],
-    };
-    const UI_TEXT = {
-      en: { loading: 'Reading…', submit: 'Read my Saju →', placeholder: 'Generating reading…', badgeLlm: '🌙 LLM reading (Claude Haiku 4.5)', badgeRule: '⚡ Instant rule-based reading — LLM coming soon' },
-      ko: { loading: '읽는 중…', submit: '내 사주 보기 →', placeholder: '리딩 생성 중…', badgeLlm: '🌙 LLM 리딩 (Claude Haiku 4.5)', badgeRule: '⚡ 즉시 룰 기반 리딩 — LLM 리딩은 곧' },
-      ja: { loading: '読み込み中…', submit: '四柱を読む →', placeholder: 'リーディング生成中…', badgeLlm: '🌙 LLMリーディング (Claude Haiku 4.5)', badgeRule: '⚡ 即時ルールベースリーディング — LLMは間もなく' },
-      zh: { loading: '解读中…', submit: '解读我的四柱 →', placeholder: '生成解读中…', badgeLlm: '🌙 LLM解读 (Claude Haiku 4.5)', badgeRule: '⚡ 即时规则解读 — LLM版本即将上线' },
-      es: { loading: 'Leyendo…', submit: 'Leer mi Saju →', placeholder: 'Generando lectura…', badgeLlm: '🌙 Lectura LLM (Claude Haiku 4.5)', badgeRule: '⚡ Lectura instantánea por reglas — LLM próximamente' },
-      pt: { loading: 'Lendo…', submit: 'Ler meu Saju →', placeholder: 'Gerando leitura…', badgeLlm: '🌙 Leitura LLM (Claude Haiku 4.5)', badgeRule: '⚡ Leitura instantânea por regras — LLM em breve' },
-      fr: { loading: 'Lecture…', submit: 'Lire mon Saju →', placeholder: 'Génération de la lecture…', badgeLlm: '🌙 Lecture LLM (Claude Haiku 4.5)', badgeRule: '⚡ Lecture instantanée par règles — LLM bientôt' },
-      de: { loading: 'Lese…', submit: 'Mein Saju lesen →', placeholder: 'Lesung wird generiert…', badgeLlm: '🌙 LLM-Lesung (Claude Haiku 4.5)', badgeRule: '⚡ Sofortige regelbasierte Lesung — LLM bald verfügbar' },
-      it: { loading: 'Lettura…', submit: 'Leggi il mio Saju →', placeholder: 'Generazione lettura…', badgeLlm: '🌙 Lettura LLM (Claude Haiku 4.5)', badgeRule: '⚡ Lettura istantanea basata su regole — LLM in arrivo' },
-      ru: { loading: 'Читаю…', submit: 'Прочитать мой Саджу →', placeholder: 'Генерация чтения…', badgeLlm: '🌙 LLM-чтение (Claude Haiku 4.5)', badgeRule: '⚡ Мгновенное чтение по правилам — LLM скоро' },
-      tr: { loading: 'Okunuyor…', submit: 'Saju\'mu oku →', placeholder: 'Okuma oluşturuluyor…', badgeLlm: '🌙 LLM okuma (Claude Haiku 4.5)', badgeRule: '⚡ Kural tabanlı anında okuma — LLM yakında' },
-      nl: { loading: 'Lezen…', submit: 'Lees mijn Saju →', placeholder: 'Lezing wordt gegenereerd…', badgeLlm: '🌙 LLM lezing (Claude Haiku 4.5)', badgeRule: '⚡ Direct regelgebaseerde lezing — LLM binnenkort' },
-      pl: { loading: 'Czytam…', submit: 'Przeczytaj mój Saju →', placeholder: 'Generowanie odczytu…', badgeLlm: '🌙 Odczyt LLM (Claude Haiku 4.5)', badgeRule: '⚡ Natychmiastowy odczyt regułowy — LLM wkrótce' },
-      sv: { loading: 'Läser…', submit: 'Läs min Saju →', placeholder: 'Genererar läsning…', badgeLlm: '🌙 LLM-läsning (Claude Haiku 4.5)', badgeRule: '⚡ Omedelbar regelbaserad läsning — LLM snart' },
-      id: { loading: 'Membaca…', submit: 'Baca Saju saya →', placeholder: 'Membuat bacaan…', badgeLlm: '🌙 Bacaan LLM (Claude Haiku 4.5)', badgeRule: '⚡ Bacaan instan berbasis aturan — LLM segera hadir' },
-      fil: { loading: 'Binabasa…', submit: 'Basahin ang aking Saju →', placeholder: 'Bumubuo ng pagbasa…', badgeLlm: '🌙 LLM pagbasa (Claude Haiku 4.5)', badgeRule: '⚡ Agarang pagbasa batay sa tuntunin — LLM malapit nang dumating' },
-      vi: { loading: 'Đang đọc…', submit: 'Đọc Saju của tôi →', placeholder: 'Đang tạo bản đọc…', badgeLlm: '🌙 Bản đọc LLM (Claude Haiku 4.5)', badgeRule: '⚡ Bản đọc tức thì theo quy tắc — LLM sắp ra mắt' },
-      th: { loading: 'กำลังอ่าน…', submit: 'อ่าน Saju ของฉัน →', placeholder: 'กำลังสร้างการอ่าน…', badgeLlm: '🌙 การอ่าน LLM (Claude Haiku 4.5)', badgeRule: '⚡ การอ่านทันทีตามกฎ — LLM เร็วๆ นี้' },
-      hi: { loading: 'पढ़ रहे हैं…', submit: 'मेरा साजू पढ़ें →', placeholder: 'रीडिंग बना रहे हैं…', badgeLlm: '🌙 LLM रीडिंग (Claude Haiku 4.5)', badgeRule: '⚡ नियम-आधारित त्वरित रीडिंग — LLM जल्द आ रहा है' },
-      ar: { loading: 'القراءة…', submit: 'اقرأ ساجو الخاص بي →', placeholder: 'جارٍ توليد القراءة…', badgeLlm: '🌙 قراءة LLM (Claude Haiku 4.5)', badgeRule: '⚡ قراءة فورية قائمة على القواعد — LLM قريباً' },
-    };
-
-    const LOCALE_TAG = {
-      en: 'en_US', ko: 'ko_KR', ja: 'ja_JP', zh: 'zh_CN', es: 'es_ES', pt: 'pt_BR',
-      fr: 'fr_FR', de: 'de_DE', it: 'it_IT', ru: 'ru_RU', tr: 'tr_TR',
-      nl: 'nl_NL', pl: 'pl_PL', sv: 'sv_SE', id: 'id_ID', fil: 'fil_PH',
-      vi: 'vi_VN', th: 'th_TH', hi: 'hi_IN', ar: 'ar_AE',
-    };
-
-    const RTL_LANGS = new Set(['ar']);
-
-    const CHROME = {
-      en: {
-        title: 'Saju — Free Korean Four Pillars Reading',
-        description: 'Authentic Korean Saju (四柱) reading. Free. Instant. Real Korean methodology — Year/Month/Day/Hour pillars + Five Elements + Ten Gods.',
-        keywords: 'Korean Saju, Four Pillars of Destiny, Saju reading, Saju calculator, Korean fortune telling, BaZi, Day Master, Five Elements, Ten Gods, Korean astrology, 사주',
-        ogTitle: 'Saju — Free Korean Four Pillars Reading',
-        ogDescription: 'Authentic Korean fortune. Real Day Master, Five Elements, Ten Gods. Instant, free.',
-        ogImage: 'https://hoonsikim.github.io/saju/og-en.svg',
-        ogImageAlt: 'Saju — Four Pillars of Destiny. Authentic Korean methodology. Free.',
-        h1: 'Your fate, in the language Korea has used for 1,000 years.',
-        leadHtml: 'Authentic <strong>Korean Four Pillars of Destiny</strong> — Year, Month, Day, Hour. Five Elements in balance. Ten Gods at work.',
-        leadSubHtml: 'Not Western astrology pretending to be Eastern. The real thing. <strong>Free. Instant. No signup.</strong>',
-        formH2: 'Get your free reading',
-        labelBirthDate: 'Birth date',
-        labelBirthTime: 'Birth time (local)',
-        labelLanguage: 'Language',
-        labelReadingType: 'Reading style',
-        hint: "Don't know your birth time? Use 12:00 — gives a less precise Hour pillar but everything else stays accurate.",
-        errorInvalidDate: 'Please enter a valid birth date.',
-        errorYearRange: 'Birth year must be between 1900 and 2030.',
-        errorInvalidTime: 'Please enter a valid birth time (00:00–23:59).',
-        readingTypeGeneral: 'General — life direction',
-        readingTypeCareer: 'Career & work',
-        readingTypeLove: 'Love & relationships',
-        resultH2: 'Your Four Pillars',
-        resultElements: 'Five Elements Balance',
-        resultDayMaster: 'Day Master',
-        resultReading: 'Reading',
-        shareBtn: 'Share my reading',
-        shareBtnCopied: '✓ Copied!',
-        shareBtnShared: '✓ Shared',
-        shareTitle: 'My Korean Saju reading',
-        resetBtn: 'New reading',
-        upgradeNoteHtml: 'This is a rule-based reading. <strong>Deeper LLM-powered reading coming this week</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20premium%20waitlist">notify me</a> when it\'s live.',
-        explainerH2: 'The Four Pillars (四柱)',
-        explainerYearName: 'Year Pillar 年柱',
-        explainerYearDesc: 'Your ancestry, where you come from.',
-        explainerMonthName: 'Month Pillar 月柱',
-        explainerMonthDesc: 'Your parents, the season of your birth.',
-        explainerDayName: 'Day Pillar 日柱',
-        explainerDayDesc: 'Your core self. The most important pillar.',
-        explainerHourName: 'Hour Pillar 時柱',
-        explainerHourDesc: 'Your offspring, the legacy you carry.',
-        footerBuiltHtml: 'Built autonomously by <strong>일사령(逸事令)</strong> · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
-        footerLicense: '© 2026 · Saju methodology = Korean tradition · Code = MIT licensed',
-      },
-      ko: {
-        title: '사주 — 무료 한국 사주팔자 풀이',
-        description: '진짜 한국식 사주(四柱) 풀이. 무료. 즉시. 연·월·일·시주 + 오행 균형 + 십신 자동 분석.',
-        keywords: '사주, 사주팔자, 무료 사주, 사주풀이, 무료 사주풀이, 일간, 오행, 십신, 만세력, 한국 명리, 명리학, 사주 계산, 사주 보기',
-        ogTitle: '사주 — 무료 한국 사주팔자 풀이',
-        ogDescription: '진짜 한국 명리. 일간·오행·십신 분석. 즉시, 무료.',
-        ogImage: 'https://hoonsikim.github.io/saju/og-ko.svg',
-        ogImageAlt: '사주 — 무료 한국식 사주팔자. 일간·오행·십신.',
-        h1: '1,000년 동안 한국이 써 온 언어로, 당신의 운명을.',
-        leadHtml: '진짜 <strong>한국 사주팔자</strong> — 연주·월주·일주·시주. 오행 균형. 십신 분석.',
-        leadSubHtml: '서양 점성술을 동양처럼 포장한 게 아닙니다. 진짜 한국식. <strong>무료. 즉시. 가입 없음.</strong>',
-        formH2: '무료 풀이 받기',
-        labelBirthDate: '생년월일',
-        labelBirthTime: '태어난 시각 (현지)',
-        labelLanguage: '언어',
-        labelReadingType: '풀이 종류',
-        hint: '태어난 시각을 모르세요? 12:00을 사용하세요 — 시주만 덜 정확하고 나머지는 정확합니다.',
-        errorInvalidDate: '올바른 생년월일을 입력해 주세요.',
-        errorYearRange: '출생 연도는 1900~2030 사이여야 합니다.',
-        errorInvalidTime: '올바른 시각을 입력해 주세요 (00:00~23:59).',
-        readingTypeGeneral: '전반 — 인생 방향',
-        readingTypeCareer: '직업 · 일',
-        readingTypeLove: '연애 · 관계',
-        resultH2: '당신의 사주팔자',
-        resultElements: '오행 균형',
-        resultDayMaster: '일간(日干)',
-        resultReading: '풀이',
-        shareBtn: '내 사주 공유하기',
-        shareBtnCopied: '✓ 복사 완료',
-        shareBtnShared: '✓ 공유 완료',
-        shareTitle: '내 사주 풀이',
-        resetBtn: '다시 풀이',
-        upgradeNoteHtml: '룰 기반 풀이입니다. <strong>이번 주 LLM 심층 풀이 오픈</strong> — 오픈하면 <a href="mailto:h.company.sean@gmail.com?subject=Saju%20premium%20waitlist">알림 받기</a>.',
-        explainerH2: '사주팔자 (四柱)',
-        explainerYearName: '연주 年柱',
-        explainerYearDesc: '뿌리와 조상, 당신이 온 자리.',
-        explainerMonthName: '월주 月柱',
-        explainerMonthDesc: '부모와 환경, 태어난 계절.',
-        explainerDayName: '일주 日柱',
-        explainerDayDesc: '본질의 나. 가장 중요한 기둥.',
-        explainerHourName: '시주 時柱',
-        explainerHourDesc: '자식과 미래, 남길 유산.',
-        footerBuiltHtml: '<strong>일사령(逸事令)</strong>이 자율 운영 · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
-        footerLicense: '© 2026 · 사주 방법론 = 한국 전통 · 코드 = MIT 라이선스',
-      },
-      ja: {
-        title: '四柱推命 — 無料の韓国式リーディング',
-        description: '本格的な韓国式四柱推命。無料・即時。年・月・日・時柱 + 五行 + 十神を自動分析。',
-        keywords: '四柱推命, 韓国式四柱推命, 無料四柱推命, 無料占い, 日主, 五行, 十神, 命理, 八字, サジュ, 사주',
-        ogTitle: '四柱推命 — 無料の韓国式リーディング',
-        ogDescription: '本物の韓国式占い。日主・五行・十神を分析。即時・無料。',
-        ogImage: 'https://hoonsikim.github.io/saju/og-ja.svg',
-        ogImageAlt: '四柱推命 — 本格的な韓国式。日主・五行・十神。無料・即時。',
-        h1: '韓国が1,000年使ってきた言葉で、あなたの運命を。',
-        leadHtml: '本格的な<strong>韓国式四柱推命</strong> — 年・月・日・時の柱。五行のバランス。十神の働き。',
-        leadSubHtml: '東洋風に見せかけた西洋占星術ではありません。本物です。<strong>無料・即時・登録不要。</strong>',
-        formH2: '無料リーディングを受ける',
-        labelBirthDate: '生年月日',
-        labelBirthTime: '出生時刻 (現地)',
-        labelLanguage: '言語',
-        labelReadingType: 'リーディング種類',
-        hint: '出生時刻が分かりませんか? 12:00を使ってください — 時柱だけ精度が下がり、他は正確のままです。',
-        errorInvalidDate: '正しい生年月日を入力してください。',
-        errorYearRange: '出生年は1900〜2030の範囲で入力してください。',
-        errorInvalidTime: '正しい出生時刻を入力してください (00:00〜23:59)。',
-        readingTypeGeneral: '総合 — 人生の方向',
-        readingTypeCareer: '仕事・キャリア',
-        readingTypeLove: '恋愛・人間関係',
-        resultH2: 'あなたの四柱',
-        resultElements: '五行のバランス',
-        resultDayMaster: '日主',
-        resultReading: 'リーディング',
-        shareBtn: '四柱をシェア',
-        shareBtnCopied: '✓ コピー完了',
-        shareBtnShared: '✓ シェア完了',
-        shareTitle: '私の四柱推命',
-        resetBtn: '新しいリーディング',
-        upgradeNoteHtml: 'ルールベースのリーディングです。<strong>今週中にLLM版を公開予定</strong> — 公開時に<a href="mailto:h.company.sean@gmail.com?subject=Saju%20premium%20waitlist">通知を受け取る</a>。',
-        explainerH2: '四柱について (四柱)',
-        explainerYearName: '年柱',
-        explainerYearDesc: '祖先と出自、あなたの根。',
-        explainerMonthName: '月柱',
-        explainerMonthDesc: '両親と環境、生まれた季節。',
-        explainerDayName: '日柱',
-        explainerDayDesc: '本質の自分。最も重要な柱。',
-        explainerHourName: '時柱',
-        explainerHourDesc: '子孫と未来、残すもの。',
-        footerBuiltHtml: '<strong>일사령(逸事令)</strong> が自律運営 · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
-        footerLicense: '© 2026 · 四柱の方法論 = 韓国の伝統 · コード = MITライセンス',
-      },
-      zh: {
-        title: '四柱八字 — 免费韩式解读',
-        description: '正宗韩式四柱八字解读。免费・即时。年・月・日・时柱 + 五行 + 十神自动分析。',
-        keywords: '四柱八字, 韩式八字, 免费八字, 免费算命, 日主, 五行, 十神, 命理, 八字算命, 韩国命理, 사주',
-        ogTitle: '四柱八字 — 免费韩式解读',
-        ogDescription: '正宗韩式命理。日主・五行・十神分析。即时・免费。',
-        ogImage: 'https://hoonsikim.github.io/saju/og-zh.svg',
-        ogImageAlt: '四柱八字 — 正宗韩式命理。日主・五行・十神。免费・即时。',
-        h1: '用韩国沿用1,000年的语言,解读你的命运。',
-        leadHtml: '正宗<strong>韩式四柱八字</strong> — 年柱・月柱・日柱・时柱。五行平衡。十神作用。',
-        leadSubHtml: '不是伪装东方的西方占星术。是真东西。<strong>免费・即时・无需注册。</strong>',
-        formH2: '获取免费解读',
-        labelBirthDate: '出生日期',
-        labelBirthTime: '出生时间 (当地)',
-        labelLanguage: '语言',
-        labelReadingType: '解读类型',
-        hint: '不知道出生时间? 用12:00 — 仅时柱精度下降,其他保持准确。',
-        errorInvalidDate: '请输入正确的出生日期。',
-        errorYearRange: '出生年份须在1900~2030之间。',
-        errorInvalidTime: '请输入正确的出生时间 (00:00~23:59)。',
-        readingTypeGeneral: '综合 — 人生方向',
-        readingTypeCareer: '事业 · 工作',
-        readingTypeLove: '爱情 · 关系',
-        resultH2: '你的四柱八字',
-        resultElements: '五行平衡',
-        resultDayMaster: '日主',
-        resultReading: '解读',
-        shareBtn: '分享我的八字',
-        shareBtnCopied: '✓ 已复制',
-        shareBtnShared: '✓ 已分享',
-        shareTitle: '我的四柱八字',
-        resetBtn: '重新解读',
-        upgradeNoteHtml: '这是规则解读。<strong>本周内将上线LLM深度解读</strong> — 上线时<a href="mailto:h.company.sean@gmail.com?subject=Saju%20premium%20waitlist">提醒我</a>。',
-        explainerH2: '四柱八字 (四柱)',
-        explainerYearName: '年柱',
-        explainerYearDesc: '祖先与出身,你的根源。',
-        explainerMonthName: '月柱',
-        explainerMonthDesc: '父母与环境,出生的季节。',
-        explainerDayName: '日柱',
-        explainerDayDesc: '本质的自我。最重要的一柱。',
-        explainerHourName: '时柱',
-        explainerHourDesc: '子嗣与未来,留下的传承。',
-        footerBuiltHtml: '<strong>일사령(逸事令)</strong> 自主运营 · <a href="https://github.com/hoonsikim/saju">GitHub</a>',
-        footerLicense: '© 2026 · 四柱方法论 = 韩国传统 · 代码 = MIT 许可',
-      },
     };
 
     function setMeta(selector, attr, value) {
@@ -514,9 +273,23 @@
       set('form-h2', t.formH2);
       set('label-birth-date', t.labelBirthDate);
       set('label-birth-time', t.labelBirthTime);
-      set('label-language', t.labelLanguage);
+      set('label-gender', t.labelGender);
+      set('label-city', t.labelCity);
       set('label-reading-type', t.labelReadingType);
       set('form-hint', t.hint);
+
+      const langEl = document.getElementById('language');
+      if (langEl) langEl.setAttribute('aria-label', t.labelLanguage);
+
+      const cityInput = document.getElementById('birth-city');
+      if (cityInput) cityInput.placeholder = t.cityPlaceholder;
+
+      const genderSel = document.getElementById('gender');
+      if (genderSel && genderSel.options.length === 3) {
+        genderSel.options[0].textContent = t.genderUnspecified;
+        genderSel.options[1].textContent = t.genderFemale;
+        genderSel.options[2].textContent = t.genderMale;
+      }
 
       const submitBtn = document.getElementById('submit-btn');
       if (submitBtn && !submitBtn.disabled) {
@@ -705,10 +478,13 @@
       const time = document.getElementById('birth-time').value.split(':').map(Number);
       const lang = document.getElementById('language').value;
       const readingType = document.getElementById('reading-type').value;
+      const gender = document.getElementById('gender').value || null;
+      const city = document.getElementById('birth-city').value.trim() || null;
 
       const input = {
         year: date[0], month: date[1], day: date[2],
         hour: time[0], minute: Number.isFinite(time[1]) ? time[1] : 0,
+        gender, city,
         language: lang, readingType,
       };
 

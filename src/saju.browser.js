@@ -47,7 +47,7 @@ function analyzePillar(ganZhi) {
   };
 }
 
-export function birthInfoToFourPillars({ year, month, day, hour, minute = 0 }) {
+export function birthInfoToFourPillars({ year, month, day, hour, minute = 0, gender = null, city = null }) {
   const jsDate = new Date(year, month - 1, day, hour, minute, 0);
   const lunar = Lunar.fromDate(jsDate);
   const pillars = {
@@ -71,7 +71,7 @@ export function birthInfoToFourPillars({ year, month, day, hour, minute = 0 }) {
     hourGan: tenGodLabel(dayMaster, pillars.hour?.gan),
   } : {};
   return {
-    input: { year, month, day, hour, minute },
+    input: { year, month, day, hour, minute, gender, city },
     pillars, dayMaster, dayMasterElement, elements, tenGods,
   };
 }
