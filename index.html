@@ -179,6 +179,14 @@
         </div>
         <div class="card-preview" id="card-preview" hidden></div>
 
+        <a class="daily-cta" id="daily-cta" href="./today.html">
+          <div class="daily-cta-text">
+            <div class="daily-cta-title" id="daily-cta-title">Liked your reading? Get your fortune every day.</div>
+            <p class="daily-cta-desc" id="daily-cta-desc">Your Four Pillars never change — but each day shifts the balance. Today's Fortune is free and takes 5 seconds.</p>
+          </div>
+          <span class="daily-cta-btn" id="daily-cta-btn">Today's Fortune →</span>
+        </a>
+
         <div class="upsell" id="upsell">
           <div class="upsell-row">
             <div class="upsell-card" id="upsell-deep">
@@ -316,6 +324,9 @@
       const shareBtn = document.getElementById('share-btn');
       if (shareBtn && !shareBtn.dataset.copied) shareBtn.textContent = t.shareBtn;
       set('reset-btn', t.resetBtn);
+      set('daily-cta-title', t.dailyCtaTitle);
+      set('daily-cta-desc', t.dailyCtaDesc);
+      set('daily-cta-btn', t.dailyCtaBtn);
       setHtml('upgrade-note', t.upgradeNoteHtml);
 
       set('explainer-h2', t.explainerH2);
@@ -543,6 +554,10 @@
       url.searchParams.delete('t');
       window.history.replaceState({}, '', url.toString());
       document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    document.getElementById('daily-cta').addEventListener('click', () => {
+      track('saju_daily_cta_click', { lang: document.getElementById('language').value });
     });
 
     let lastSaju = null;
