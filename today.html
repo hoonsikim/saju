@@ -115,6 +115,7 @@
         <div class="actions">
           <button id="share-btn" type="button">Share today's fortune</button>
           <button id="card-btn" type="button" class="ghost">Download card</button>
+          <button id="week-card-btn" type="button" class="ghost">Download week card</button>
           <button id="reset-btn" type="button" class="ghost">New birth date</button>
         </div>
 
@@ -185,6 +186,7 @@
         shareBtn: "Share today's fortune", shareBtnShared: '✓ Shared', shareBtnCopied: '✓ Copied!',
         shareTitle: 'My Korean Saju daily fortune',
         cardBtn: 'Download card', cardBtnDone: '✓ Saved',
+        weekCardBtn: 'Download week card', weekCardBtnDone: '✓ Saved',
         resetBtn: 'New birth date',
         comeBackHtml: 'Your fortune shifts with each day\'s pillar. <strong>Bookmark this and come back tomorrow.</strong>',
         upgradeNoteHtml: 'Rule-based daily reading. <strong>LLM-deep daily guidance coming soon</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Daily%20Deep%20%E2%80%94%20notify%20me">notify me</a> when it\'s live.',
@@ -210,6 +212,7 @@
         shareBtn: '오늘의 운세 공유', shareBtnShared: '✓ 공유 완료', shareBtnCopied: '✓ 복사 완료',
         shareTitle: '내 오늘의 사주 운세',
         cardBtn: '카드 저장', cardBtnDone: '✓ 저장 완료',
+        weekCardBtn: '주간 카드 저장', weekCardBtnDone: '✓ 저장 완료',
         resetBtn: '다른 생년월일',
         comeBackHtml: '운세는 매일의 일진에 따라 달라집니다. <strong>북마크해 두고 내일 다시 오세요.</strong>',
         upgradeNoteHtml: '룰 기반 일진 풀이입니다. <strong>LLM 심층 데일리 가이드 곧 오픈</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Daily%20Deep%20%E2%80%94%20notify%20me">알림 받기</a>.',
@@ -235,6 +238,7 @@
         shareBtn: '今日の運勢をシェア', shareBtnShared: '✓ シェア完了', shareBtnCopied: '✓ コピー完了',
         shareTitle: '私の今日の四柱運勢',
         cardBtn: 'カード保存', cardBtnDone: '✓ 保存完了',
+        weekCardBtn: '週間カード保存', weekCardBtnDone: '✓ 保存完了',
         resetBtn: '別の生年月日',
         comeBackHtml: '運勢は毎日の日柱で変わります。<strong>ブックマークして明日また来てください。</strong>',
         upgradeNoteHtml: 'ルールベースの日運です。<strong>LLM深層デイリーガイドを準備中</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Daily%20Deep%20%E2%80%94%20notify%20me">通知を受け取る</a>。',
@@ -260,6 +264,7 @@
         shareBtn: '分享今日运势', shareBtnShared: '✓ 已分享', shareBtnCopied: '✓ 已复制',
         shareTitle: '我的今日四柱运势',
         cardBtn: '保存卡片', cardBtnDone: '✓ 已保存',
+        weekCardBtn: '保存周卡片', weekCardBtnDone: '✓ 已保存',
         resetBtn: '换出生日期',
         comeBackHtml: '运势随每日的日柱而变。<strong>收藏本页,明天再来。</strong>',
         upgradeNoteHtml: '规则日运解读。<strong>LLM深度每日指引即将上线</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Daily%20Deep%20%E2%80%94%20notify%20me">提醒我</a>。',
@@ -285,6 +290,7 @@
         shareBtn: 'Compartir la fortuna de hoy', shareBtnShared: '✓ Compartido', shareBtnCopied: '✓ ¡Copiado!',
         shareTitle: 'Mi fortuna diaria de Saju coreano',
         cardBtn: 'Descargar tarjeta', cardBtnDone: '✓ Guardado',
+        weekCardBtn: 'Descargar tarjeta semanal', weekCardBtnDone: '✓ Guardado',
         resetBtn: 'Otra fecha',
         comeBackHtml: 'Tu fortuna cambia con el pilar de cada día. <strong>Guarda esta página y vuelve mañana.</strong>',
         upgradeNoteHtml: 'Lectura diaria basada en reglas. <strong>Guía diaria profunda con IA muy pronto</strong> — <a href="mailto:h.company.sean@gmail.com?subject=Saju%20Daily%20Deep%20%E2%80%94%20notify%20me">avísame</a> cuando esté disponible.',
@@ -339,6 +345,8 @@
       if (shareBtn && !shareBtn.dataset.copied) shareBtn.textContent = t.shareBtn;
       const cardBtn = document.getElementById('card-btn');
       if (cardBtn && !cardBtn.dataset.saved) cardBtn.textContent = t.cardBtn;
+      const weekCardBtn = document.getElementById('week-card-btn');
+      if (weekCardBtn && !weekCardBtn.dataset.saved) weekCardBtn.textContent = t.weekCardBtn;
       set('reset-btn', t.resetBtn);
       setHtml('come-back', t.comeBackHtml);
       setHtml('upgrade-note', t.upgradeNoteHtml);
@@ -612,6 +620,42 @@
 </svg>`;
     }
 
+    function buildWeekCardSvg({ title, days, bestIndex, weekdayLabels, bestText, brandUrl }) {
+      const W = 1200, H = 630;
+      const fontStack = "'Noto Serif KR','Songti SC','Yu Mincho','Hiragino Mincho ProN',serif";
+      const chartX = 110, chartW = 980, colW = chartW / 7;
+      const baseY = 470, maxBarH = 280, barW = 84;
+      const bars = days.map((day, i) => {
+        const barH = Math.max(24, Math.round((day.score / 99) * maxBarH));
+        const x = chartX + i * colW + (colW - barW) / 2;
+        const y = baseY - barH;
+        const cx = x + barW / 2;
+        const isBest = i === bestIndex;
+        const fill = isBest ? '#d4a574' : '#4a4030';
+        const stroke = isBest ? '#f4d4a4' : '#6a5a45';
+        const labelFill = isBest ? '#f4d4a4' : '#a0a0b0';
+        return `
+  <rect x="${x.toFixed(1)}" y="${y}" width="${barW}" height="${barH}" rx="6" fill="${fill}" stroke="${stroke}" stroke-width="2"/>
+  <text x="${cx.toFixed(1)}" y="${y - 14}" text-anchor="middle" font-family="${fontStack}" font-size="28" font-weight="700" fill="${labelFill}">${escapeXml(String(day.score))}</text>
+  <text x="${cx.toFixed(1)}" y="${baseY + 36}" text-anchor="middle" font-family="${fontStack}" font-size="24" fill="${labelFill}">${escapeXml(weekdayLabels[i] || '')}</text>`;
+      }).join('');
+      return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0a0f"/>
+      <stop offset="100%" stop-color="#1a1410"/>
+    </linearGradient>
+  </defs>
+  <rect width="${W}" height="${H}" fill="url(#bg)"/>
+  <rect x="20" y="20" width="${W - 40}" height="${H - 40}" fill="none" stroke="#d4a574" stroke-opacity="0.5" stroke-width="2" rx="16"/>
+  <text x="${W / 2}" y="100" text-anchor="middle" font-family="${fontStack}" font-size="44" font-weight="700" fill="#d4a574" letter-spacing="2">${escapeXml(title)}</text>
+  <line x1="${chartX}" y1="${baseY}" x2="${chartX + chartW}" y2="${baseY}" stroke="#d4a574" stroke-opacity="0.3" stroke-width="2"/>${bars}
+  <text x="${W / 2}" y="565" text-anchor="middle" font-family="${fontStack}" font-size="30" fill="#f4d4a4">${escapeXml(bestText)}</text>
+  <text x="${W / 2}" y="602" text-anchor="middle" font-family="${fontStack}" font-size="18" fill="#d4a574" letter-spacing="2">${escapeXml(brandUrl)}</text>
+</svg>`;
+    }
+
     function svgToPng(svgString, width, height) {
       return new Promise((resolve, reject) => {
         const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
@@ -681,6 +725,48 @@
       setTimeout(() => {
         delete btn.dataset.saved;
         btn.textContent = (CHROME[langSelect.value] || CHROME.en).cardBtn;
+      }, 2000);
+    });
+
+    document.getElementById('week-card-btn').addEventListener('click', async () => {
+      const lang = langSelect.value;
+      const t = CHROME[lang] || CHROME.en;
+      const btn = document.getElementById('week-card-btn');
+      if (!lastWeek) return;
+
+      const locale = (LOCALE_TAG[lang] || 'en_US').replace('_', '-');
+      const weekdayLabels = lastWeek.days.map(day =>
+        dateFromIso(day.date).toLocaleDateString(locale, { weekday: 'short' }));
+      const bestLabel = dateFromIso(lastWeek.best.date)
+        .toLocaleDateString(locale, { weekday: 'short', month: 'short', day: 'numeric' });
+      const svg = buildWeekCardSvg({
+        title: t.weekH3,
+        days: lastWeek.days,
+        bestIndex: lastWeek.best.index,
+        weekdayLabels,
+        bestText: `${t.shareBestDay}: ${bestLabel} · ${lastWeek.best.score}`,
+        brandUrl: 'hoonsikim.github.io/saju/today',
+      });
+
+      const pngBlob = await svgToPng(svg, 1200, 630).catch(() => null);
+      const blob = pngBlob || new Blob([svg], { type: 'image/svg+xml' });
+      const ext = pngBlob ? 'png' : 'svg';
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `saju-week-${lastWeek.days[0].date}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      track('daily_week_card_download', { best_score: lastWeek.best.score, ext, lang });
+
+      btn.dataset.saved = '1';
+      btn.textContent = t.weekCardBtnDone;
+      setTimeout(() => {
+        delete btn.dataset.saved;
+        btn.textContent = (CHROME[langSelect.value] || CHROME.en).weekCardBtn;
       }, 2000);
     });
   </script>
