@@ -8,10 +8,11 @@ Korean Four Pillars of Destiny (사주, 四柱) — global edition.
 
 ## Try it
 
-- **Reading** — https://hoonsikim.github.io/saju
+- **Reading** — https://hoonsikim.github.io/saju — Four Pillars chart + Five Elements + Ten Gods for any birth date/time
+- **Daily fortune** — https://hoonsikim.github.io/saju/today.html — today's reading + 7-day forecast strip, surfaces the best day of the week
 - **Compatibility (궁합)** — https://hoonsikim.github.io/saju/compat.html — two birth charts, a 0–100 verdict, shareable result card
 
-Both run fully client-side. Enter a birth date/time, get a reading instantly. Every result is a shareable URL — open someone's link and their chart renders on your screen.
+All three run fully client-side. Enter a birth date/time, get a reading instantly. Every result is a shareable URL — open someone's link and their chart renders on your screen.
 
 ## What it does
 
