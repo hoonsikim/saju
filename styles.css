@@ -371,6 +371,123 @@ section { padding: 64px 0; }
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
 }
 
+/* depth (ADR-023): 지장간·12운성·공망·대운 */
+.pillar-hidden, .pillar-stage {
+  font-size: 11px;
+  color: var(--text-sub);
+  margin-top: 6px;
+  line-height: 1.3;
+}
+.pillar-hidden .ph-label, .pillar-stage .ps-label {
+  color: var(--accent);
+  font-weight: 600;
+  margin-right: 4px;
+  letter-spacing: 0.02em;
+}
+
+.void-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 12px 18px;
+  margin-top: 12px;
+  font-size: 14px;
+}
+.void-label {
+  color: var(--accent);
+  font-weight: 600;
+  font-family: var(--font-serif);
+}
+.void-chars {
+  font-family: var(--font-han);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.05em;
+}
+.void-hint {
+  color: var(--text-sub);
+  font-size: 13px;
+  flex: 1 1 200px;
+}
+
+.major-luck-section {
+  margin-top: 40px;
+}
+.major-luck-title {
+  font-family: var(--font-serif);
+  text-align: center;
+  font-size: 18px;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+  margin: 0 0 8px;
+}
+.major-luck-start {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-sub);
+  margin: 0 0 16px;
+}
+.major-luck-hint {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-sub);
+  font-style: italic;
+  margin: 16px 0 0;
+}
+.major-luck-strip {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 8px;
+}
+.luck-cell {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 6px;
+  text-align: center;
+  transition: border-color 0.15s, transform 0.15s;
+}
+.luck-cell:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.luck-age {
+  font-size: 11px;
+  color: var(--text-sub);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.luck-year {
+  font-size: 10px;
+  color: var(--text-sub);
+  margin-bottom: 6px;
+}
+.luck-chars {
+  font-family: var(--font-han);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+  margin: 4px 0 6px;
+}
+.luck-god {
+  font-family: var(--font-han);
+  font-size: 10px;
+  color: var(--accent);
+}
+
+@media (max-width: 720px) {
+  .major-luck-strip { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 400px) {
+  .major-luck-strip { grid-template-columns: repeat(2, 1fr); }
+}
+
 /* feedback widget (ADR-020) */
 .feedback-card {
   background: var(--bg-card);

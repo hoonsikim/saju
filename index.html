@@ -168,9 +168,22 @@
         <h3 id="result-h3-day-master">Day Master</h3>
         <div class="day-master-box" id="day-master-box"></div>
 
+        <div class="void-box" id="void-box" hidden>
+          <span class="void-label" id="void-label">Void (空亡)</span>
+          <span class="void-chars" id="void-chars"></span>
+          <span class="void-hint" id="void-hint"></span>
+        </div>
+
         <h3 id="result-h3-reading">Reading</h3>
         <div class="reading-badge" id="reading-badge"></div>
         <div class="reading-text" id="reading-text"></div>
+
+        <section class="major-luck-section" id="major-luck-section" hidden>
+          <h3 class="major-luck-title" id="major-luck-title">Major Luck (大運)</h3>
+          <p class="major-luck-start" id="major-luck-start"></p>
+          <div class="major-luck-strip" id="major-luck-strip"></div>
+        </section>
+        <p class="major-luck-hint" id="major-luck-hint" hidden></p>
 
         <div class="actions">
           <button id="card-btn" type="button">Download share card</button>
@@ -323,6 +336,16 @@
       }
     }
 
+    // 깊이 데이터 i18n (지장간·12운성·공망·대운) — CHROME과 분리. 5 lang + en 폴백.
+    const DEPTH_I18N = {
+      en: { hidden: 'hidden', stage: 'stage', voidLabel: 'Void (空亡)', voidHint: 'these branches lose substance — events there often feel incomplete', luckTitle: 'Major Luck Cycles (大運)', luckStart: 'starts age', luckAge: 'age', luckMissingGender: 'Add your gender above to see 10-year luck cycles.' },
+      ko: { hidden: '지장간', stage: '12운성', voidLabel: '공망(空亡)', voidHint: '이 지지에 닿는 인연·사건은 빈 듯한 느낌이 따른다', luckTitle: '대운(大運) 10년 주기', luckStart: '시작 나이', luckAge: '세', luckMissingGender: '성별을 입력하시면 10년 단위 대운을 보여드립니다.' },
+      ja: { hidden: '蔵干', stage: '十二運', voidLabel: '空亡', voidHint: 'これらの地支に触れる縁・出来事は虚しさを伴う', luckTitle: '大運(10年周期)', luckStart: '開始年齢', luckAge: '歳', luckMissingGender: '性別を入力すると10年単位の大運が表示されます。' },
+      zh: { hidden: '藏干', stage: '十二运', voidLabel: '空亡', voidHint: '触此地支之缘与事，常带空虚之感', luckTitle: '大运(10年周期)', luckStart: '起运年龄', luckAge: '岁', luckMissingGender: '请填写性别以查看10年大运。' },
+      es: { hidden: 'oculto', stage: 'etapa', voidLabel: 'Vacío (空亡)', voidHint: 'estas ramas pierden sustancia — los sucesos que las tocan suelen sentirse incompletos', luckTitle: 'Ciclos de Suerte Mayor (大運) 10 años', luckStart: 'inicia edad', luckAge: 'años', luckMissingGender: 'Indica tu género arriba para ver los ciclos de 10 años.' },
+    };
+    const depthI18n = (lang) => DEPTH_I18N[lang] || DEPTH_I18N.en;
+
     // Feedback widget i18n — CHROME 50 키와 분리, 가벼운 5 lang 사전(나머지는 en 폴백).
     const FEEDBACK_I18N = {
       en: { prompt: 'How was your reading?', placeholder: 'Optional: tell us more', btn: 'Send', thanks: '✓ Thanks!' },
@@ -474,6 +497,18 @@
       set('footer-license', t.footerLicense);
 
       applyFeedbackI18n(lang);
+      applyDepthI18n(lang);
+    }
+
+    // 깊이 영역 라벨 swap (값은 그대로). 완전 swap은 form 재제출 시 renderResult가.
+    function applyDepthI18n(lang) {
+      const di = depthI18n(lang);
+      const set = (id, txt) => { const e = document.getElementById(id); if (e) e.textContent = txt; };
+      set('void-label', di.voidLabel);
+      set('void-hint', di.voidHint);
+      set('major-luck-title', di.luckTitle);
+      const hintEl = document.getElementById('major-luck-hint');
+      if (hintEl && !hintEl.hidden) hintEl.textContent = di.luckMissingGender;
     }
 
     function detectInitialLang() {
@@ -785,18 +820,31 @@
     function renderResult(saju, lang) {
       const names = ELEMENT_NAME[lang] || ELEMENT_NAME.en;
       const labels = PILLAR_LABELS[lang] || PILLAR_LABELS.en;
+      const di = depthI18n(lang);
       const labelsHan = ['年柱', '月柱', '日柱', '時柱'];
       const showHan = lang === 'en' || lang === 'ko';
+      const hs = saju.hiddenStems || {};
+      const ts = saju.twelveStages || {};
       const pillarsHtml = ['year', 'month', 'day', 'hour'].map((key, i) => {
         const p = saju.pillars[key];
         const isDay = key === 'day';
         const labelHtml = showHan ? `${labels[i]}<br><span class="pillar-han">${labelsHan[i]}</span>` : labels[i];
+        const hidden = (hs[key] || []).slice(0, 3);
+        const hiddenHtml = hidden.length
+          ? `<div class="pillar-hidden"><span class="ph-label">${di.hidden}</span> ${hidden.join('·')}</div>`
+          : '';
+        const stage = ts[key];
+        const stageHtml = stage
+          ? `<div class="pillar-stage"><span class="ps-label">${di.stage}</span> ${stage}</div>`
+          : '';
         return `
           <div class="pillar-cell ${isDay ? 'day-pillar' : ''}">
             <div class="pillar-label">${labelHtml}</div>
             <div class="pillar-chars" style="color: ${ELEMENT_COLOR[p.ganElement]}">${p.gan}</div>
             <div class="pillar-chars" style="color: ${ELEMENT_COLOR[p.zhiElement]}">${p.zhi}</div>
             <div class="pillar-meta">${names[p.ganElement]} / ${names[p.zhiElement]}</div>
+            ${hiddenHtml}
+            ${stageHtml}
           </div>`;
       }).join('');
       document.getElementById('pillars-grid').innerHTML = pillarsHtml;
@@ -814,6 +862,49 @@
         <div class="dm-char" style="color: ${ELEMENT_COLOR[saju.dayMasterElement]}">${saju.dayMaster}</div>
         <div class="dm-meta">${names[saju.dayMasterElement]}</div>
       `;
+
+      // 공망 (空亡) — 일주 기준 2개 지지
+      const voidBox = document.getElementById('void-box');
+      const voidChars = document.getElementById('void-chars');
+      const voidLabel = document.getElementById('void-label');
+      const voidHint = document.getElementById('void-hint');
+      if (saju.voidBranches && voidBox) {
+        voidLabel.textContent = di.voidLabel;
+        voidChars.textContent = saju.voidBranches;
+        voidHint.textContent = di.voidHint;
+        voidBox.hidden = false;
+      } else if (voidBox) {
+        voidBox.hidden = true;
+      }
+
+      // 대운 (大運) — 10년 단위
+      const luckSec = document.getElementById('major-luck-section');
+      const luckHint = document.getElementById('major-luck-hint');
+      const luckTitle = document.getElementById('major-luck-title');
+      const luckStart = document.getElementById('major-luck-start');
+      const luckStrip = document.getElementById('major-luck-strip');
+      if (saju.majorLuck && saju.majorLuck.cycles && saju.majorLuck.cycles.length) {
+        luckTitle.textContent = di.luckTitle;
+        const first = saju.majorLuck.cycles[0];
+        luckStart.textContent = `${di.luckStart} ${first.startAge}${di.luckAge === '세' || di.luckAge === '岁' || di.luckAge === '歳' ? '' : ' '}${di.luckAge} (${first.startYear})`;
+        luckStrip.innerHTML = saju.majorLuck.cycles.map(c => `
+          <div class="luck-cell" title="${c.tenGod || ''}">
+            <div class="luck-age">${c.startAge}${di.luckAge}+</div>
+            <div class="luck-year">${c.startYear}</div>
+            <div class="luck-chars">
+              <span style="color: ${ELEMENT_COLOR[c.ganElement]}">${c.gan}</span><span style="color: ${ELEMENT_COLOR[c.zhiElement]}">${c.zhi}</span>
+            </div>
+            ${c.tenGod ? `<div class="luck-god">${c.tenGod}</div>` : ''}
+          </div>`).join('');
+        luckSec.hidden = false;
+        if (luckHint) luckHint.hidden = true;
+      } else {
+        luckSec.hidden = true;
+        if (luckHint) {
+          luckHint.textContent = di.luckMissingGender;
+          luckHint.hidden = false;
+        }
+      }
 
       const t = UI_TEXT[lang] || UI_TEXT.en;
       document.getElementById('reading-text').textContent = t.placeholder;

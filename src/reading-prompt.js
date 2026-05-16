@@ -73,13 +73,31 @@ export function userMessage(saju, options = {}) {
     ? `\nBirth city: ${saju.input.city}`
     : '';
 
+  // ADR-023 깊이 — 지장간·12운성·공망·대운
+  const hs = saju.hiddenStems || {};
+  const ts = saju.twelveStages || {};
+  const hiddenLine = (key) => (hs[key] && hs[key].length) ? ` [hidden: ${hs[key].join('·')}]` : '';
+  const stageLine = (key) => ts[key] ? ` [12-stage: ${ts[key]}]` : '';
+
+  const voidLine = saju.voidBranches
+    ? `\n\nVoid branches (空亡, from Day pillar ${saju.pillars.day.ganZhi}): ${saju.voidBranches}\n  → branches that lose substance; events touching them often feel incomplete or detached.`
+    : '';
+
+  let luckLine = '';
+  if (saju.majorLuck && saju.majorLuck.cycles && saju.majorLuck.cycles.length) {
+    const upcoming = saju.majorLuck.cycles.slice(0, 6).map(c =>
+      `  age ${c.startAge}+ (${c.startYear}+): ${c.ganZhi} [${c.ganElement}/${c.zhiElement}, ten-god: ${c.tenGod || 'N/A'}]`
+    ).join('\n');
+    luckLine = `\n\nMajor Luck Cycles (大運, 10-year periods, starts age ${saju.majorLuck.cycles[0].startAge}):\n${upcoming}`;
+  }
+
   return `Birth: ${saju.input.year}-${String(saju.input.month).padStart(2, '0')}-${String(saju.input.day).padStart(2, '0')} ${String(saju.input.hour).padStart(2, '0')}:${String(saju.input.minute).padStart(2, '0')}${genderLine}${cityLine}
 
 Four Pillars (sequence: Year / Month / Day / Hour):
-- Year: ${saju.pillars.year.ganZhi} (${saju.pillars.year.ganElement} stem · ${saju.pillars.year.zhiElement} branch)
-- Month: ${saju.pillars.month.ganZhi} (${saju.pillars.month.ganElement} · ${saju.pillars.month.zhiElement})
-- Day: ${saju.pillars.day.ganZhi} (${saju.pillars.day.ganElement} · ${saju.pillars.day.zhiElement}) ← Day Master
-- Hour: ${saju.pillars.hour.ganZhi} (${saju.pillars.hour.ganElement} · ${saju.pillars.hour.zhiElement})
+- Year: ${saju.pillars.year.ganZhi} (${saju.pillars.year.ganElement} stem · ${saju.pillars.year.zhiElement} branch)${hiddenLine('year')}${stageLine('year')}
+- Month: ${saju.pillars.month.ganZhi} (${saju.pillars.month.ganElement} · ${saju.pillars.month.zhiElement})${hiddenLine('month')}${stageLine('month')}
+- Day: ${saju.pillars.day.ganZhi} (${saju.pillars.day.ganElement} · ${saju.pillars.day.zhiElement})${hiddenLine('day')}${stageLine('day')} ← Day Master
+- Hour: ${saju.pillars.hour.ganZhi} (${saju.pillars.hour.ganElement} · ${saju.pillars.hour.zhiElement})${hiddenLine('hour')}${stageLine('hour')}
 
 Day Master: ${saju.dayMaster} (${saju.dayMasterElement})
 
@@ -93,12 +111,12 @@ Five Elements balance (8 chars total):
 Ten Gods (relative to Day Master ${saju.dayMaster}):
 - Year stem: ${saju.tenGods.yearGan || 'N/A'}
 - Month stem: ${saju.tenGods.monthGan || 'N/A'}
-- Hour stem: ${saju.tenGods.hourGan || 'N/A'}
+- Hour stem: ${saju.tenGods.hourGan || 'N/A'}${voidLine}${luckLine}
 
 Reading type requested: ${readingType}
 Output language: ${language}
 
-Write the Saju reading now.`;
+Write the Saju reading now. Use the hidden stems, 12 stages, void branches, and major luck cycles when they meaningfully inform the reading — don't enumerate them mechanically, integrate them into the personality·timing·life direction narrative.`;
 }
 
 /**

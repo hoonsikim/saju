@@ -50,6 +50,7 @@ function analyzePillar(ganZhi) {
 export function birthInfoToFourPillars({ year, month, day, hour, minute = 0, gender = null, city = null }) {
   const jsDate = new Date(year, month - 1, day, hour, minute, 0);
   const lunar = Lunar.fromDate(jsDate);
+  const eight = lunar.getEightChar();
   const pillars = {
     year: analyzePillar(lunar.getYearInGanZhi()),
     month: analyzePillar(lunar.getMonthInGanZhi()),
@@ -70,9 +71,49 @@ export function birthInfoToFourPillars({ year, month, day, hour, minute = 0, gen
     monthGan: tenGodLabel(dayMaster, pillars.month?.gan),
     hourGan: tenGodLabel(dayMaster, pillars.hour?.gan),
   } : {};
+  // ADR-023 — 무료 path 깊이 (지장간·12운성·공망·대운)
+  const hiddenStems = {
+    year: eight.getYearHideGan() || [],
+    month: eight.getMonthHideGan() || [],
+    day: eight.getDayHideGan() || [],
+    hour: eight.getTimeHideGan() || [],
+  };
+  const twelveStages = {
+    year: eight.getYearDiShi() || null,
+    month: eight.getMonthDiShi() || null,
+    day: eight.getDayDiShi() || null,
+    hour: eight.getTimeDiShi() || null,
+  };
+  const voidBranches = eight.getDayXunKong() || '';
+  let majorLuck = null;
+  if (gender === 'male' || gender === 'female') {
+    const genderInt = gender === 'male' ? 1 : 0;
+    try {
+      const yun = eight.getYun(genderInt);
+      const startYear = yun.getStartYear ? yun.getStartYear() : null;
+      const startMonth = yun.getStartMonth ? yun.getStartMonth() : null;
+      const startDay = yun.getStartDay ? yun.getStartDay() : null;
+      const daYun = yun.getDaYun ? yun.getDaYun() : [];
+      const cycles = [];
+      for (const d of daYun.slice(1, 9)) {
+        const gz = d.getGanZhi();
+        if (!gz || gz.length !== 2) continue;
+        cycles.push({
+          ganZhi: gz, gan: gz[0], zhi: gz[1],
+          ganElement: GAN_ELEMENT[gz[0]] || null,
+          zhiElement: ZHI_ELEMENT[gz[1]] || null,
+          tenGod: tenGodLabel(dayMaster, gz[0]),
+          startAge: d.getStartAge ? d.getStartAge() : null,
+          startYear: d.getStartYear ? d.getStartYear() : null,
+        });
+      }
+      majorLuck = { startYear, startMonth, startDay, cycles };
+    } catch {}
+  }
   return {
     input: { year, month, day, hour, minute, gender, city },
     pillars, dayMaster, dayMasterElement, elements, tenGods,
+    hiddenStems, twelveStages, voidBranches, majorLuck,
   };
 }
 

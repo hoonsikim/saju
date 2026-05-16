@@ -114,6 +114,7 @@ export function birthInfoToFourPillars({ year, month, day, hour, minute = 0, gen
   // lunar-javascript: Lunar.fromDate(jsDate) 또는 Solar 변환
   const jsDate = new Date(year, month - 1, day, hour, minute, 0);
   const lunar = Lunar.fromDate(jsDate);
+  const eight = lunar.getEightChar();
 
   const pillars = {
     year: analyzePillar(lunar.getYearInGanZhi()),
@@ -142,6 +143,60 @@ export function birthInfoToFourPillars({ year, month, day, hour, minute = 0, gen
     hourGan: tenGodLabel(dayMaster, pillars.hour?.gan),
   } : {};
 
+  // 지장간 (支藏干) — 지지 속 숨은 천간 (정기·중기·여기 순)
+  // ADR-023 — 무료 path 깊이
+  const hiddenStems = {
+    year: eight.getYearHideGan() || [],
+    month: eight.getMonthHideGan() || [],
+    day: eight.getDayHideGan() || [],
+    hour: eight.getTimeHideGan() || [],
+  };
+
+  // 12운성 (十二運星) — 일간 기준 각 지지의 강약 12단계
+  // 长生·沐浴·冠带·临官·帝旺·衰·病·死·墓·绝·胎·养
+  const twelveStages = {
+    year: eight.getYearDiShi() || null,
+    month: eight.getMonthDiShi() || null,
+    day: eight.getDayDiShi() || null,
+    hour: eight.getTimeDiShi() || null,
+  };
+
+  // 공망 (空亡) — 일주가 속한 순(旬)의 끝 2개 지지
+  const voidBranches = eight.getDayXunKong() || '';
+
+  // 대운 (大運) — 양남음녀 순행 / 음남양녀 역행. 10년 단위 8개.
+  // gender: 'female' = 0, 'male' = 1. null이면 majorLuck = null.
+  let majorLuck = null;
+  if (gender === 'male' || gender === 'female') {
+    const genderInt = gender === 'male' ? 1 : 0;
+    try {
+      const yun = eight.getYun(genderInt);
+      const startYear = yun.getStartYear ? yun.getStartYear() : null;
+      const startMonth = yun.getStartMonth ? yun.getStartMonth() : null;
+      const startDay = yun.getStartDay ? yun.getStartDay() : null;
+      const daYun = yun.getDaYun ? yun.getDaYun() : [];
+      // 첫 원소는 출생~첫대운 사이 小運 (ganZhi 비어있음) → 건너뜀
+      const cycles = [];
+      for (const d of daYun.slice(1, 9)) {
+        const gz = d.getGanZhi();
+        if (!gz || gz.length !== 2) continue;
+        cycles.push({
+          ganZhi: gz,
+          gan: gz[0],
+          zhi: gz[1],
+          ganElement: GAN_ELEMENT[gz[0]] || null,
+          zhiElement: ZHI_ELEMENT[gz[1]] || null,
+          tenGod: tenGodLabel(dayMaster, gz[0]),
+          startAge: d.getStartAge ? d.getStartAge() : null,
+          startYear: d.getStartYear ? d.getStartYear() : null,
+        });
+      }
+      majorLuck = { startYear, startMonth, startDay, cycles };
+    } catch (e) {
+      // lunar-javascript 호출 실패 시 silent — majorLuck = null
+    }
+  }
+
   return {
     input: { year, month, day, hour, minute, gender, city },
     pillars,
@@ -149,6 +204,10 @@ export function birthInfoToFourPillars({ year, month, day, hour, minute = 0, gen
     dayMasterElement,
     elements,
     tenGods,
+    hiddenStems,
+    twelveStages,
+    voidBranches,
+    majorLuck,
   };
 }
 

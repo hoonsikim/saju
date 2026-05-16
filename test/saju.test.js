@@ -107,6 +107,31 @@ function assertContains(name, actual, expected) {
   assert('포스텔러 5행 water 25%', pct('water'), 25);
 }
 
+// === Case 7 (ADR-023): 깊이 4종 — 지장간·12운성·공망·대운
+// 1990-12-20 16:30 男 ground truth 기반 (lunar-javascript 위임)
+{
+  const r = birthInfoToFourPillars({ year: 1990, month: 12, day: 20, hour: 16, minute: 30, gender: 'male' });
+  // 지장간: 각 기둥 array 반환, 첫 원소(정기)
+  assert('지장간 year array', Array.isArray(r.hiddenStems.year), true);
+  assert('지장간 month 본기 癸 (子)', r.hiddenStems.month[0], '癸');
+  assert('지장간 day 본기 己 (未)', r.hiddenStems.day[0], '己');
+  assert('지장간 hour 본기 庚 (申)', r.hiddenStems.hour[0], '庚');
+  // 12운성: 일간 己 기준 각 지지의 단계
+  assert('12운성 year 临官 (己→午)', r.twelveStages.year, '临官');
+  assert('12운성 month 绝 (己→子)', r.twelveStages.month, '绝');
+  assert('12운성 day 冠带 (己→未)', r.twelveStages.day, '冠带');
+  // 공망: 己未 일주는 甲寅순 → 공망 子丑
+  assert('공망 (己未 일주) = 子丑', r.voidBranches, '子丑');
+  // 대운: 男 + 庚午年(양년) 양남 → 순행. 7세 시작, 8 cycle
+  assert('대운 cycles 8개', r.majorLuck.cycles.length, 8);
+  assert('대운 첫 시작 나이 7', r.majorLuck.cycles[0].startAge, 7);
+  assert('대운 첫 ganZhi 己丑', r.majorLuck.cycles[0].ganZhi, '己丑');
+  assert('대운 첫 startYear 1996', r.majorLuck.cycles[0].startYear, 1996);
+  // gender 없으면 majorLuck null
+  const r2 = birthInfoToFourPillars({ year: 1990, month: 12, day: 20, hour: 16, minute: 30 });
+  assert('gender 없으면 majorLuck null', r2.majorLuck, null);
+}
+
 // === 결과
 console.log(`\n${passed + failed} tests · ${passed} passed · ${failed} failed`);
 process.exit(failed > 0 ? 1 : 0);
