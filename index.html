@@ -237,9 +237,10 @@
     import { generateShareCard, downloadBlob, copyBlobToClipboard } from './src/share-card.js';
     import { ELEMENT_NAME, PILLAR_LABELS, UI_TEXT, LOCALE_TAG, RTL_LANGS, CHROME } from './src/i18n.js';
 
-    // Cloudflare Worker URL — set after `wrangler deploy`.
+    // Cloudflare Worker URL — LLM 리딩 엔드포인트.
     // Empty = use client-side rule-based reading only.
-    const WORKER_URL = window.SAJU_WORKER_URL || '';
+    // 배포 실패 시 fetchLLMReading()이 null 반환 → 자동으로 rule-based fallback.
+    const WORKER_URL = window.SAJU_WORKER_URL || 'https://saju-reading.h-company-sean.workers.dev';
 
     const ELEMENT_COLOR = {
       wood: '#4ade80', fire: '#f97316', earth: '#d4a574',
