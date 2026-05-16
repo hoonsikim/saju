@@ -10,3 +10,14 @@ MAX_TOKENS = "1024"
 
 # Secrets (set via `wrangler secret put`):
 #   ANTHROPIC_API_KEY
+#   TELEGRAM_BOT_TOKEN  (선택: feedback 도착 시 텔레그램 ad-hoc notify)
+#   TELEGRAM_CHAT_ID    (선택: 위 토큰 set 시 같이)
+
+# KV: 자체 측정·피드백 인프라 (ADR-020)
+[[kv_namespaces]]
+binding = "METRICS"
+id = "eb0ca8255e6d48b1b186109712ba608f"
+
+[[kv_namespaces]]
+binding = "FEEDBACK"
+id = "9f32b86a28224ef895c0faf8e1d53091"

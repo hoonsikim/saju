@@ -179,6 +179,20 @@
         </div>
         <div class="card-preview" id="card-preview" hidden></div>
 
+        <div class="feedback-card" id="feedback-card" hidden>
+          <div class="fb-prompt" id="fb-prompt">How was your reading?</div>
+          <div class="fb-stars" id="fb-stars" role="radiogroup" aria-label="Rate this reading">
+            <button type="button" class="fb-star" data-rating="1" aria-label="1 star">★</button>
+            <button type="button" class="fb-star" data-rating="2" aria-label="2 stars">★</button>
+            <button type="button" class="fb-star" data-rating="3" aria-label="3 stars">★</button>
+            <button type="button" class="fb-star" data-rating="4" aria-label="4 stars">★</button>
+            <button type="button" class="fb-star" data-rating="5" aria-label="5 stars">★</button>
+          </div>
+          <textarea class="fb-text" id="fb-text" placeholder="Optional: tell us more" maxlength="500" rows="2" hidden></textarea>
+          <button type="button" class="fb-submit" id="fb-submit" hidden>Send</button>
+          <div class="fb-thanks" id="fb-thanks" hidden>✓ Thanks!</div>
+        </div>
+
         <a class="daily-cta" id="daily-cta" href="./today.html">
           <div class="daily-cta-text">
             <div class="daily-cta-title" id="daily-cta-title">Liked your reading? Get your fortune every day.</div>
@@ -252,14 +266,123 @@
       if (el) el.setAttribute(attr, value);
     }
 
+    // 세션 ID — 같은 브라우저 탭 내 user journey 묶기 (ADR-020 측정 인프라).
+    function getSessionId() {
+      try {
+        let s = sessionStorage.getItem('saju.sess');
+        if (!s) { s = 'sess_' + Math.random().toString(36).slice(2, 12); sessionStorage.setItem('saju.sess', s); }
+        return s;
+      } catch { return null; }
+    }
+
+    // track — GA4(dataLayer) + Worker /track 동시 송신. sendBeacon으로 unload-safe.
     function track(name, params) {
+      const payload = params || {};
       try {
         if (typeof window.gtag === 'function') {
-          window.gtag('event', name, params || {});
+          window.gtag('event', name, payload);
         } else {
-          (window.dataLayer = window.dataLayer || []).push({ event: name, ...(params || {}) });
+          (window.dataLayer = window.dataLayer || []).push({ event: name, ...payload });
         }
       } catch {}
+      if (WORKER_URL) {
+        try {
+          const body = JSON.stringify({
+            event: name,
+            lang: document.documentElement.lang || null,
+            page: (location.pathname.split('/').filter(Boolean).pop() || 'index').replace('.html', ''),
+            sessionId: getSessionId(),
+            extra: payload,
+          });
+          const blob = new Blob([body], { type: 'application/json' });
+          if (navigator.sendBeacon) navigator.sendBeacon(WORKER_URL + '/track', blob);
+          else fetch(WORKER_URL + '/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(() => {});
+        } catch {}
+      }
+    }
+
+    // Lemon Squeezy product URL (ADR-020 stub).
+    // 비어있으면 mailto 폴백 유지. Product ID 받으면 window.SAJU_LS_DEEP_URL 또는 이 const 채움.
+    const LS_DEEP_URL = window.SAJU_LS_DEEP_URL || '';
+    function applyPaidLinks() {
+      if (LS_DEEP_URL) {
+        const cta = document.getElementById('upsell-deep-cta');
+        if (cta) {
+          cta.href = LS_DEEP_URL;
+          cta.setAttribute('rel', 'noopener');
+          cta.setAttribute('target', '_blank');
+          cta.addEventListener('click', () => track('saju_paid_click', { product: 'deep' }), { once: true });
+        }
+      }
+    }
+
+    // Feedback widget i18n — CHROME 50 키와 분리, 가벼운 5 lang 사전(나머지는 en 폴백).
+    const FEEDBACK_I18N = {
+      en: { prompt: 'How was your reading?', placeholder: 'Optional: tell us more', btn: 'Send', thanks: '✓ Thanks!' },
+      ko: { prompt: '리딩 어떠셨나요?', placeholder: '선택: 의견 남기기', btn: '보내기', thanks: '✓ 감사합니다' },
+      ja: { prompt: 'リーディングはどうでしたか?', placeholder: '任意: 詳しく教えてください', btn: '送信', thanks: '✓ ありがとう' },
+      zh: { prompt: '解读如何?', placeholder: '可选: 留言', btn: '发送', thanks: '✓ 谢谢' },
+      es: { prompt: '¿Qué te pareció?', placeholder: 'Opcional: dinos más', btn: 'Enviar', thanks: '✓ ¡Gracias!' },
+      pt: { prompt: 'Como foi a leitura?', placeholder: 'Opcional: nos conte mais', btn: 'Enviar', thanks: '✓ Obrigado!' },
+      fr: { prompt: 'Comment trouvez-vous la lecture ?', placeholder: 'Facultatif : dites-nous plus', btn: 'Envoyer', thanks: '✓ Merci !' },
+      de: { prompt: 'Wie war die Lesung?', placeholder: 'Optional: Sag uns mehr', btn: 'Senden', thanks: '✓ Danke!' },
+      ar: { prompt: 'كيف كانت القراءة؟', placeholder: 'اختياري: أخبرنا المزيد', btn: 'إرسال', thanks: '✓ شكراً!' },
+    };
+    function applyFeedbackI18n(lang) {
+      const i = FEEDBACK_I18N[lang] || FEEDBACK_I18N.en;
+      const set = (id, txt) => { const e = document.getElementById(id); if (e) e.textContent = txt; };
+      set('fb-prompt', i.prompt);
+      set('fb-submit', i.btn);
+      set('fb-thanks', i.thanks);
+      const t = document.getElementById('fb-text');
+      if (t) t.placeholder = i.placeholder;
+    }
+
+    // Feedback widget — result section 안. 별점 1-5 + 자유 텍스트, 한 사용자당 1회.
+    function initFeedback() {
+      const card = document.getElementById('feedback-card');
+      if (!card) return;
+      try {
+        if (localStorage.getItem('saju.fb.submitted')) { card.hidden = true; return; }
+      } catch {}
+      const stars = card.querySelectorAll('.fb-star');
+      const textEl = document.getElementById('fb-text');
+      const submitBtn = document.getElementById('fb-submit');
+      const promptEl = document.getElementById('fb-prompt');
+      const starsEl = document.getElementById('fb-stars');
+      const thanksEl = document.getElementById('fb-thanks');
+      let rating = 0;
+      stars.forEach(btn => {
+        btn.addEventListener('click', () => {
+          rating = +btn.dataset.rating;
+          stars.forEach(s => s.classList.toggle('selected', +s.dataset.rating <= rating));
+          textEl.hidden = false;
+          submitBtn.hidden = false;
+        });
+      });
+      submitBtn.addEventListener('click', async () => {
+        if (!rating) return;
+        submitBtn.disabled = true;
+        const lang = document.getElementById('language').value;
+        const text = (textEl.value || '').trim();
+        if (WORKER_URL) {
+          try {
+            await fetch(WORKER_URL + '/feedback', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ rating, text: text || null, lang, page: 'index', sessionId: getSessionId() }),
+              keepalive: true,
+            });
+          } catch {}
+        }
+        try { localStorage.setItem('saju.fb.submitted', '1'); } catch {}
+        promptEl.hidden = true;
+        starsEl.hidden = true;
+        textEl.hidden = true;
+        submitBtn.hidden = true;
+        thanksEl.hidden = false;
+        track('saju_feedback_submitted', { rating, hasText: !!text });
+      });
     }
 
     function applyChrome(lang) {
@@ -342,6 +465,8 @@
 
       setHtml('footer-built', t.footerBuiltHtml);
       set('footer-license', t.footerLicense);
+
+      applyFeedbackI18n(lang);
     }
 
     function detectInitialLang() {
@@ -408,7 +533,13 @@
       const lang = langSelect.value;
       applyChrome(lang);
       persistLang(lang);
+      track('saju_lang_change', { lang });
     });
+
+    // 페이지 진입 측정 (ADR-020) + LS·feedback 초기화
+    applyPaidLinks();
+    initFeedback();
+    track('page_view', { lang: initialLang });
 
     function applyBirthFromUrlIfAny() {
       const birth = decodeBirthFromUrl();
@@ -527,6 +658,13 @@
       renderResult(saju, lang, null);
       track('saju_reading_generated', { dayMaster: saju.dayMaster, readingType, lang });
       document.getElementById('result').hidden = false;
+      // feedback card도 결과와 함께 노출 (이미 제출했으면 initFeedback이 hidden 유지)
+      const fbCard = document.getElementById('feedback-card');
+      if (fbCard) {
+        try {
+          if (!localStorage.getItem('saju.fb.submitted')) fbCard.hidden = false;
+        } catch { fbCard.hidden = false; }
+      }
       document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
       // 2) Try LLM reading (Cloudflare Worker), fallback to rule-based
