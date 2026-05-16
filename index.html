@@ -294,9 +294,16 @@
             sessionId: getSessionId(),
             extra: payload,
           });
-          const blob = new Blob([body], { type: 'application/json' });
-          if (navigator.sendBeacon) navigator.sendBeacon(WORKER_URL + '/track', blob);
-          else fetch(WORKER_URL + '/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(() => {});
+          // fetch(keepalive)로 통일 — sendBeacon은 application/json blob에서
+          // preflight 트리거 후 일부 브라우저(특히 HeadlessChrome)에서 silently
+          // drop. keepalive=true는 unload-safe이면서 도착 신뢰성 높음.
+          fetch(WORKER_URL + '/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body,
+            keepalive: true,
+            mode: 'cors',
+          }).catch(() => {});
         } catch {}
       }
     }
