@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Saju logo · 1080×1080 · LS store avatar -->
+<!-- Design system: dark night (#0a0a0f) + hanji gold (#d4a574) + 四 hanja -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080">
+  <!-- Background -->
+  <rect width="1080" height="1080" fill="#0a0a0f"/>
+
+  <!-- Outer hairline frame (subtle) -->
+  <rect x="60" y="60" width="960" height="960" fill="none" stroke="#d4a574" stroke-opacity="0.18" stroke-width="1"/>
+
+  <!-- Corner ticks (designer pattern) -->
+  <g stroke="#d4a574" stroke-width="2" fill="none">
+    <!-- top-left -->
+    <path d="M 80 110 L 80 80 L 110 80"/>
+    <!-- top-right -->
+    <path d="M 970 80 L 1000 80 L 1000 110"/>
+    <!-- bottom-left -->
+    <path d="M 80 970 L 80 1000 L 110 1000"/>
+    <!-- bottom-right -->
+    <path d="M 970 1000 L 1000 1000 L 1000 970"/>
+  </g>
+
+  <!-- Central gold-bordered square containing 四 -->
+  <rect x="320" y="320" width="440" height="440" fill="none" stroke="#d4a574" stroke-width="3"/>
+
+  <!-- 四 hanja, centered -->
+  <text x="540" y="612"
+        text-anchor="middle"
+        font-family="'Noto Serif KR', 'Noto Serif SC', 'Noto Serif JP', Georgia, serif"
+        font-weight="500"
+        font-size="320"
+        fill="#d4a574">四</text>
+
+  <!-- Eyebrow label below the hanja -->
+  <text x="540" y="900"
+        text-anchor="middle"
+        font-family="'JetBrains Mono', 'SF Mono', Menlo, monospace"
+        font-weight="500"
+        font-size="38"
+        letter-spacing="14"
+        fill="#8a7f6e">SAJU · 四柱</text>
+</svg>

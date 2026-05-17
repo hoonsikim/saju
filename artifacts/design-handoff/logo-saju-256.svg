@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Saju favicon · 256×256 · simplified for small sizes -->
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <rect width="256" height="256" fill="#0a0a0f"/>
+  <rect x="48" y="48" width="160" height="160" fill="none" stroke="#d4a574" stroke-width="2"/>
+  <text x="128" y="172"
+        text-anchor="middle"
+        font-family="'Noto Serif KR', 'Noto Serif SC', 'Noto Serif JP', Georgia, serif"
+        font-weight="500"
+        font-size="148"
+        fill="#d4a574">四</text>
+</svg>
