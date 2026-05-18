@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Saju Deep Reading · Tier I · 1200×900 (4:3) · LS media tab -->
+<!-- Same visual system as 1080×1080 — re-laid for 4:3 -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
+  <defs>
+    <linearGradient id="bgGrad43" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#100d12"/>
+      <stop offset="100%" stop-color="#06050a"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="900" fill="url(#bgGrad43)"/>
+
+  <!-- Inner hairline frame -->
+  <rect x="28" y="28" width="1144" height="844" fill="none" stroke="#d4a574" stroke-opacity="0.2" stroke-width="1"/>
+
+  <!-- Vertical brand line (left) -->
+  <line x1="60" y1="60" x2="60" y2="840" stroke="#2a2520" stroke-width="1"/>
+
+  <!-- Top bar -->
+  <g transform="translate(92, 56)">
+    <rect x="0" y="0" width="36" height="36" fill="none" stroke="#d4a574" stroke-width="1"/>
+    <text x="18" y="28" text-anchor="middle"
+          font-family="'Noto Serif KR', 'Noto Serif SC', serif"
+          font-size="22" fill="#d4a574">四</text>
+    <text x="56" y="24"
+          font-family="'JetBrains Mono', monospace"
+          font-size="16" letter-spacing="5" fill="#8a7f6e">SAJU · 四柱</text>
+  </g>
+  <text x="1144" y="80" text-anchor="end"
+        font-family="'JetBrains Mono', monospace"
+        font-size="16" letter-spacing="4" fill="#8a7f6e">01 · 五領域 · FIVE DOMAINS</text>
+
+  <!-- Four-pillar hero (center y ~ 450) -->
+  <g font-family="'Noto Serif KR', 'Noto Serif SC', serif" font-weight="500">
+    <g transform="translate(255, 450)">
+      <text text-anchor="middle" y="-80" font-size="150" fill="#d4a574">庚</text>
+      <line x1="-14" y1="-42" x2="14" y2="-42" stroke="#3a3328" stroke-width="1"/>
+      <text text-anchor="middle" y="108" font-size="150" fill="#ede4d3">午</text>
+      <text text-anchor="middle" y="158"
+            font-family="'JetBrains Mono', monospace"
+            font-size="13" letter-spacing="4" fill="#5e5648">HOUR</text>
+    </g>
+    <g transform="translate(485, 450)">
+      <text text-anchor="middle" y="-80" font-size="150" fill="#d4a574">戊</text>
+      <line x1="-14" y1="-42" x2="14" y2="-42" stroke="#3a3328" stroke-width="1"/>
+      <text text-anchor="middle" y="108" font-size="150" fill="#ede4d3">子</text>
+      <text text-anchor="middle" y="158"
+            font-family="'JetBrains Mono', monospace"
+            font-size="13" letter-spacing="4" fill="#5e5648">DAY</text>
+    </g>
+    <g transform="translate(715, 450)">
+      <text text-anchor="middle" y="-80" font-size="150" fill="#d4a574">己</text>
+      <line x1="-14" y1="-42" x2="14" y2="-42" stroke="#3a3328" stroke-width="1"/>
+      <text text-anchor="middle" y="108" font-size="150" fill="#ede4d3">未</text>
+      <text text-anchor="middle" y="158"
+            font-family="'JetBrains Mono', monospace"
+            font-size="13" letter-spacing="4" fill="#5e5648">MONTH</text>
+    </g>
+    <g transform="translate(945, 450)">
+      <text text-anchor="middle" y="-80" font-size="150" fill="#d4a574">壬</text>
+      <line x1="-14" y1="-42" x2="14" y2="-42" stroke="#3a3328" stroke-width="1"/>
+      <text text-anchor="middle" y="108" font-size="150" fill="#ede4d3">申</text>
+      <text text-anchor="middle" y="158"
+            font-family="'JetBrains Mono', monospace"
+            font-size="13" letter-spacing="4" fill="#5e5648">YEAR</text>
+    </g>
+  </g>
+
+  <!-- Bottom row: title + price -->
+  <g transform="translate(92, 778)">
+    <text font-family="'EB Garamond', Georgia, serif"
+          font-style="italic" font-size="56" fill="#ede4d3" letter-spacing="-0.5">Deep Reading</text>
+    <text y="40"
+          font-family="'Noto Serif KR', serif"
+          font-size="28" fill="#8a7f6e" letter-spacing="2">심층 풀이</text>
+  </g>
+  <g transform="translate(1144, 790)">
+    <rect x="-200" y="-44" width="200" height="64" fill="none" stroke="#d4a574" stroke-width="1"/>
+    <text x="-182" y="-12"
+          font-family="'JetBrains Mono', monospace"
+          font-size="13" letter-spacing="4" fill="#8a7f6e">ONE-TIME</text>
+    <text x="-182" y="12"
+          font-family="'JetBrains Mono', monospace"
+          font-size="36" font-weight="500" fill="#d4a574" letter-spacing="1">$7</text>
+  </g>
+
+  <!-- Corner ticks -->
+  <g stroke="#d4a574" stroke-width="1" fill="none">
+    <path d="M 28 50 L 28 28 L 50 28"/>
+    <path d="M 1150 28 L 1172 28 L 1172 50"/>
+    <path d="M 28 850 L 28 872 L 50 872"/>
+    <path d="M 1150 872 L 1172 872 L 1172 850"/>
+  </g>
+</svg>
