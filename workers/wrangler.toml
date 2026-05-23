@@ -6,7 +6,7 @@ workers_dev = true
 [vars]
 ALLOWED_ORIGIN = "https://hoonsikim.github.io"
 ANTHROPIC_MODEL = "claude-haiku-4-5-20251001"
-MAX_TOKENS = "1024"
+MAX_TOKENS = "6144"
 
 # Secrets (set via `wrangler secret put`):
 #   ANTHROPIC_API_KEY

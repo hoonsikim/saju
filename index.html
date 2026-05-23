@@ -180,7 +180,6 @@
         </div>
 
         <h3 id="result-h3-reading">Reading</h3>
-        <div class="reading-badge" id="reading-badge"></div>
         <div class="reading-text" id="reading-text"></div>
 
         <section class="major-luck-section" id="major-luck-section" hidden>
@@ -826,8 +825,7 @@
       // 2) Try LLM reading (Cloudflare Worker), fallback to rule-based
       const llmText = await fetchLLMReading(input);
       const reading = llmText || generateReading(saju, lang);
-      const provenance = llmText ? 'llm' : 'rule';
-      renderReading(reading, provenance, lang);
+      renderReading(reading, lang);
 
       submitBtn.disabled = false;
       submitBtn.textContent = T.submit;
@@ -1048,20 +1046,9 @@
       document.getElementById('reading-text').textContent = t.placeholder;
     }
 
-    function renderReading(text, provenance, lang) {
+    function renderReading(text, lang) {
       const el = document.getElementById('reading-text');
       el.textContent = text;
-      const badge = document.getElementById('reading-badge');
-      if (badge) {
-        const t = UI_TEXT[lang] || UI_TEXT.en;
-        if (provenance === 'llm') {
-          badge.textContent = t.badgeLlm;
-          badge.className = 'reading-badge badge-llm';
-        } else {
-          badge.textContent = t.badgeRule;
-          badge.className = 'reading-badge badge-rule';
-        }
-      }
     }
   </script>
 </body>

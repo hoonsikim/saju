@@ -92,7 +92,7 @@ function validateReadingInput(input) {
 async function callClaude(env, request) {
   const body = {
     model: env.ANTHROPIC_MODEL || 'claude-haiku-4-5-20251001',
-    max_tokens: Number(env.MAX_TOKENS) || 1024,
+    max_tokens: Number(env.MAX_TOKENS) || 6144,
     system: request.system,
     messages: request.messages,
   };
@@ -146,7 +146,7 @@ async function handleReading(request, env) {
     return json({ error: `saju calc failed: ${e.message}` }, 500, env);
   }
 
-  const claudeReq = buildClaudeRequest(saju, { language });
+  const claudeReq = buildClaudeRequest(saju, { language, readingType: input.readingType });
 
   let reading;
   try {
