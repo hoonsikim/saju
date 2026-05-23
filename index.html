@@ -321,9 +321,9 @@
       }
     }
 
-    // Lemon Squeezy product URL (ADR-020 stub).
-    // 비어있으면 mailto 폴백 유지. Product ID 받으면 window.SAJU_LS_DEEP_URL 또는 이 const 채움.
-    const LS_DEEP_URL = window.SAJU_LS_DEEP_URL || '';
+    // Lemon Squeezy Deep Reading checkout (LIVE — Saju Deep Reading $7, test mode).
+    // variant slug 66b82c2f-1e1a-4168-962a-5cace3f040c3 · product_id 1080791
+    const LS_DEEP_URL = window.SAJU_LS_DEEP_URL || 'https://hcompanysaju.lemonsqueezy.com/checkout/buy/66b82c2f-1e1a-4168-962a-5cace3f040c3';
     function applyPaidLinks() {
       if (LS_DEEP_URL) {
         const cta = document.getElementById('upsell-deep-cta');
