@@ -112,6 +112,11 @@
       </div>
     </section>
 
+    <div id="paid-banner" hidden role="status" aria-live="polite" style="max-width:720px;margin:16px auto 0;padding:14px 18px;background:linear-gradient(135deg,#1a3d2e,#0f2920);border:1px solid #2d6a4f;border-radius:8px;color:#d4f0e0;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+      <span id="paid-banner-text">Payment confirmed · Showing your reading · Email also on the way</span>
+      <button id="paid-banner-close" aria-label="Close" style="background:transparent;border:0;color:#d4f0e0;font-size:20px;line-height:1;cursor:pointer;padding:0 4px;">&times;</button>
+    </div>
+
     <section class="form-section">
       <div class="container narrow">
         <h2 id="form-h2">Get your free reading</h2>
@@ -339,6 +344,20 @@
     };
     const paidCtaText = (lang) => PAID_CTA_I18N[lang] || PAID_CTA_I18N.en;
 
+    // Path 1 banner — 결제 직후 redirect 복귀 시 상단 안내
+    const PAID_BANNER_I18N = {
+      en: 'Payment confirmed · Showing your reading · Email also on the way',
+      ko: '결제 완료 · 결과를 표시합니다 · 이메일도 곧 도착합니다',
+      ja: '決済完了 · リーディングを表示します · メールも間もなく届きます',
+      zh: '支付完成 · 正在显示解读 · 邮件即将送达',
+      es: 'Pago confirmado · Mostrando tu lectura · El correo también está en camino',
+      pt: 'Pagamento confirmado · Mostrando sua leitura · O e-mail também está a caminho',
+      fr: 'Paiement confirmé · Affichage de votre lecture · L’e-mail arrive aussi',
+      de: 'Zahlung bestätigt · Lesung wird angezeigt · E-Mail folgt in Kürze',
+      ar: 'تم تأكيد الدفع · جارٍ عرض القراءة · البريد الإلكتروني في الطريق',
+    };
+    const paidBannerText = (lang) => PAID_BANNER_I18N[lang] || PAID_BANNER_I18N.en;
+
     // LS checkout URL에 birth state를 custom 파라미터로 동봉.
     // 폼 제출 후엔 그 값을, 제출 전엔 base URL만. n8n webhook이 meta.custom_data로 받음.
     function buildCheckoutUrl() {
@@ -370,9 +389,29 @@
           // 클릭 직전 동적 href — 사용자가 form 제출 후 birth state 동봉
           const dyn = buildCheckoutUrl();
           if (dyn) cta.href = dyn;
+          // Path 1: birth state를 localStorage에 보존. redirect 복귀 시 즉시 표시용.
+          if (lastInput) {
+            try {
+              localStorage.setItem('saju.paid.lastInput', JSON.stringify(lastInput));
+              localStorage.setItem('saju.paid.ts', String(Date.now()));
+            } catch {}
+          }
           track('saju_paid_click', { product: 'deep', hasBirth: !!lastInput });
         });
         cta.dataset.paidTracked = '1';
+      }
+      // Path 1 banner — ?paid=deep 복귀 시 안내 + 다국어 textContent swap
+      const banner = document.getElementById('paid-banner');
+      const bannerText = document.getElementById('paid-banner-text');
+      if (banner && bannerText) {
+        bannerText.textContent = paidBannerText(lang);
+        const hasPaid = new URL(window.location.href).searchParams.get('paid') === 'deep';
+        if (hasPaid) banner.hidden = false;
+        const closeBtn = document.getElementById('paid-banner-close');
+        if (closeBtn && !closeBtn.dataset.bound) {
+          closeBtn.addEventListener('click', () => { banner.hidden = true; });
+          closeBtn.dataset.bound = '1';
+        }
       }
     }
 
@@ -760,6 +799,29 @@
       submitBtn.disabled = false;
       submitBtn.textContent = T.submit;
     });
+
+    // Path 1: ?paid=deep 복귀 → localStorage에서 birth 복원 → URL ?b=&t= 주입
+    // 기존 applyBirthFromUrlIfAny → auto-submit 흐름을 그대로 재사용한다.
+    function restorePaidBirth() {
+      const url = new URL(window.location.href);
+      if (url.searchParams.get('paid') !== 'deep') return false;
+      if (url.searchParams.get('b')) return false; // 이미 birth URL 있음 → 우선
+      try {
+        const raw = localStorage.getItem('saju.paid.lastInput');
+        if (!raw) return false;
+        const f = JSON.parse(raw);
+        if (!f || !f.year || !f.month || !f.day) return false;
+        const pad = n => String(n).padStart(2, '0');
+        const b = `${f.year}${pad(f.month)}${pad(f.day)}${pad(f.hour ?? 12)}${pad(f.minute ?? 0)}`;
+        const t = READING_TYPE_CODE[f.readingType] || 'g';
+        url.searchParams.set('b', b);
+        url.searchParams.set('t', t);
+        window.history.replaceState({}, '', url.toString());
+        track('saju_paid_return', { hasBirth: true });
+        return true;
+      } catch { return false; }
+    }
+    restorePaidBirth();
 
     if (applyBirthFromUrlIfAny()) {
       requestAnimationFrame(() => {
