@@ -324,15 +324,33 @@
     // Lemon Squeezy Deep Reading checkout (LIVE — Saju Deep Reading $7, test mode).
     // variant slug 66b82c2f-1e1a-4168-962a-5cace3f040c3 · product_id 1080791
     const LS_DEEP_URL = window.SAJU_LS_DEEP_URL || 'https://hcompanysaju.lemonsqueezy.com/checkout/buy/66b82c2f-1e1a-4168-962a-5cace3f040c3';
+
+    // LS_DEEP_URL 활성 시 CTA 텍스트도 결제 유도로 swap (i18n 9 lang + en 폴백)
+    const PAID_CTA_I18N = {
+      en: 'Buy Deep Reading · $7 →',
+      ko: '심층 풀이 구매 · $7 →',
+      ja: '心層リーディング購入 · $7 →',
+      zh: '购买心层解读 · $7 →',
+      es: 'Comprar lectura profunda · $7 →',
+      pt: 'Comprar leitura profunda · $7 →',
+      fr: 'Acheter la lecture approfondie · $7 →',
+      de: 'Tiefenlesung kaufen · $7 →',
+      ar: 'شراء قراءة عميقة · $7 →',
+    };
+    const paidCtaText = (lang) => PAID_CTA_I18N[lang] || PAID_CTA_I18N.en;
+
     function applyPaidLinks() {
-      if (LS_DEEP_URL) {
-        const cta = document.getElementById('upsell-deep-cta');
-        if (cta) {
-          cta.href = LS_DEEP_URL;
-          cta.setAttribute('rel', 'noopener');
-          cta.setAttribute('target', '_blank');
-          cta.addEventListener('click', () => track('saju_paid_click', { product: 'deep' }), { once: true });
-        }
+      if (!LS_DEEP_URL) return;
+      const cta = document.getElementById('upsell-deep-cta');
+      if (!cta) return;
+      cta.href = LS_DEEP_URL;
+      cta.setAttribute('rel', 'noopener');
+      cta.setAttribute('target', '_blank');
+      const lang = document.getElementById('language')?.value || document.documentElement.lang || 'en';
+      cta.textContent = paidCtaText(lang);
+      if (!cta.dataset.paidTracked) {
+        cta.addEventListener('click', () => track('saju_paid_click', { product: 'deep' }));
+        cta.dataset.paidTracked = '1';
       }
     }
 
@@ -498,6 +516,7 @@
 
       applyFeedbackI18n(lang);
       applyDepthI18n(lang);
+      applyPaidLinks();
     }
 
     // 깊이 영역 라벨 swap (값은 그대로). 완전 swap은 form 재제출 시 renderResult가.
