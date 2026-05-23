@@ -225,6 +225,12 @@
               <div class="upsell-title" id="upsell-deep-title">Deeper LLM Reading · $7</div>
               <p class="upsell-desc" id="upsell-deep-desc">1500-word reading across 5 areas (love, career, wealth, health, timing). PDF download. AI-powered.</p>
               <a class="upsell-cta" id="upsell-deep-cta" href="mailto:h.company.sean@gmail.com?subject=Saju%20Deep%20Reading%20%247%20%E2%80%94%20notify%20me&body=Notify%20me%20when%20Deep%20Reading%20goes%20live.%0A%0AMy%20Day%20Master%20(if%20you%20already%20did%20the%20free%20reading):%20%0A">Notify me when live →</a>
+              <p class="paid-agreement" id="paid-agreement" style="margin:10px 0 0;font-size:11px;line-height:1.5;color:#8a7f6e;letter-spacing:0.2px;">
+                <span id="paid-agreement-text">By purchasing, you agree to instant delivery and waive your 14-day right of withdrawal.</span>
+                <a href="./legal/terms/" id="paid-agreement-terms" style="color:#a89a82;text-decoration:underline;">Terms</a>
+                ·
+                <a href="./legal/refund/" id="paid-agreement-refund" style="color:#a89a82;text-decoration:underline;">Refund</a>
+              </p>
             </div>
             <div class="upsell-card" id="upsell-compat">
               <div class="upsell-title" id="upsell-compat-title">Compatibility · $7 per pair</div>
@@ -361,6 +367,20 @@
     };
     const paidBannerText = (lang) => PAID_BANNER_I18N[lang] || PAID_BANNER_I18N.en;
 
+    // 결제 동의 문구 (옵션 C) — 즉시 발송 동의 + 14일 청약철회권 포기
+    const PAID_AGREEMENT_I18N = {
+      en: { text: 'By purchasing, you agree to instant delivery and waive your 14-day right of withdrawal.', terms: 'Terms', refund: 'Refund' },
+      ko: { text: '구매 시 즉시 발송에 동의하며 14일 청약철회권을 포기합니다.', terms: '약관', refund: '환불' },
+      ja: { text: 'ご購入により即時配信に同意し、14日間の撤回権を放棄したものとみなされます。', terms: '規約', refund: '返金' },
+      zh: { text: '购买即视为同意即时交付，并放弃 14 天撤回权。', terms: '条款', refund: '退款' },
+      es: { text: 'Al comprar, acepta la entrega inmediata y renuncia a su derecho de desistimiento de 14 días.', terms: 'Términos', refund: 'Reembolso' },
+      pt: { text: 'Ao comprar, você concorda com a entrega imediata e renuncia ao seu direito de retirada de 14 dias.', terms: 'Termos', refund: 'Reembolso' },
+      fr: { text: 'En achetant, vous acceptez la livraison immédiate et renoncez à votre droit de rétractation de 14 jours.', terms: 'Conditions', refund: 'Remboursement' },
+      de: { text: 'Mit dem Kauf stimmen Sie der sofortigen Lieferung zu und verzichten auf Ihr 14-tägiges Widerrufsrecht.', terms: 'AGB', refund: 'Erstattung' },
+      ar: { text: 'بالشراء، فإنك توافق على التسليم الفوري وتتنازل عن حقك في الانسحاب لمدة 14 يومًا.', terms: 'الشروط', refund: 'الاسترداد' },
+    };
+    const paidAgreement = (lang) => PAID_AGREEMENT_I18N[lang] || PAID_AGREEMENT_I18N.en;
+
     // LS checkout URL에 birth state를 custom 파라미터로 동봉.
     // 폼 제출 후엔 그 값을, 제출 전엔 base URL만. n8n webhook이 meta.custom_data로 받음.
     function buildCheckoutUrl() {
@@ -402,6 +422,16 @@
           track('saju_paid_click', { product: 'deep', hasBirth: !!lastInput });
         });
         cta.dataset.paidTracked = '1';
+      }
+      // 결제 동의 문구 (옵션 C) — 9 lang swap
+      const agText = document.getElementById('paid-agreement-text');
+      const agTerms = document.getElementById('paid-agreement-terms');
+      const agRefund = document.getElementById('paid-agreement-refund');
+      if (agText && agTerms && agRefund) {
+        const ag = paidAgreement(lang);
+        agText.textContent = ag.text;
+        agTerms.textContent = ag.terms;
+        agRefund.textContent = ag.refund;
       }
       // Path 1 banner — ?paid=deep 복귀 시 안내 + 다국어 textContent swap
       const banner = document.getElementById('paid-banner');
