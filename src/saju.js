@@ -197,6 +197,12 @@ export function birthInfoToFourPillars({ year, month, day, hour, minute = 0, gen
     }
   }
 
+  // 신살 (神煞) — 천을귀인·도화살·역마살 (ADR-030)
+  const shenSha = dayMaster ? computeShenSha(pillars, dayMaster) : { tianyi: [], taohwa: [], yeokma: [] };
+
+  // 올해 세운 (Current Year Pillar) — 입춘 기준 + 본인 일간 대비 십신
+  const currentYearPillar = getCurrentYearPillar(new Date(), dayMaster);
+
   return {
     input: { year, month, day, hour, minute, gender, city },
     pillars,
@@ -208,7 +214,78 @@ export function birthInfoToFourPillars({ year, month, day, hour, minute = 0, gen
     twelveStages,
     voidBranches,
     majorLuck,
+    shenSha,
+    currentYearPillar,
   };
+}
+
+// =========================================================================
+// 신살(神煞) — 무료 path 깊이 (ADR-030)
+// 핵심 3개: 천을귀인(天乙貴人) · 도화살(桃花) · 역마살(驛馬)
+// =========================================================================
+
+// 천을귀인 — 일간 → 길지(吉地). 사주 4지지 중 해당 글자 있으면 hit.
+const TIANYI_FROM_GAN = {
+  '甲': ['丑', '未'], '戊': ['丑', '未'], '庚': ['丑', '未'],
+  '乙': ['子', '申'], '己': ['子', '申'],
+  '丙': ['亥', '酉'], '丁': ['亥', '酉'],
+  '壬': ['巳', '卯'], '癸': ['巳', '卯'],
+  '辛': ['寅', '午'],
+};
+
+// 도화살 — 연지·일지 三合 → 桃花 지지 (사왕지)
+const TAOHWA_FROM_BRANCH = {
+  '寅': '卯', '午': '卯', '戌': '卯',
+  '申': '酉', '子': '酉', '辰': '酉',
+  '巳': '午', '酉': '午', '丑': '午',
+  '亥': '子', '卯': '子', '未': '子',
+};
+
+// 역마살 — 三合 첫 글자의 충 (사생지)
+const YEOKMA_FROM_BRANCH = {
+  '寅': '申', '午': '申', '戌': '申',
+  '申': '寅', '子': '寅', '辰': '寅',
+  '巳': '亥', '酉': '亥', '丑': '亥',
+  '亥': '巳', '卯': '巳', '未': '巳',
+};
+
+export function computeShenSha(pillars, dayMaster) {
+  const branches = ['year', 'month', 'day', 'hour']
+    .map(k => pillars[k]?.zhi).filter(Boolean);
+  const branchSet = new Set(branches);
+  const yearZhi = pillars.year?.zhi;
+  const dayZhi = pillars.day?.zhi;
+
+  const tianyi = (TIANYI_FROM_GAN[dayMaster] || []).filter(t => branchSet.has(t));
+
+  const taohwaTargets = new Set();
+  if (yearZhi && TAOHWA_FROM_BRANCH[yearZhi]) taohwaTargets.add(TAOHWA_FROM_BRANCH[yearZhi]);
+  if (dayZhi && TAOHWA_FROM_BRANCH[dayZhi]) taohwaTargets.add(TAOHWA_FROM_BRANCH[dayZhi]);
+  const taohwa = [...taohwaTargets].filter(t => branchSet.has(t));
+
+  const yeokmaTargets = new Set();
+  if (yearZhi && YEOKMA_FROM_BRANCH[yearZhi]) yeokmaTargets.add(YEOKMA_FROM_BRANCH[yearZhi]);
+  if (dayZhi && YEOKMA_FROM_BRANCH[dayZhi]) yeokmaTargets.add(YEOKMA_FROM_BRANCH[dayZhi]);
+  const yeokma = [...yeokmaTargets].filter(t => branchSet.has(t));
+
+  return { tianyi, taohwa, yeokma };
+}
+
+// 올해 세운 (Current Year Pillar) — 입춘 기준 lunar.getYearInGanZhi
+export function getCurrentYearPillar(date = new Date(), dayMaster = null) {
+  try {
+    const lunar = Lunar.fromDate(date);
+    const ganZhi = lunar.getYearInGanZhi();
+    const pillar = analyzePillar(ganZhi);
+    if (!pillar) return null;
+    return {
+      ...pillar,
+      tenGod: dayMaster ? tenGodLabel(dayMaster, pillar.gan) : null,
+      year: date.getFullYear(),
+    };
+  } catch {
+    return null;
+  }
 }
 
 // 5 elements 비율 (백분율)

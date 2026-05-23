@@ -179,6 +179,17 @@
           <span class="void-hint" id="void-hint"></span>
         </div>
 
+        <div class="extras-row" id="extras-row" hidden style="display:flex;gap:12px;flex-wrap:wrap;margin:14px 0 18px;">
+          <div class="extras-box" id="shensha-box" hidden style="flex:1;min-width:240px;padding:12px 14px;border:1px solid #2a2520;border-radius:6px;background:rgba(212,165,116,0.04);">
+            <div style="font-family:monospace;font-size:10px;color:#d4a574;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;" id="shensha-label">Auspicious Stars (神煞)</div>
+            <div id="shensha-content" style="font-size:14px;line-height:1.7;color:#c9bfa9;"></div>
+          </div>
+          <div class="extras-box" id="year-pillar-box" hidden style="flex:1;min-width:240px;padding:12px 14px;border:1px solid #2a2520;border-radius:6px;background:rgba(212,165,116,0.04);">
+            <div style="font-family:monospace;font-size:10px;color:#d4a574;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;" id="year-pillar-label">2026 Year (歲運)</div>
+            <div id="year-pillar-content" style="font-size:14px;line-height:1.7;color:#c9bfa9;"></div>
+          </div>
+        </div>
+
         <h3 id="result-h3-reading">Reading</h3>
         <div class="reading-text" id="reading-text"></div>
 
@@ -379,6 +390,15 @@
       ar: { text: 'بالشراء، فإنك توافق على التسليم الفوري وتتنازل عن حقك في الانسحاب لمدة 14 يومًا.', terms: 'الشروط', refund: 'الاسترداد' },
     };
     const paidAgreement = (lang) => PAID_AGREEMENT_I18N[lang] || PAID_AGREEMENT_I18N.en;
+
+    // ADR-030 — 신살(神煞) + 올해 세운 i18n (en/ko/ja/zh + en 폴백)
+    const EXTRAS_I18N = {
+      en: { stars: 'Auspicious Stars (神煞)', tianyi: 'Heavenly Noble', taohwa: 'Peach Blossom', yeokma: 'Traveling Horse', noneNote: 'No active stars in your chart.', yearTitle: 'Year', tenGodLine: 'vs Day Master' },
+      ko: { stars: '신살(神煞)', tianyi: '천을귀인', taohwa: '도화살', yeokma: '역마살', noneNote: '활성 신살 없음.', yearTitle: '년 세운', tenGodLine: '일간 대비' },
+      ja: { stars: '神煞', tianyi: '天乙貴人', taohwa: '桃花', yeokma: '駅馬', noneNote: '該当する神煞はありません。', yearTitle: '年運', tenGodLine: '日主との関係' },
+      zh: { stars: '神煞', tianyi: '天乙贵人', taohwa: '桃花', yeokma: '驿马', noneNote: '当前命局无相关神煞。', yearTitle: '年运', tenGodLine: '与日主关系' },
+    };
+    const extrasI18n = (lang) => EXTRAS_I18N[lang] || EXTRAS_I18N.en;
 
     // LS checkout URL에 birth state를 custom 파라미터로 동봉.
     // 폼 제출 후엔 그 값을, 제출 전엔 base URL만. n8n webhook이 meta.custom_data로 받음.
@@ -1012,6 +1032,36 @@
       } else if (voidBox) {
         voidBox.hidden = true;
       }
+
+      // 신살 + 올해 세운 (ADR-030)
+      const ext = extrasI18n(lang);
+      const extrasRow = document.getElementById('extras-row');
+      const shenBox = document.getElementById('shensha-box');
+      const shenLabel = document.getElementById('shensha-label');
+      const shenContent = document.getElementById('shensha-content');
+      const yearBox = document.getElementById('year-pillar-box');
+      const yearLabel = document.getElementById('year-pillar-label');
+      const yearContent = document.getElementById('year-pillar-content');
+      const ss = saju.shenSha || { tianyi: [], taohwa: [], yeokma: [] };
+      const ssHits = [];
+      if (ss.tianyi.length) ssHits.push(`<strong style="color:#d4a574;">${ext.tianyi}</strong> · ${ss.tianyi.join('·')}`);
+      if (ss.taohwa.length) ssHits.push(`<strong style="color:#d4a574;">${ext.taohwa}</strong> · ${ss.taohwa.join('·')}`);
+      if (ss.yeokma.length) ssHits.push(`<strong style="color:#d4a574;">${ext.yeokma}</strong> · ${ss.yeokma.join('·')}`);
+      if (shenLabel) shenLabel.textContent = ext.stars;
+      if (shenContent) shenContent.innerHTML = ssHits.length ? ssHits.join('<br>') : `<span style="color:#8a7f6e;">${ext.noneNote}</span>`;
+      if (shenBox) shenBox.hidden = false;
+      const cy = saju.currentYearPillar;
+      if (cy && yearContent && yearLabel) {
+        yearLabel.textContent = `${cy.year} ${ext.yearTitle}`;
+        const ganColor = ELEMENT_COLOR[cy.ganElement] || '#ede4d3';
+        const zhiColor = ELEMENT_COLOR[cy.zhiElement] || '#ede4d3';
+        const tg = cy.tenGod ? `<div style="font-size:11px;color:#8a7f6e;letter-spacing:1px;margin-top:4px;">${ext.tenGodLine}: <span style="color:#d4a574;">${cy.tenGod}</span></div>` : '';
+        yearContent.innerHTML = `<div style="font-family:'Noto Serif KR',serif;font-size:22px;line-height:1;"><span style="color:${ganColor};">${cy.gan}</span><span style="color:${zhiColor};">${cy.zhi}</span></div>${tg}`;
+        if (yearBox) yearBox.hidden = false;
+      } else if (yearBox) {
+        yearBox.hidden = true;
+      }
+      if (extrasRow) extrasRow.hidden = false;
 
       // 대운 (大運) — 10년 단위
       const luckSec = document.getElementById('major-luck-section');

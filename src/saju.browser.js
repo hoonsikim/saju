@@ -110,11 +110,67 @@ export function birthInfoToFourPillars({ year, month, day, hour, minute = 0, gen
       majorLuck = { startYear, startMonth, startDay, cycles };
     } catch {}
   }
+  // 신살 + 올해 세운 (ADR-030)
+  const shenSha = dayMaster ? computeShenSha(pillars, dayMaster) : { tianyi: [], taohwa: [], yeokma: [] };
+  const currentYearPillar = getCurrentYearPillar(new Date(), dayMaster);
+
   return {
     input: { year, month, day, hour, minute, gender, city },
     pillars, dayMaster, dayMasterElement, elements, tenGods,
     hiddenStems, twelveStages, voidBranches, majorLuck,
+    shenSha, currentYearPillar,
   };
+}
+
+// 신살 (ADR-030) — 천을귀인·도화살·역마살
+const TIANYI_FROM_GAN = {
+  '甲': ['丑','未'], '戊': ['丑','未'], '庚': ['丑','未'],
+  '乙': ['子','申'], '己': ['子','申'],
+  '丙': ['亥','酉'], '丁': ['亥','酉'],
+  '壬': ['巳','卯'], '癸': ['巳','卯'],
+  '辛': ['寅','午'],
+};
+const TAOHWA_FROM_BRANCH = {
+  '寅':'卯','午':'卯','戌':'卯',
+  '申':'酉','子':'酉','辰':'酉',
+  '巳':'午','酉':'午','丑':'午',
+  '亥':'子','卯':'子','未':'子',
+};
+const YEOKMA_FROM_BRANCH = {
+  '寅':'申','午':'申','戌':'申',
+  '申':'寅','子':'寅','辰':'寅',
+  '巳':'亥','酉':'亥','丑':'亥',
+  '亥':'巳','卯':'巳','未':'巳',
+};
+
+export function computeShenSha(pillars, dayMaster) {
+  const branches = ['year','month','day','hour'].map(k => pillars[k]?.zhi).filter(Boolean);
+  const branchSet = new Set(branches);
+  const yearZhi = pillars.year?.zhi;
+  const dayZhi = pillars.day?.zhi;
+  const tianyi = (TIANYI_FROM_GAN[dayMaster] || []).filter(t => branchSet.has(t));
+  const taohwaTargets = new Set();
+  if (yearZhi && TAOHWA_FROM_BRANCH[yearZhi]) taohwaTargets.add(TAOHWA_FROM_BRANCH[yearZhi]);
+  if (dayZhi && TAOHWA_FROM_BRANCH[dayZhi]) taohwaTargets.add(TAOHWA_FROM_BRANCH[dayZhi]);
+  const taohwa = [...taohwaTargets].filter(t => branchSet.has(t));
+  const yeokmaTargets = new Set();
+  if (yearZhi && YEOKMA_FROM_BRANCH[yearZhi]) yeokmaTargets.add(YEOKMA_FROM_BRANCH[yearZhi]);
+  if (dayZhi && YEOKMA_FROM_BRANCH[dayZhi]) yeokmaTargets.add(YEOKMA_FROM_BRANCH[dayZhi]);
+  const yeokma = [...yeokmaTargets].filter(t => branchSet.has(t));
+  return { tianyi, taohwa, yeokma };
+}
+
+export function getCurrentYearPillar(date = new Date(), dayMaster = null) {
+  try {
+    const lunar = Lunar.fromDate(date);
+    const pillar = analyzePillar(lunar.getYearInGanZhi());
+    if (!pillar) return null;
+    return {
+      ...pillar,
+      tenGod: dayMaster ? tenGodLabel(dayMaster, pillar.gan) : null,
+      year: date.getFullYear(),
+    };
+  } catch { return null; }
 }
 
 export function elementBalance(saju) {

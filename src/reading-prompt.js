@@ -144,6 +144,19 @@ export function userMessage(saju, options = {}) {
     ? `\n\nVoid branches (空亡, from Day pillar ${saju.pillars.day.ganZhi}'s 旬): ${saju.voidBranches}\n  → branches that lose substance in this chart; events touching them often feel incomplete, detached, or "not for them"`
     : '';
 
+  // ADR-030 — 신살(神煞) + 올해 세운 데이터 (LLM이 활용)
+  const ss = saju.shenSha || { tianyi: [], taohwa: [], yeokma: [] };
+  const ssParts = [];
+  if (ss.tianyi.length) ssParts.push(`天乙貴人 (Heavenly Noble — protection, divine help): ${ss.tianyi.join('·')}`);
+  if (ss.taohwa.length) ssParts.push(`桃花 (Peach Blossom — charm, attractiveness, magnetism): ${ss.taohwa.join('·')}`);
+  if (ss.yeokma.length) ssParts.push(`驛馬 (Traveling Horse — movement, travel, change): ${ss.yeokma.join('·')}`);
+  const shenShaLine = ssParts.length ? `\n\nAuspicious Stars (神煞) active in chart:\n${ssParts.map(p => '  - ' + p).join('\n')}` : '';
+
+  const cy = saju.currentYearPillar;
+  const yearPillarLine = cy
+    ? `\n\nCurrent year pillar (${cy.year} 歲運): ${cy.ganZhi} [${cy.ganElement} stem / ${cy.zhiElement} branch, ten-god vs Day Master: ${cy.tenGod || 'N/A'}]\n  → use this to anchor "what this year is about" insight in section 5 (Timing & Cycles).`
+    : '';
+
   let luckLine = '';
   if (saju.majorLuck && saju.majorLuck.cycles && saju.majorLuck.cycles.length) {
     const upcoming = saju.majorLuck.cycles.slice(0, 8).map(c =>
@@ -172,7 +185,7 @@ Five Elements balance (8 chars total):
 Ten Gods (relative to Day Master ${saju.dayMaster}):
 - Year stem:  ${saju.tenGods.yearGan || 'N/A'}
 - Month stem: ${saju.tenGods.monthGan || 'N/A'}
-- Hour stem:  ${saju.tenGods.hourGan || 'N/A'}${voidLine}${luckLine}
+- Hour stem:  ${saju.tenGods.hourGan || 'N/A'}${voidLine}${shenShaLine}${luckLine}${yearPillarLine}
 
 Reading type requested: ${readingType}
 Output language: ${language}
