@@ -38,9 +38,10 @@ Write the reading in {LANGUAGE} as a structured, deeply personalized long-form a
 - 12-stage of Day pillar in relationship dynamics context
 - Compatible patterns + patterns to be careful with (name them — Day Master pairings)
 
-## Section 4 — Wealth & Resources (~400 words)
+## Section 4 — Wealth & Resources (~400 words{S4_BONUS})
+- Identify the **format (格局)** implied by the Month branch + transparent stems (e.g. 正官格·偏財格·食神生財·建祿格) and what archetype of wealth path it suggests
 - Wealth star (正财 / 偏财) analysis — steady income vs windfall pattern
-- Earth element role (storage of wealth)
+- Earth element role (storage of wealth, 財庫) + **favorable element (用神/喜神)** for this chart
 - Practical financial style (saver / spender / risk-taker / institution-builder)
 - One concrete financial behavior to lean into
 
@@ -79,6 +80,7 @@ The client requested readingType = "{READING_TYPE}":
 - general: balanced across all 5 sections + closing
 - career: section 2 expands to ~800 words with deeper directional detail
 - love: section 3 expands to ~800 words with deeper relationship dynamics
+- wealth: section 4 expands to ~800 words with deeper format(格局)·用神·財星 dynamics + 流年 cross-check timing
 
 Integrate the hidden stems, 12 stages, void branches, and major luck cycles as SUBSTANTIVE material throughout — they are the depth that makes this a paid reading, not footnotes.`;
 
@@ -111,13 +113,14 @@ const LANGUAGE_NAMES = {
  */
 export function systemPrompt(language, readingType = 'general') {
   const langName = LANGUAGE_NAMES[language] || LANGUAGE_NAMES.en;
-  const rt = ['general', 'career', 'love'].includes(readingType) ? readingType : 'general';
+  const rt = ['general', 'career', 'love', 'wealth'].includes(readingType) ? readingType : 'general';
   return SYSTEM_PROMPT_BASE
     .replaceAll('{LANGUAGE}', langName)
     .replaceAll('{READING_TYPE}', rt)
     .replaceAll('{S1_BONUS}', '')
     .replaceAll('{S2_BONUS}', rt === 'career' ? ', expand to ~800 words for this client (career focus)' : '')
-    .replaceAll('{S3_BONUS}', rt === 'love' ? ', expand to ~800 words for this client (love focus)' : '');
+    .replaceAll('{S3_BONUS}', rt === 'love' ? ', expand to ~800 words for this client (love focus)' : '')
+    .replaceAll('{S4_BONUS}', rt === 'wealth' ? ', expand to ~800 words for this client (wealth focus): 格局 + 用神 + 流年 cross-check' : '');
 }
 
 /**

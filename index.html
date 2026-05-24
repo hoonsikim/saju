@@ -152,6 +152,7 @@
                 <option value="general">General — life direction</option>
                 <option value="career">Career &amp; work</option>
                 <option value="love">Love &amp; relationships</option>
+                <option value="wealth">Wealth &amp; resources</option>
               </select>
             </label>
           </div>
@@ -233,7 +234,7 @@
           <div class="upsell-row">
             <div class="upsell-card" id="upsell-deep">
               <div class="upsell-title" id="upsell-deep-title">Deeper LLM Reading · $7</div>
-              <p class="upsell-desc" id="upsell-deep-desc">1500-word reading across 5 areas (love, career, wealth, health, timing). PDF download. AI-powered.</p>
+              <p class="upsell-desc" id="upsell-deep-desc">2500-3500 word deep reading across 5 sections (Personality · Career · Love · Wealth · Timing) + closing insight. Choose your focus (career / love / wealth) → that section expands to ~800 words. Rule-based chart (deterministic) + LLM interpretation. Delivered to your inbox in your selected language.</p>
               <a class="upsell-cta" id="upsell-deep-cta" href="mailto:h.company.sean@gmail.com?subject=Saju%20Deep%20Reading%20%247%20%E2%80%94%20notify%20me&body=Notify%20me%20when%20Deep%20Reading%20goes%20live.%0A%0AMy%20Day%20Master%20(if%20you%20already%20did%20the%20free%20reading):%20%0A">Notify me when live →</a>
               <p class="paid-agreement" id="paid-agreement" style="margin:10px 0 0;font-size:11px;line-height:1.5;color:#8a7f6e;letter-spacing:0.2px;">
                 <span id="paid-agreement-text">By purchasing, you agree to instant delivery and waive your 14-day right of withdrawal.</span>
@@ -595,10 +596,11 @@
       }
 
       const rt = document.getElementById('reading-type');
-      if (rt && rt.options.length === 3) {
+      if (rt && rt.options.length === 4) {
         rt.options[0].textContent = t.readingTypeGeneral;
         rt.options[1].textContent = t.readingTypeCareer;
         rt.options[2].textContent = t.readingTypeLove;
+        rt.options[3].textContent = t.readingTypeWealth;
       }
 
       set('result-h2', t.resultH2);
