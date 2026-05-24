@@ -33,6 +33,21 @@ const HOOK_BY_ELEMENT = {
 };
 const URL_LABEL = 'saju.hoonsikim.github.io';
 
+// Day Master archetype name — TikTok-ready hook (Tom·Lily 페르소나 발견)
+// 10 천간 × 4 lang. 영어는 짧고 viral 톤.
+const DAY_MASTER_ARCHETYPE = {
+  '甲': { en: 'The Tall Tree',    ko: '큰 나무',   ja: '大樹',     zh: '大树' },
+  '乙': { en: 'The Vine',         ko: '덩굴',     ja: '蔓',      zh: '藤蔓' },
+  '丙': { en: 'The Sun',          ko: '태양',     ja: '太陽',     zh: '太阳' },
+  '丁': { en: 'The Candle',       ko: '촛불',     ja: '蝋燭',     zh: '烛火' },
+  '戊': { en: 'The Mountain',     ko: '큰 산',    ja: '山',      zh: '高山' },
+  '己': { en: 'The Field',        ko: '밭',      ja: '田畑',     zh: '田园' },
+  '庚': { en: 'The Sword',        ko: '검',      ja: '刀剣',     zh: '利剑' },
+  '辛': { en: 'The Jewel',        ko: '보석',     ja: '宝石',     zh: '珠宝' },
+  '壬': { en: 'The Ocean',        ko: '바다',     ja: '大海',     zh: '汪洋' },
+  '癸': { en: 'The Stream',       ko: '시냇물',   ja: '小川',     zh: '溪流' },
+};
+
 const SIZE = 1080;
 const BG = '#0a0a0f';
 const BG_CARD = '#14141c';
@@ -132,21 +147,29 @@ export async function generateShareCard(saju, lang = 'en') {
   });
 
   // Day Master big highlight
-  const dmY = 660;
+  const dmY = 640;
   ctx.fillStyle = TEXT_SUB;
   ctx.font = '500 26px -apple-system, "Pretendard", sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText(`Day Master · 日主 · ${ELEMENT_NAME[L][saju.dayMasterElement]}`, SIZE / 2, dmY);
 
   ctx.fillStyle = ELEMENT_COLOR[saju.dayMasterElement];
-  ctx.font = '800 180px "Noto Serif KR", "Noto Serif", serif';
-  ctx.fillText(saju.dayMaster, SIZE / 2, dmY + 165);
+  ctx.font = '800 170px "Noto Serif KR", "Noto Serif", serif';
+  ctx.fillText(saju.dayMaster, SIZE / 2, dmY + 150);
+
+  // Archetype name (e.g. "The Sword") — TikTok-ready hook
+  const arch = DAY_MASTER_ARCHETYPE[saju.dayMaster]?.[L] || '';
+  if (arch) {
+    ctx.fillStyle = ACCENT;
+    ctx.font = '600 36px "Noto Serif KR", "Noto Serif", serif';
+    ctx.fillText(arch, SIZE / 2, dmY + 200);
+  }
 
   // Hook (element-based one-liner)
   const hook = HOOK_BY_ELEMENT[saju.dayMasterElement][L];
   ctx.fillStyle = ACCENT_GLOW;
   ctx.font = '600 38px "Noto Serif KR", "Noto Serif", serif';
-  ctx.fillText(hook, SIZE / 2, 920);
+  ctx.fillText(hook, SIZE / 2, 930);
 
   // 5 elements mini bar (small, bottom)
   const total = Object.values(saju.elements).reduce((a, b) => a + b, 0) || 1;
@@ -168,6 +191,115 @@ export async function generateShareCard(saju, lang = 'en') {
   ctx.font = '500 22px -apple-system, "Pretendard", sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText(URL_LABEL, SIZE / 2, 1030);
+
+  return new Promise(resolve => canvas.toBlob(b => resolve(b), 'image/png', 0.95));
+}
+
+/**
+ * 9:16 story variant — IG/TikTok story (1080x1920).
+ * 페르소나 QA P6 (Lily decisive · Tom·민지·Aisha cross-confirm).
+ */
+export async function generateShareCardStory(saju, lang = 'en') {
+  const L = ['en', 'ko', 'ja', 'zh'].includes(lang) ? lang : 'en';
+  const W = 1080, H = 1920;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // Background gradient
+  const bgGrad = ctx.createRadialGradient(W / 2, 300, 200, W / 2, H / 2, H);
+  bgGrad.addColorStop(0, '#1a1520');
+  bgGrad.addColorStop(0.55, BG);
+  bgGrad.addColorStop(1, '#000000');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle grid
+  ctx.strokeStyle = 'rgba(212, 165, 116, 0.04)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i < W; i += 60) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, H); ctx.stroke(); }
+  for (let i = 0; i < H; i += 60) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(W, i); ctx.stroke(); }
+
+  // Top kicker
+  ctx.fillStyle = ACCENT;
+  ctx.font = '500 32px -apple-system, "Pretendard", "Hiragino Sans", "Noto Sans KR", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('사주 · 四柱 · SA-JU', W / 2, 200);
+
+  // Tagline
+  ctx.fillStyle = TEXT;
+  ctx.font = '600 52px "Noto Serif KR", "Noto Serif", Georgia, serif';
+  ctx.fillText(TAGLINE[L], W / 2, 290);
+
+  // 4 pillars row — compact
+  const labels = PILLAR_LABELS[L];
+  const cellW = 200, cellGap = 24, totalW = cellW * 4 + cellGap * 3;
+  const startX = (W - totalW) / 2;
+  const cellY = 380, cellH = 320;
+  ['year', 'month', 'day', 'hour'].forEach((key, i) => {
+    const p = saju.pillars[key];
+    const x = startX + i * (cellW + cellGap);
+    ctx.fillStyle = BG_CARD;
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(x, cellY, cellW, cellH, 18); else ctx.rect(x, cellY, cellW, cellH);
+    ctx.fill();
+    if (key === 'day') {
+      ctx.strokeStyle = ACCENT; ctx.lineWidth = 3;
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(x, cellY, cellW, cellH, 18); else ctx.rect(x, cellY, cellW, cellH);
+      ctx.stroke();
+    }
+    ctx.fillStyle = TEXT_SUB;
+    ctx.font = '500 22px -apple-system, "Pretendard", sans-serif';
+    ctx.fillText(labels[i], x + cellW / 2, cellY + 36);
+    ctx.fillStyle = ELEMENT_COLOR[p.ganElement];
+    ctx.font = '700 110px "Noto Serif KR", "Noto Serif", serif';
+    ctx.fillText(p.gan, x + cellW / 2, cellY + 160);
+    ctx.fillStyle = ELEMENT_COLOR[p.zhiElement];
+    ctx.fillText(p.zhi, x + cellW / 2, cellY + 290);
+  });
+
+  // Day Master — center, BIG (story format hero)
+  const dmY = 900;
+  ctx.fillStyle = TEXT_SUB;
+  ctx.font = '500 28px -apple-system, "Pretendard", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(`Day Master · 日主 · ${ELEMENT_NAME[L][saju.dayMasterElement]}`, W / 2, dmY);
+
+  ctx.fillStyle = ELEMENT_COLOR[saju.dayMasterElement];
+  ctx.font = '800 280px "Noto Serif KR", "Noto Serif", serif';
+  ctx.fillText(saju.dayMaster, W / 2, dmY + 230);
+
+  // Archetype name (e.g. "The Sword") — TikTok-ready one-liner hook
+  const arch = DAY_MASTER_ARCHETYPE[saju.dayMaster]?.[L] || '';
+  if (arch) {
+    ctx.fillStyle = ACCENT;
+    ctx.font = '700 56px "Noto Serif KR", "Noto Serif", serif';
+    ctx.fillText(arch, W / 2, dmY + 320);
+  }
+
+  // Element hook (savage one-liner)
+  const hook = HOOK_BY_ELEMENT[saju.dayMasterElement][L];
+  ctx.fillStyle = ACCENT_GLOW;
+  ctx.font = '600 44px "Noto Serif KR", "Noto Serif", serif';
+  ctx.fillText(hook, W / 2, dmY + 420);
+
+  // 5 elements bar
+  const total = Object.values(saju.elements).reduce((a, b) => a + b, 0) || 1;
+  const barW = 720, barH = 12;
+  const barX = (W - barW) / 2, barY = 1700;
+  let cumX = barX;
+  ['wood', 'fire', 'earth', 'metal', 'water'].forEach(e => {
+    const w = (saju.elements[e] / total) * barW;
+    ctx.fillStyle = ELEMENT_COLOR[e];
+    ctx.fillRect(cumX, barY, w, barH);
+    cumX += w;
+  });
+
+  // Footer URL
+  ctx.fillStyle = TEXT_SUB;
+  ctx.font = '500 26px -apple-system, "Pretendard", sans-serif';
+  ctx.fillText(URL_LABEL, W / 2, 1820);
 
   return new Promise(resolve => canvas.toBlob(b => resolve(b), 'image/png', 0.95));
 }

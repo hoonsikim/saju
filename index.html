@@ -211,7 +211,8 @@
         <p class="major-luck-hint" id="major-luck-hint" hidden></p>
 
         <div class="actions">
-          <button id="card-btn" type="button">Download share card</button>
+          <button id="card-btn" type="button">Share card (1:1)</button>
+          <button id="card-story-btn" type="button">Story card (9:16)</button>
           <button id="share-btn" type="button" class="ghost">Copy share text</button>
           <button id="reset-btn" type="button" class="ghost">New reading</button>
         </div>
@@ -295,7 +296,7 @@
   <script type="module">
     import { birthInfoToFourPillars, elementBalance } from './src/saju.browser.js';
     import { generateReading } from './src/reading-rules.js';
-    import { generateShareCard, downloadBlob, copyBlobToClipboard } from './src/share-card.js';
+    import { generateShareCard, generateShareCardStory, downloadBlob, copyBlobToClipboard } from './src/share-card.js';
     import { ELEMENT_NAME, PILLAR_LABELS, UI_TEXT, LOCALE_TAG, RTL_LANGS, CHROME } from './src/i18n.js';
 
     // Cloudflare Worker URL — LLM 리딩 엔드포인트.
@@ -976,6 +977,33 @@
           btn.textContent = '✓ Downloaded';
         }
         track('saju_card_download', { dayMaster: lastSaju.dayMaster, method: copied ? 'clipboard' : 'download', lang });
+        setTimeout(() => { btn.disabled = false; btn.textContent = originalText; }, 2500);
+      } catch (e) {
+        btn.textContent = '⚠ ' + e.message;
+        setTimeout(() => { btn.disabled = false; btn.textContent = originalText; }, 3000);
+      }
+    });
+
+    document.getElementById('card-story-btn').addEventListener('click', async () => {
+      if (!lastSaju) return;
+      const lang = document.getElementById('language').value;
+      const btn = document.getElementById('card-story-btn');
+      const originalText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = '...';
+      try {
+        const blob = await generateShareCardStory(lastSaju, lang);
+        const preview = document.getElementById('card-preview');
+        preview.innerHTML = `<img src="${URL.createObjectURL(blob)}" alt="Saju story card" style="max-width:50%;border-radius:12px;margin-top:20px;">`;
+        preview.hidden = false;
+        const copied = await copyBlobToClipboard(blob);
+        if (copied) {
+          btn.textContent = '✓ Copied to clipboard';
+        } else {
+          downloadBlob(blob, `saju-story-${lastSaju.dayMaster}-${Date.now()}.png`);
+          btn.textContent = '✓ Downloaded';
+        }
+        track('saju_card_story_download', { dayMaster: lastSaju.dayMaster, method: copied ? 'clipboard' : 'download', lang });
         setTimeout(() => { btn.disabled = false; btn.textContent = originalText; }, 2500);
       } catch (e) {
         btn.textContent = '⚠ ' + e.message;
