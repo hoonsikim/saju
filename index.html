@@ -112,6 +112,11 @@
       </div>
     </section>
 
+    <details class="what-is-saju" id="what-is-saju" style="max-width:720px;margin:14px auto 0;padding:14px 18px;background:rgba(212,165,116,0.04);border-left:2px solid #d4a574;border-radius:4px;color:#c9bfa9;font-size:14px;line-height:1.7;">
+      <summary id="what-is-saju-summary" style="cursor:pointer;font-family:Georgia,serif;font-style:italic;font-size:16px;color:#d4a574;outline:none;">First time? What is Saju? →</summary>
+      <div id="what-is-saju-body" style="margin-top:14px;"></div>
+    </details>
+
     <div id="paid-banner" hidden role="status" aria-live="polite" style="max-width:720px;margin:16px auto 0;padding:14px 18px;background:linear-gradient(135deg,#1a3d2e,#0f2920);border:1px solid #2d6a4f;border-radius:8px;color:#d4f0e0;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
       <span id="paid-banner-text">Payment confirmed · Showing your reading · Email also on the way</span>
       <button id="paid-banner-close" aria-label="Close" style="background:transparent;border:0;color:#d4f0e0;font-size:20px;line-height:1;cursor:pointer;padding:0 4px;">&times;</button>
@@ -179,18 +184,18 @@
         <div class="day-master-box" id="day-master-box"></div>
 
         <div class="void-box" id="void-box" hidden>
-          <span class="void-label" id="void-label">Void (空亡)</span>
+          <span class="void-label" id="void-label" title="Void branches (空亡) — branches that lose substance from your Day pillar's 旬. Events touching them often feel incomplete, detached, or 'not for you'.">Void (空亡)</span>
           <span class="void-chars" id="void-chars"></span>
           <span class="void-hint" id="void-hint"></span>
         </div>
 
         <div class="extras-row" id="extras-row" hidden style="display:flex;gap:12px;flex-wrap:wrap;margin:14px 0 18px;">
           <div class="extras-box" id="shensha-box" hidden style="flex:1;min-width:240px;padding:12px 14px;border:1px solid #2a2520;border-radius:6px;background:rgba(212,165,116,0.04);">
-            <div style="font-family:monospace;font-size:10px;color:#d4a574;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;" id="shensha-label">Auspicious Stars (神煞)</div>
+            <div style="font-family:monospace;font-size:10px;color:#d4a574;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;" id="shensha-label" title="Auspicious Stars (神煞) — lucky stars derived from your Day Master and Year/Day branches. The three core ones: 天乙貴人 (Heavenly Noble, protection), 桃花 (Peach Blossom, charm), 驛馬 (Traveling Horse, movement).">Auspicious Stars (神煞)</div>
             <div id="shensha-content" style="font-size:14px;line-height:1.7;color:#c9bfa9;"></div>
           </div>
           <div class="extras-box" id="year-pillar-box" hidden style="flex:1;min-width:240px;padding:12px 14px;border:1px solid #2a2520;border-radius:6px;background:rgba(212,165,116,0.04);">
-            <div style="font-family:monospace;font-size:10px;color:#d4a574;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;" id="year-pillar-label">2026 Year (歲運)</div>
+            <div style="font-family:monospace;font-size:10px;color:#d4a574;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;" id="year-pillar-label" title="Year Pillar (歲運) — the current year's stem-branch pair, and how it relates to your Day Master via the Ten Gods (十神).">2026 Year (歲運)</div>
             <div id="year-pillar-content" style="font-size:14px;line-height:1.7;color:#c9bfa9;"></div>
           </div>
         </div>
@@ -199,7 +204,7 @@
         <div class="reading-text" id="reading-text"></div>
 
         <section class="major-luck-section" id="major-luck-section" hidden>
-          <h3 class="major-luck-title" id="major-luck-title">Major Luck (大運)</h3>
+          <h3 class="major-luck-title" id="major-luck-title" title="Major Luck (大運) — 10-year luck cycles. Direction (forward/reverse) is set by gender + Year stem yin/yang. Each cycle is a stem-branch pair that colors a decade of your life.">Major Luck (大運)</h3>
           <p class="major-luck-start" id="major-luck-start"></p>
           <div class="major-luck-strip" id="major-luck-strip"></div>
         </section>
@@ -404,6 +409,49 @@
       zh: { stars: '神煞', tianyi: '天乙贵人', taohwa: '桃花', yeokma: '驿马', noneNote: '当前命局无相关神煞。', yearTitle: '年运', tenGodLine: '与日主关系' },
     };
     const extrasI18n = (lang) => EXTRAS_I18N[lang] || EXTRAS_I18N.en;
+
+    // P4 — "What is Saju?" expandable (8 lang, 나머지 영어 폴백). Western Sun sign ↔ Day Master 1:1 bridge.
+    const WHAT_IS_SAJU_I18N = {
+      en: {
+        summary: 'First time? What is Saju? →',
+        body: '<p><strong>Saju (사주, 四柱) literally means "Four Pillars."</strong> It\'s the Korean version of Chinese BaZi (八字) — a birth chart based on your year, month, day, and hour of birth.</p><p><strong>If you know Western astrology:</strong> your Sun sign is one fact about your birth. Saju takes <em>eight</em> facts (a stem + branch for each of Year, Month, Day, Hour), then reads them through Five Elements (五行) and Ten Gods (十神).</p><p><strong>The most personal piece is your Day Master (日主, 일주)</strong> — the elemental archetype of your core self, like a zodiac sign but based on the day you were born.</p><p>This site computes the chart <strong>deterministically in your browser</strong>. The optional $7 Deep Reading adds an AI-written interpretation. We do not predict the future and we do not replace a credentialed practitioner.</p>'
+      },
+      ko: {
+        summary: '사주가 처음? 1분 설명 →',
+        body: '<p><strong>사주(四柱)는 글자 그대로 "네 기둥"입니다.</strong> 태어난 연·월·일·시를 천간·지지(干支) 조합으로 표시한 8글자(八字)가 핵심입니다.</p><p><strong>서양 점성술과 비교하면:</strong> Sun sign 한 가지가 아니라 8가지 정보(연주·월주·일주·시주 각각 천간 + 지지)로 읽습니다. 오행(五行)과 십신(十神)의 관계 분석이 본질입니다.</p><p><strong>가장 개인적인 것은 일주(日主)</strong> — 태어난 날의 천간으로, 그 사람의 본질적 archetype을 나타냅니다. 서양 zodiac sign과 비슷하지만 날 단위로 더 세밀합니다.</p><p>이 사이트는 사주를 <strong>브라우저에서 결정론적으로 계산</strong>합니다. $7 심층 풀이는 AI(Claude Haiku 4.5)가 해석을 더합니다. 미래를 예측하지 않으며, 전문 명리상담사의 자리를 대신하지 않습니다.</p>'
+      },
+      ja: {
+        summary: '初めて? 1分で四柱を理解 →',
+        body: '<p><strong>四柱(さしゅう)は文字通り「四つの柱」を意味します。</strong> 生まれた年・月・日・時を干支の組み合わせで表した八文字(八字)が本質です。</p><p><strong>西洋占星術と比較すると:</strong> Sun signという一つの情報ではなく、八つの情報(各柱に天干と地支)で読み解きます。五行と十神の関係分析が核心です。</p><p><strong>最も個人的なのが日主(日干)</strong> — 生まれた日の天干で、その人の本質的なアーキタイプを表します。西洋のzodiac signに似ていますが、日単位でより精細です。</p><p>このサイトは四柱推命を<strong>ブラウザで決定論的に計算</strong>します。$7の心層リーディングはAI(Claude Haiku 4.5)が解釈を追加します。未来を予言するものではなく、認定された専門家の代わりにはなりません。</p>'
+      },
+      zh: {
+        summary: '第一次? 一分钟看懂八字 →',
+        body: '<p><strong>四柱(Sìzhù)字面意思是"四根柱子"。</strong>是基于出生年、月、日、时,以天干地支组合表示的八个字(八字)。</p><p><strong>与西方占星术对比:</strong>不是Sun sign一个信息,而是八个信息(年柱、月柱、日柱、时柱各有天干和地支)。五行和十神的关系分析是核心。</p><p><strong>最个人化的是日主(日干)</strong> — 出生日的天干,代表一个人本质上的原型。类似西方zodiac sign,但以日为单位更精细。</p><p>本网站在<strong>浏览器中确定性地计算</strong>八字。可选$7深度解读由AI(Claude Haiku 4.5)添加文字解释。我们不预测未来,也不替代经认证的命理师。</p>'
+      },
+      es: {
+        summary: '¿Primera vez? ¿Qué es Saju? →',
+        body: '<p><strong>Saju (사주, "Cuatro Pilares") es la versión coreana del BaZi chino (八字)</strong> — una carta natal basada en tu año, mes, día y hora de nacimiento.</p><p><strong>Si conoces la astrología occidental:</strong> tu signo solar es un dato sobre tu nacimiento. Saju toma <em>ocho</em> datos (un tallo y una rama para cada uno de Año, Mes, Día, Hora) y los lee a través de los Cinco Elementos (五行) y los Diez Dioses (十神).</p><p><strong>El más personal es tu Maestro del Día (Day Master, 日主)</strong> — el arquetipo elemental de tu yo esencial, como un signo zodiacal pero basado en el día en que naciste.</p><p>Este sitio calcula la carta de forma <strong>determinista en tu navegador</strong>. La Lectura Profunda opcional de $7 añade una interpretación escrita por IA. No predecimos el futuro ni reemplazamos a un practicante acreditado.</p>'
+      },
+      fr: {
+        summary: 'Première fois ? Qu\'est-ce que le Saju ? →',
+        body: '<p><strong>Saju (사주, « Quatre Piliers ») est la version coréenne du BaZi chinois (八字)</strong> — un thème natal basé sur votre année, mois, jour et heure de naissance.</p><p><strong>Comparé à l\'astrologie occidentale :</strong> votre signe solaire est un fait à propos de votre naissance. Saju prend <em>huit</em> faits (un tronc et une branche pour chacun de Année, Mois, Jour, Heure) et les lit à travers les Cinq Éléments (五行) et les Dix Dieux (十神).</p><p><strong>Le plus personnel est votre Maître du Jour (Day Master, 日主)</strong> — l\'archétype élémentaire de votre soi essentiel, comme un signe zodiacal mais basé sur le jour de votre naissance.</p><p>Ce site calcule le thème de manière <strong>déterministe dans votre navigateur</strong>. La Lecture Approfondie optionnelle à 7$ ajoute une interprétation écrite par IA. Nous ne prédisons pas l\'avenir et ne remplaçons pas un praticien accrédité.</p>'
+      },
+      de: {
+        summary: 'Zum ersten Mal? Was ist Saju? →',
+        body: '<p><strong>Saju (사주, „Vier Säulen") ist die koreanische Variante des chinesischen BaZi (八字)</strong> — ein Geburtsdiagramm basierend auf Ihrem Geburtsjahr, -monat, -tag und -stunde.</p><p><strong>Im Vergleich zur westlichen Astrologie:</strong> Ihr Sonnenzeichen ist eine Information über Ihre Geburt. Saju nimmt <em>acht</em> Informationen (ein Stamm und ein Zweig für Jahr, Monat, Tag, Stunde) und liest sie durch die Fünf Elemente (五行) und die Zehn Götter (十神).</p><p><strong>Das Persönlichste ist Ihr Tagesmeister (Day Master, 日主)</strong> — der elementare Archetyp Ihres Kerns, wie ein Tierkreiszeichen, aber basierend auf dem Tag Ihrer Geburt.</p><p>Diese Website berechnet das Diagramm <strong>deterministisch in Ihrem Browser</strong>. Die optionale Tiefenlesung für 7$ fügt eine KI-geschriebene Interpretation hinzu. Wir sagen die Zukunft nicht voraus und ersetzen keinen anerkannten Praktiker.</p>'
+      },
+      ar: {
+        summary: 'لأول مرة؟ ما هو الساجو؟ →',
+        body: '<p><strong>ساجو (사주، "الأعمدة الأربعة") هي النسخة الكورية من باتزي الصينية (八字)</strong> — مخطط ميلاد يعتمد على سنة وشهر ويوم وساعة ميلادك.</p><p><strong>مقارنة بالتنجيم الغربي:</strong> علامة شمسك هي معلومة واحدة عن ميلادك. ساجو يأخذ <em>ثمانية</em> معلومات (جذع وفرع لكل من السنة والشهر واليوم والساعة) ويقرؤها من خلال العناصر الخمسة (五行) والآلهة العشر (十神).</p><p><strong>الأكثر شخصية هو سيد اليوم (Day Master، 日主)</strong> — النموذج الأصلي العنصري لذاتك الجوهرية، مثل علامة زودياك لكن بناءً على يوم ميلادك.</p><p>هذا الموقع يحسب المخطط <strong>بشكل حتمي في متصفحك</strong>. القراءة العميقة الاختيارية بسعر 7$ تضيف تفسيراً مكتوباً بالذكاء الاصطناعي. نحن لا نتنبأ بالمستقبل ولا نحل محل ممارس معتمد.</p>'
+      },
+    };
+    function applyWhatIsSaju(lang) {
+      const wis = WHAT_IS_SAJU_I18N[lang] || WHAT_IS_SAJU_I18N.en;
+      const sum = document.getElementById('what-is-saju-summary');
+      const body = document.getElementById('what-is-saju-body');
+      if (sum) sum.textContent = wis.summary;
+      if (body) body.innerHTML = wis.body;
+    }
 
     // LS checkout URL에 birth state를 custom 파라미터로 동봉.
     // 폼 제출 후엔 그 값을, 제출 전엔 base URL만. n8n webhook이 meta.custom_data로 받음.
@@ -636,6 +684,7 @@
       applyFeedbackI18n(lang);
       applyDepthI18n(lang);
       applyPaidLinks();
+      applyWhatIsSaju(lang);
     }
 
     // 깊이 영역 라벨 swap (값은 그대로). 완전 swap은 form 재제출 시 renderResult가.
