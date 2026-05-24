@@ -284,7 +284,7 @@
         <span class="current">Saju Reading</span>
         <a href="./compat.html">Compatibility</a>
         <a href="./today.html">Today's Fortune</a>
-        <a href="./about/">About</a>
+        <a href="./about/" id="footer-about-link">About</a>
         <a href="./legal/refund/">Refund</a>
         <a href="./legal/terms/">Terms</a>
       </nav>
@@ -686,6 +686,12 @@
       applyDepthI18n(lang);
       applyPaidLinks();
       applyWhatIsSaju(lang);
+      // about footer link lang 자동 swap (ko/ja/zh만 별도 페이지, 나머지는 영어)
+      const aboutLink = document.getElementById('footer-about-link');
+      if (aboutLink) {
+        const langPath = ['ko', 'ja', 'zh'].includes(lang) ? lang + '/' : '';
+        aboutLink.href = './about/' + langPath;
+      }
     }
 
     // 깊이 영역 라벨 swap (값은 그대로). 완전 swap은 form 재제출 시 renderResult가.
