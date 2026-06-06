@@ -91,8 +91,8 @@ function validateReadingInput(input) {
 
 async function callClaude(env, request) {
   const body = {
-    model: env.ANTHROPIC_MODEL || 'claude-haiku-4-5-20251001',
-    max_tokens: Number(env.MAX_TOKENS) || 6144,
+    model: env.ANTHROPIC_MODEL || 'claude-opus-4-8',
+    max_tokens: Number(env.MAX_TOKENS) || 8192,
     system: request.system,
     messages: request.messages,
   };
@@ -167,6 +167,60 @@ async function handleReading(request, env) {
       reading: reading.text,
       language,
       usage: reading.usage,
+    },
+    200,
+    env
+  );
+}
+
+// =========================================================================
+// /prompt — saju 계산 + Claude prompt 빌드만 (Anthropic 호출 X)
+// n8n이 Anthropic 직접 호출하는 path 지원 (Worker egress Anthropic 403 우회)
+// body: 동일 (year/month/day/hour/minute/...). 응답: { saju, prompt, model }
+// =========================================================================
+async function handlePrompt(request, env) {
+  const parsed = await safeJson(request);
+  if (parsed.error) return json({ error: parsed.error }, 400, env);
+  const input = parsed.value;
+
+  const validationError = validateReadingInput(input);
+  if (validationError) return json({ error: validationError }, 400, env);
+
+  const language = input.language || 'en';
+
+  let saju;
+  try {
+    saju = birthInfoToFourPillars({
+      year: input.year,
+      month: input.month,
+      day: input.day,
+      hour: input.hour,
+      minute: input.minute || 0,
+      gender: input.gender || null,
+      city: input.city || null,
+    });
+  } catch (e) {
+    return json({ error: `saju calc failed: ${e.message}` }, 500, env);
+  }
+
+  const claudeReq = buildClaudeRequest(saju, { language, readingType: input.readingType });
+
+  return json(
+    {
+      saju: {
+        pillars: saju.pillars,
+        dayMaster: saju.dayMaster,
+        dayMasterElement: saju.dayMasterElement,
+        elements: saju.elements,
+        tenGods: saju.tenGods,
+      },
+      prompt: {
+        system: claudeReq.system,
+        messages: claudeReq.messages,
+      },
+      model: env.ANTHROPIC_MODEL || 'claude-opus-4-8',
+      max_tokens: Number(env.MAX_TOKENS) || 8192,
+      language,
     },
     200,
     env
@@ -351,6 +405,7 @@ export default {
     }
 
     if (path === '/reading' && method === 'POST') return handleReading(request, env);
+    if (path === '/prompt' && method === 'POST') return handlePrompt(request, env);
     if (path === '/track' && method === 'POST') return handleTrack(request, env);
     if (path === '/feedback' && method === 'POST') return handleFeedback(request, env);
     if (path === '/metrics' && method === 'GET') return handleMetricsRead(request, env);
@@ -359,7 +414,7 @@ export default {
     return json(
       {
         error: 'not found',
-        routes: ['GET /health', 'POST /reading', 'POST /track', 'POST /feedback', 'GET /metrics', 'GET /feedback/recent'],
+        routes: ['GET /health', 'POST /reading', 'POST /prompt', 'POST /track', 'POST /feedback', 'GET /metrics', 'GET /feedback/recent'],
       },
       404,
       env

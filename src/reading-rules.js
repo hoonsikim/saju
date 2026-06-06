@@ -4,6 +4,29 @@
 // 지원: en ko ja zh es pt fr de it ru tr nl pl sv id fil vi th hi ar
 // RTL: ar (applyChrome에서 dir 처리)
 
+// 한국어 조사 해소기 — '이(가)' '을(를)' '은(는)' 패턴을 jongseong 기준으로 해소.
+// ADR-? (D+26 audit) — '화이(가) 38%', '의지을(를) 요구' funnel-killer 버그 fix.
+function _hasJongseong(ch) {
+  const code = ch.charCodeAt(0);
+  if (code < 0xAC00 || code > 0xD7A3) return null; // 한글 아님 — alphanum/한자 등
+  return (code - 0xAC00) % 28 !== 0;
+}
+function _resolveKoreanParticles(text) {
+  return text
+    .replace(/(\S)이\(가\)/g, (m, ch) => {
+      const j = _hasJongseong(ch);
+      return ch + (j === null ? '이(가)' : (j ? '이' : '가'));
+    })
+    .replace(/(\S)을\(를\)/g, (m, ch) => {
+      const j = _hasJongseong(ch);
+      return ch + (j === null ? '을(를)' : (j ? '을' : '를'));
+    })
+    .replace(/(\S)은\(는\)/g, (m, ch) => {
+      const j = _hasJongseong(ch);
+      return ch + (j === null ? '은(는)' : (j ? '은' : '는'));
+    });
+}
+
 const DAY_MASTER_ARCHETYPE = {
   '甲': {
     en: 'Yang Wood — the Tall Tree. Upright, growth-oriented, naturally a leader who breaks new ground.',
@@ -960,7 +983,7 @@ export function generateReading(saju, lang = 'en') {
     ? GOD_CLAUSE[L].replace('{TG}', topGod).replace('{GM}', godMeaning)
     : '';
 
-  return READING_TEMPLATE[L]
+  const rendered = READING_TEMPLATE[L]
     .replace('{DM}', dayMaster)
     .replace('{AR}', archetype)
     .replace(/\{SN\}/g, strongName)
@@ -972,4 +995,7 @@ export function generateReading(saju, lang = 'en') {
     .replace('{WT}', weakTrait)
     .replace('{GD}', gdClause)
     .replace('{DR}', direction);
+
+  // 한국어: 조사 해소 ('화이(가)' → '화가', '금이(가)' → '금이' 등)
+  return L === 'ko' ? _resolveKoreanParticles(rendered) : rendered;
 }

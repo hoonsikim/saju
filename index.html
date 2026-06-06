@@ -481,7 +481,22 @@
       const lang = document.getElementById('language')?.value || document.documentElement.lang || 'en';
       cta.textContent = paidCtaText(lang);
       if (!cta.dataset.paidTracked) {
-        cta.addEventListener('click', () => {
+        cta.addEventListener('click', (ev) => {
+          // ADR-? (D+26 audit) — gender 필수 검증: 大運(10년운) 계산엔 gender 필요.
+          // 없이 결제 시 silently degraded reading 발송 = refund risk.
+          const genderVal = document.getElementById('gender')?.value || '';
+          if (!genderVal) {
+            ev.preventDefault();
+            const i18n = (typeof CHROME_I18N !== 'undefined') ? CHROME_I18N[lang] : null;
+            const msg = (i18n && i18n.luckMissingGender) ||
+              (lang === 'ko' ? '대운(大運) 계산을 위해 성별을 먼저 선택해주세요. (위쪽 성별 드롭다운)'
+                             : 'Please select your gender first — required to compute Major Luck (大運) cycles for your reading.');
+            alert(msg);
+            const sel = document.getElementById('gender');
+            if (sel) { sel.focus(); sel.style.outline = '2px solid #d4574a'; setTimeout(() => { sel.style.outline = ''; }, 3000); }
+            track('saju_paid_block_no_gender', { product: 'deep' });
+            return;
+          }
           // 클릭 직전 동적 href — 사용자가 form 제출 후 birth state 동봉
           const dyn = buildCheckoutUrl();
           if (dyn) cta.href = dyn;
