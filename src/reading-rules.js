@@ -930,6 +930,54 @@ const MISSING_CLAUSE = {
   ar: () => ` ({M} غائب تماماً)`,
 };
 
+// =========================================================================
+// Free reading 확장 — D+26 user critique 반영
+// 짧은 단락 1개 → 5-6 단락. 기존 compute (void, shenSha, yearPillar) 활용.
+// EN + KO 풀 번역. 기타 18 lang은 EN fallback (free path는 acceptable).
+// =========================================================================
+
+const HOOK_OPENING = {
+  en: (dm, archetype) => `Your Saju (사주, Four Pillars of Destiny) reads the moment of your birth as eight characters arranged in four pillars — year, month, day, hour. Of those eight, one represents *you*: your Day Master.\n\nYour Day Master is ${dm}. ${archetype}`,
+  ko: (dm, archetype) => `사주(四柱)는 태어난 순간의 8글자가 만드는 운명의 지도다. 그 8글자 중 단 한 글자만이 *너 자신*을 가리킨다. 그게 너의 일간(日干)이다.\n\n너의 일간은 ${dm}. ${archetype}`,
+};
+
+const PILLAR_GLANCE = {
+  en: (p) => `\n\nYour four pillars at a glance:\nYear ${p.year.ganZhi} · Month ${p.month.ganZhi} · Day ${p.day.ganZhi} (← you) · Hour ${p.hour.ganZhi}`,
+  ko: (p) => `\n\n너의 사주 4기둥:\n년주 ${p.year.ganZhi} · 월주 ${p.month.ganZhi} · 일주 ${p.day.ganZhi} (← 너) · 시주 ${p.hour.ganZhi}`,
+};
+
+const VOID_LINE = {
+  en: (vb) => vb ? `\n\nVoid branches (空亡) in your chart: ${vb}. Areas of life connected to these branches tend to feel thin — events touching them feel incomplete or "not quite yours." It's not bad luck. It's a structural blind spot, and the first step is just knowing it's there.` : '',
+  ko: (vb) => vb ? `\n\n너의 공망(空亡)은 ${vb}이다. 이 글자와 닿는 인연·사건은 묘하게 비어 보인다. 손에 잡힐 듯 잡히지 않거나, 일어나고도 "내 것이 아닌 듯한" 느낌이 따른다. 나쁜 게 아니라, 너의 구조적 사각지대다. 알고 있는 것만으로 절반은 다룬 셈이다.` : '',
+};
+
+const SHEN_SHA_LINE = {
+  en: (ss) => {
+    const parts = [];
+    if (ss?.tianyi?.length) parts.push(`Heavenly Noble (天乙貴人) at ${ss.tianyi.join('·')} — unexpected protection from people you weren't expecting it from`);
+    if (ss?.taohwa?.length) parts.push(`Peach Blossom (桃花) at ${ss.taohwa.join('·')} — natural magnetism, charm`);
+    if (ss?.yeokma?.length) parts.push(`Traveling Horse (驛馬) at ${ss.yeokma.join('·')} — movement, change, travel as recurring theme`);
+    return parts.length ? `\n\nActive auspicious stars in your chart: ${parts.join('; ')}.` : '';
+  },
+  ko: (ss) => {
+    const parts = [];
+    if (ss?.tianyi?.length) parts.push(`천을귀인(天乙貴人)이 ${ss.tianyi.join('·')}에 — 예상치 못한 사람으로부터 오는 도움`);
+    if (ss?.taohwa?.length) parts.push(`도화살(桃花)이 ${ss.taohwa.join('·')}에 — 자연스러운 매력과 끌림`);
+    if (ss?.yeokma?.length) parts.push(`역마살(驛馬)이 ${ss.yeokma.join('·')}에 — 이동·변화·여행이 반복되는 주제`);
+    return parts.length ? `\n\n너의 사주에 살아있는 신살(神煞): ${parts.join('; ')}.` : '';
+  },
+};
+
+const YEAR_PILLAR_LINE = {
+  en: (cy) => cy ? `\n\nThis year (${cy.year}) carries the pillar ${cy.ganZhi}. Relative to your Day Master, it acts as your ${cy.tenGod || 'current influence'} — a flavor that colors how the year meets you.` : '',
+  ko: (cy) => cy ? `\n\n올해(${cy.year})의 운(歲運)은 ${cy.ganZhi}이다. 너의 일간 기준으로 이건 ${cy.tenGod || '현 시점 영향력'}으로 작용한다 — 올해가 너와 만나는 결을 결정짓는 색이다.` : '',
+};
+
+const PAID_TEASER = {
+  en: `\n\n— — —\n\nThis is the free read — a snapshot. The paid Deep Reading ($7) takes the same chart and writes a 2,500–3,500 word personalized analysis across five sections: Personality, Career, Love, Wealth, Timing & Cycles. It uses the hidden stems (지장간) inside each branch, the 12 life stages of each pillar, your void branches, and your 10-year Major Luck cycles — woven into one narrative that names what's actually happening in your life, not what could happen to anyone.`,
+  ko: `\n\n— — —\n\n여기까지가 무료다 — 한 장면짜리 스냅샷이다. 유료 Deep Reading ($7)은 같은 차트를 받아 5섹션(성정·직업·사랑·재물·시기) × 2,500~3,500단어(한국어 6,000~10,000자)로 풀어낸다. 지지에 숨은 천간(지장간), 각 기둥의 12운성, 공망, 10년 단위 대운(大運)이 한 편의 narrative로 직조된다 — 누구한테나 해당될 수 있는 말이 아니라, 진짜 너의 인생에서 지금 일어나고 있는 일을 짚는다.`,
+};
+
 function pickTopGod(saju) {
   const gods = Object.values(saju.tenGods).filter(Boolean);
   if (gods.length === 0) return null;
@@ -983,7 +1031,7 @@ export function generateReading(saju, lang = 'en') {
     ? GOD_CLAUSE[L].replace('{TG}', topGod).replace('{GM}', godMeaning)
     : '';
 
-  const rendered = READING_TEMPLATE[L]
+  const core = READING_TEMPLATE[L]
     .replace('{DM}', dayMaster)
     .replace('{AR}', archetype)
     .replace(/\{SN\}/g, strongName)
@@ -996,6 +1044,22 @@ export function generateReading(saju, lang = 'en') {
     .replace('{GD}', gdClause)
     .replace('{DR}', direction);
 
+  // D+26 user critique 반영: 무료 분량 5-6 단락으로 확장 (기존 compute 활용).
+  // EN+KO 풀 번역. 기타 18 lang은 EN fallback.
+  const fall = (table) => table[L] || table.en;
+  const hook    = fall(HOOK_OPENING)(dayMaster, archetype);
+  const pillars = fall(PILLAR_GLANCE)(saju.pillars);
+  const voidL   = fall(VOID_LINE)(saju.voidBranches);
+  const shenL   = fall(SHEN_SHA_LINE)(saju.shenSha);
+  const yearL   = fall(YEAR_PILLAR_LINE)(saju.currentYearPillar);
+  const teaser  = fall(PAID_TEASER);
+
+  // 새 narrative 구조: HOOK → PILLAR_GLANCE → [core: archetype + element + god] → VOID → SHEN_SHA → YEAR_PILLAR → TEASER
+  // core에서 dayMaster archetype 중복 제거 (HOOK이 이미 다룸): core의 1단락 skip
+  const coreWithoutDmIntro = core.split('\n\n').slice(1).join('\n\n');
+
+  const expanded = `${hook}${pillars}\n\n${coreWithoutDmIntro}${voidL}${shenL}${yearL}${teaser}`;
+
   // 한국어: 조사 해소 ('화이(가)' → '화가', '금이(가)' → '금이' 등)
-  return L === 'ko' ? _resolveKoreanParticles(rendered) : rendered;
+  return L === 'ko' ? _resolveKoreanParticles(expanded) : expanded;
 }

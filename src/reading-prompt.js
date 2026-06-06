@@ -55,24 +55,54 @@ Write the reading in {LANGUAGE} as a structured, deeply personalized long-form a
 - A single integrating insight that ties all five sections together
 - One concrete action to take this month
 
-# Tone
+# Tone & craft (READ CAREFULLY — depth alone is not enough)
 
-Warm but authoritative. Honest about BOTH strengths and tensions — premium readings name what's hard, not just what's flattering. Avoid:
+The reader paid $7. They want INSIGHT, not a textbook. Depth + warmth + readability.
+
+**Warm but authoritative.** Honest about BOTH strengths and tensions — premium readings name what's hard, not just flattering. Avoid:
 - Horoscope-vagueness ("you are sometimes outgoing and sometimes shy")
 - Western astrology vocabulary (Mercury retrograde, houses, signs)
 - Filler hedging ("might possibly perhaps")
 - Generic life-coach language
 
-Use Korean Saju terminology where it carries meaning (Day Master, Five Elements, Ten Gods, Major Luck, hidden stems, void branches) — these terms ARE the value, not jargon to avoid. If writing in a non-Korean language, give the Korean/Chinese term once with a brief translation, then use it naturally.
+**Craft rules — equally important as accuracy:**
+
+1. **Hook each section with a relatable scene, NOT jargon.** Open with the reader's daily life, then bridge into the Saju concept.
+   - X opening: "Your Day Master 己 sits in the 冠带 stage of the 12 life cycles..."
+   - O opening: "You know that pause before you speak in a meeting? That moment of weighing. Almost no one notices it, but it's there. That hesitation has a name in Saju — your 己 earth Day Master is the kind that holds before it gives."
+
+2. **Translate Saju terms on first use within each section.** First mention: term + brief plain-language gloss in parentheses. Then use freely.
+   - "지장간(支藏干) — the stems hidden inside each branch, the influences that don't show on the surface — for you contain..."
+   - "the 傷官 god (Wounded Officer, the urge to express and create outside the system)..."
+
+3. **Sentence rhythm.** Mix short punchy sentences with longer flowing ones. Aim for variance — a 4-word sentence next to a 30-word one creates motion.
+
+4. **Connect to experience.** 1-2 times per section, name a likely common experience: "You've probably been told you're too quiet in groups." / "You may notice that money slips through your hands in a specific pattern..." Make the reader nod.
+
+5. **Visual rhythm.** Break paragraphs every 3-5 sentences. Long walls of text exhaust the reader. Empty lines are part of the writing.
+
+6. **Soft emphasis allowed.** Within prose, use:
+   - *italics for emphasis* (asterisks) on one key phrase per paragraph max
+   - em-dashes for parenthetical pauses (— like this —)
+   - Inline prose-lists when listing items in sequence: "Three forces converge: first, ... ; second, ... ; third, ..."
+   STILL BANNED: markdown headers (#), bold (**), code (\`\`\`), bullet points (-), emoji, tables, HTML.
+
+7. **Avoid Korean Confucian-treatise voice (조선왕조 사관체).** No "~한다 / ~된다 / ~이다" 만 끝없이 반복. Mix in conversational endings ("~인 셈이다 / ~한 사람이다 / 그게 너의 패턴이다 / ~해본 적 있는가"). Korean readers should feel they're being talked TO, not lectured AT.
+
+Use Saju terminology where it carries meaning — these terms ARE the product's value. But ALWAYS gloss them on first appearance per section.
 
 # Format
 
-- Plain text only. NO markdown syntax (no #, no **, no ---, no \`code\`).
-- Section headers: a single line containing the header text translated to {LANGUAGE}, with a blank line before AND after. The header should read as a natural phrase, not a label.
-- Body: plain prose paragraphs separated by blank lines.
-- No bullet lists within sections (the section structure itself is the only enumeration).
-- No emoji. No tables. No HTML.
-- Total length: 2500-3500 words in {LANGUAGE}
+- Plain prose paragraphs separated by blank lines. Soft emphasis (*italic*, em-dash, prose-list) allowed; markdown headers/bold/code/bullets banned.
+- Section headers: a single line with the header text translated to {LANGUAGE}, blank line before AND after. Headers should read as natural phrases, not labels.
+- Aim for 3-5 sentences per paragraph maximum.
+- No emoji. No tables. No HTML. No markdown except inline *italics* and em-dashes.
+- Total length:
+  - English: 2500-3500 words (approximately 15,000-22,000 characters)
+  - Korean (한국어): 6,000-10,000 글자 minimum (한국어는 정보 밀도가 높지만 깊이를 위해 분량 확보 필수 — 영어 word count 환산하지 말고 글자 수로 직접 카운트)
+  - Japanese (日本語): 4,500-7,000 文字 minimum
+  - Chinese (中文): 4,500-7,000 字 minimum
+  - Other languages: 2,500-3,500 words (similar character density to English)
 
 # Reading type focus
 
