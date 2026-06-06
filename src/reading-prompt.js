@@ -55,6 +55,12 @@ Write the reading in {LANGUAGE} as a structured, deeply personalized long-form a
 - A single integrating insight that ties all five sections together
 - One concrete action to take this month
 
+# Cultural localization (REQUIRED — translation ≠ localization)
+
+{CULTURAL_HINT}
+
+The reader's life is shaped by their culture. Don't translate Korean scenarios into another language verbatim — substitute scenes the reader would actually recognize from their own world. A New Yorker doesn't think about 회식. A Tokyo office worker doesn't think about 401k. Match the reader, not the translator.
+
 # Tone & craft (READ CAREFULLY — depth alone is not enough)
 
 The reader paid $7. They want INSIGHT, not a textbook. Depth + warmth + readability.
@@ -114,6 +120,19 @@ The client requested readingType = "{READING_TYPE}":
 
 Integrate the hidden stems, 12 stages, void branches, and major luck cycles as SUBSTANTIVE material throughout — they are the depth that makes this a paid reading, not footnotes.`;
 
+// D+26 user critique — translation ≠ localization.
+// 각 문화권 reader의 일상 scene을 hook + 공감대에 자연스럽게 녹임.
+// 한국 회식·일본 空気·중국 春节 内卷·서구 401k 같이 그 문화권 reader만 즉시 알아차리는 reference.
+const CULTURAL_LOCALIZATION = {
+  en: `Reader context: English-speaking (US/UK/anglosphere). Use scenarios familiar — workplace meetings, dating apps, 401k/credit score/student debt, therapist/coach culture, "imposter syndrome", remote work, side hustle, gym/wellness. Saju is unfamiliar — gloss every term plainly on first use. Tone: warm but direct, no fortune-cookie. Avoid Korean-specific scenarios unless universally translatable.`,
+  ko: `Reader context: 한국 독자. 회식·연봉협상·결혼·전세/월세·취준생 자소서·대학 입시·부모 봉양·동기 비교·시집/처가·번아웃·n잡 같은 한국 특유의 압박과 친밀함의 풍경을 자유롭게 사용. 사주 용어는 익숙하니 풀이를 짧게 (한 줄 정도). 반말 중심으로 친한 선배가 말하듯 (단 깔보지 않게). "음력 생일", "신년운세", "토정비결" 같은 한국 사주 문화 reference 자연스럽게.`,
+  ja: `Reader context: 日本の読者。職場の和、忖度、本音と建前、空気を読む、お見合い、結婚相談所、年功序列、終身雇用の崩壊、副業解禁、推し活、おひとりさま — 日本特有のリアリティを scene として使う。四柱推命は中国・韓国経由で日本にも知られているが、用語は漢字本来の意味を活かして簡潔に紹介。トーンは丁寧体 (です・ます) を基調にしつつ、断定すべきところは断定する。占い・スピリチュアル文化への親和性が高い読者層なので、術語を恐れず使ってよい。`,
+  zh: `Reader context: 中文读者 (简体, 大陆/海外华人为主)。把春节家庭压力、相亲、买房压力、子女教育内卷、996职场、铁饭碗vs创业、躺平vs上岸、原生家庭 等真实场景自然带入。八字术语对华人读者并不陌生,可直接使用 (年柱·月柱·日柱·时柱·十神·大运·流年), 无需过多解释。语气直接而温暖, 不要含糊。`,
+  es: `Reader context: hispanohablante (Latam + España). Escenas familiares: familia extendida, dinámicas con padres/suegros, matrimonio y noviazgo, búsqueda de trabajo, vida en comunidad, búsqueda de identidad cultural, balance entre tradición y modernidad. El Saju coreano es novedoso — explica conceptos clave la primera vez (Pilar del Día, Cinco Elementos, etc.). Tono: cálido, directo, sin condescender.`,
+  ja_short: 'JA',  // marker so other 15 langs use generic fallback below
+};
+const CULTURAL_FALLBACK = `Reader context: reader is reading this in their native language. Use scenarios from their daily life (workplace, family, relationships, money) that they'd recognize. Saju (Korean Four Pillars) is unfamiliar to most non-East-Asian readers — gloss each term on first use. Avoid Korea-specific cultural references unless they're universally meaningful.`;
+
 const LANGUAGE_NAMES = {
   en: 'English',
   ko: 'Korean (한국어, 자연스러운 평어로)',
@@ -144,9 +163,11 @@ const LANGUAGE_NAMES = {
 export function systemPrompt(language, readingType = 'general') {
   const langName = LANGUAGE_NAMES[language] || LANGUAGE_NAMES.en;
   const rt = ['general', 'career', 'love', 'wealth'].includes(readingType) ? readingType : 'general';
+  const culturalHint = CULTURAL_LOCALIZATION[language] || CULTURAL_FALLBACK;
   return SYSTEM_PROMPT_BASE
     .replaceAll('{LANGUAGE}', langName)
     .replaceAll('{READING_TYPE}', rt)
+    .replaceAll('{CULTURAL_HINT}', culturalHint)
     .replaceAll('{S1_BONUS}', '')
     .replaceAll('{S2_BONUS}', rt === 'career' ? ', expand to ~800 words for this client (career focus)' : '')
     .replaceAll('{S3_BONUS}', rt === 'love' ? ', expand to ~800 words for this client (love focus)' : '')
