@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>Saju — Four Pillars of Destiny</title>
+  <link>https://hoonsikim.github.io/saju/</link>
+  <description>Free, instant, multi-lingual (20 langs) Korean Saju reading. Authentic methodology. Open source MIT. Daily build log.</description>
+  <language>en</language>
+  <atom:link href="https://hoonsikim.github.io/saju/feed.xml" rel="self" type="application/rss+xml"/>
+  <item>
+    <title>Free 4-pillars reading in 20 languages</title>
+    <link>https://hoonsikim.github.io/saju/</link>
+    <guid isPermaLink="true">https://hoonsikim.github.io/saju/</guid>
+    <description>Birth date/time/gender → instant 4-pillars chart + 5-element balance + 10 gods + hidden stems + 12 life stages + void branches + 神煞 + current year pillar. Browser-rendered, no signup. EN/KO/JA/ZH/ES + 15 more.</description>
+    <pubDate>Mon, 11 May 2026 14:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Day Master 10 archetypes — comprehensive guide</title>
+    <link>https://hoonsikim.github.io/saju/blog/day-master-archetypes-en.html</link>
+    <guid isPermaLink="true">https://hoonsikim.github.io/saju/blog/day-master-archetypes-en.html</guid>
+    <description>10 Heavenly Stems (甲乙丙丁戊己庚辛壬癸) explained as personality archetypes. Day Master is the lens through which 4-pillars analysis interprets everything else.</description>
+    <pubDate>Mon, 08 Jun 2026 12:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Compatibility (궁합) between two charts</title>
+    <link>https://hoonsikim.github.io/saju/compat.html</link>
+    <guid isPermaLink="true">https://hoonsikim.github.io/saju/compat.html</guid>
+    <description>Two-chart compatibility analysis with 0-100 score + 5-tier verdict + 1200x630 shareable card image.</description>
+    <pubDate>Tue, 26 May 2026 12:00:00 GMT</pubDate>
+  </item>
+</channel>
+</rss>
