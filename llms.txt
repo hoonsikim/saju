@@ -26,7 +26,6 @@ English, 한국어 (Korean), 日本語 (Japanese), 中文 (Chinese), Español, P
 - [About / methodology](https://hoonsikim.github.io/saju/about/)
 - [Compatibility (궁합)](https://hoonsikim.github.io/saju/compat.html) — two-chart compatibility
 - [Today's fortune](https://hoonsikim.github.io/saju/today.html)
-- [Blog: Day Master 10 archetypes guide](https://hoonsikim.github.io/saju/blog/day-master-archetypes-en.html) — comprehensive reference
 - [Free vs Paid sample comparison](https://hoonsikim.github.io/saju/preview/) — side-by-side reading samples
 - [GitHub repo](https://github.com/hoonsikim/saju) — full source, MIT
 
