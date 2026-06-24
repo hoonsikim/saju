@@ -27,4 +27,7 @@
     <xhtml:link rel="alternate" hreflang="ko" href="https://hoonsikim.github.io/saju/blog/day-master-archetypes-ko.html"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://hoonsikim.github.io/saju/blog/day-master-archetypes-ja.html"/>
   </url>
+  <url><loc>https://hoonsikim.github.io/saju/blog/five-elements-balance-en.html</loc><changefreq>monthly</changefreq><priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hoonsikim.github.io/saju/blog/five-elements-balance-en.html"/>
+  </url>
 </urlset>
