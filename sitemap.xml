@@ -45,9 +45,16 @@
   <url><loc>https://hoonsikim.github.io/saju/blog/saju-compatibility-en.html</loc><changefreq>monthly</changefreq><priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://hoonsikim.github.io/saju/blog/saju-compatibility-en.html"/>
     <xhtml:link rel="alternate" hreflang="ko" href="https://hoonsikim.github.io/saju/blog/saju-compatibility-ko.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://hoonsikim.github.io/saju/blog/saju-compatibility-ja.html"/>
   </url>
   <url><loc>https://hoonsikim.github.io/saju/blog/saju-compatibility-ko.html</loc><changefreq>monthly</changefreq><priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://hoonsikim.github.io/saju/blog/saju-compatibility-en.html"/>
     <xhtml:link rel="alternate" hreflang="ko" href="https://hoonsikim.github.io/saju/blog/saju-compatibility-ko.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://hoonsikim.github.io/saju/blog/saju-compatibility-ja.html"/>
+  </url>
+  <url><loc>https://hoonsikim.github.io/saju/blog/saju-compatibility-ja.html</loc><changefreq>monthly</changefreq><priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hoonsikim.github.io/saju/blog/saju-compatibility-en.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hoonsikim.github.io/saju/blog/saju-compatibility-ko.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://hoonsikim.github.io/saju/blog/saju-compatibility-ja.html"/>
   </url>
 </urlset>
