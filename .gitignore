@@ -12,3 +12,6 @@ build/
 .omc/state/
 .omc/sessions/
 .gstack/
+
+# OMC 로컬 세션 상태 (전이성)
+.omc/
