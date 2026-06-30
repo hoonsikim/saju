@@ -29,6 +29,14 @@ English, 한국어 (Korean), 日本語 (Japanese), 中文 (Chinese), Español, P
 - [Free vs Paid sample comparison](https://hoonsikim.github.io/saju/preview/) — side-by-side reading samples
 - [GitHub repo](https://github.com/hoonsikim/saju) — full source, MIT
 
+## Guides
+
+In-depth articles on Saju / BaZi concepts, each available in English, Korean (한국어), and Japanese (日本語):
+
+- Day Master 10 Archetypes — the 10 Heavenly Stems (甲乙丙丁戊己庚辛壬癸) as personality archetypes: [EN](https://hoonsikim.github.io/saju/blog/day-master-archetypes-en.html) · [KO](https://hoonsikim.github.io/saju/blog/day-master-archetypes-ko.html) · [JA](https://hoonsikim.github.io/saju/blog/day-master-archetypes-ja.html)
+- Five Elements Balance — reading 木火土金水 strength and weakness in a chart: [EN](https://hoonsikim.github.io/saju/blog/five-elements-balance-en.html) · [KO](https://hoonsikim.github.io/saju/blog/five-elements-balance-ko.html) · [JA](https://hoonsikim.github.io/saju/blog/five-elements-balance-ja.html)
+- Saju Compatibility (궁합) — two-chart relationship analysis: [EN](https://hoonsikim.github.io/saju/blog/saju-compatibility-en.html) · [KO](https://hoonsikim.github.io/saju/blog/saju-compatibility-ko.html) · [JA](https://hoonsikim.github.io/saju/blog/saju-compatibility-ja.html)
+
 ## Technical stack
 
 - Vanilla HTML/CSS/JS (~12KB)
