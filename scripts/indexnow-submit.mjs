@@ -9,6 +9,7 @@ const KEY_LOCATION = `https://${HOST}/saju/${KEY}.txt`;
 
 const URLS = [
   'https://hoonsikim.github.io/saju/',
+  'https://hoonsikim.github.io/saju/blog/',
   'https://hoonsikim.github.io/saju/blog/day-master-archetypes-en.html',
   'https://hoonsikim.github.io/saju/blog/day-master-archetypes-ko.html',
   'https://hoonsikim.github.io/saju/blog/day-master-archetypes-ja.html',
