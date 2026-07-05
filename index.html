@@ -362,11 +362,11 @@
       }
     }
 
-    // Lemon Squeezy Deep Reading checkout (LIVE — Saju Deep Reading $7, test mode).
-    // variant slug 66b82c2f-1e1a-4168-962a-5cace3f040c3 · product_id 1080791
-    const LS_DEEP_URL = window.SAJU_LS_DEEP_URL || 'https://hcompanysaju.lemonsqueezy.com/checkout/buy/66b82c2f-1e1a-4168-962a-5cace3f040c3';
+    // Gumroad Deep Reading checkout (LIVE — Saju Deep Reading $7, product jdykvl).
+    // LS 폐기 (ADR-037) — delivery는 Gumroad ping → n8n(e19CqCd5aGg4SZN4) → Worker /reading → Resend.
+    const DEEP_URL = window.SAJU_DEEP_URL || 'https://hcompany.gumroad.com/l/reading';
 
-    // LS_DEEP_URL 활성 시 CTA 텍스트도 결제 유도로 swap (i18n 9 lang + en 폴백)
+    // DEEP_URL 활성 시 CTA 텍스트도 결제 유도로 swap (i18n 9 lang + en 폴백)
     const PAID_CTA_I18N = {
       en: 'Buy Deep Reading · $7 →',
       ko: '심층 풀이 구매 · $7 →',
@@ -460,28 +460,28 @@
       if (body) body.innerHTML = wis.body;
     }
 
-    // LS checkout URL에 birth state를 custom 파라미터로 동봉.
-    // 폼 제출 후엔 그 값을, 제출 전엔 base URL만. n8n webhook이 meta.custom_data로 받음.
+    // Gumroad checkout URL에 birth state를 query param으로 동봉.
+    // 폼 제출 후엔 그 값을, 제출 전엔 base URL만. n8n이 Gumroad ping url_params로 받음.
     function buildCheckoutUrl() {
-      if (!LS_DEEP_URL) return '';
+      if (!DEEP_URL) return '';
       const f = lastInput;
-      if (!f) return LS_DEEP_URL;
+      if (!f) return DEEP_URL;
       const pad = n => String(n).padStart(2, '0');
       const birth = `${f.year}${pad(f.month)}${pad(f.day)}${pad(f.hour)}${pad(f.minute || 0)}`;
       const params = new URLSearchParams();
-      params.set('checkout[custom][birth]', birth);
-      params.set('checkout[custom][lang]', f.language || 'en');
-      params.set('checkout[custom][readingType]', f.readingType || 'general');
-      if (f.gender) params.set('checkout[custom][gender]', f.gender);
-      if (f.city) params.set('checkout[custom][city]', f.city);
-      return LS_DEEP_URL + (LS_DEEP_URL.includes('?') ? '&' : '?') + params.toString();
+      params.set('birth', birth);
+      params.set('lang', f.language || 'en');
+      params.set('readingType', f.readingType || 'general');
+      if (f.gender) params.set('gender', f.gender);
+      if (f.city) params.set('city', f.city);
+      return DEEP_URL + (DEEP_URL.includes('?') ? '&' : '?') + params.toString();
     }
 
     function applyPaidLinks() {
-      if (!LS_DEEP_URL) return;
+      if (!DEEP_URL) return;
       const cta = document.getElementById('upsell-deep-cta');
       if (!cta) return;
-      cta.href = LS_DEEP_URL;
+      cta.href = DEEP_URL;
       cta.setAttribute('rel', 'noopener');
       cta.setAttribute('target', '_blank');
       const lang = document.getElementById('language')?.value || document.documentElement.lang || 'en';
