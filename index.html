@@ -479,6 +479,10 @@
 
     function applyPaidLinks() {
       if (!DEEP_URL) return;
+      // Deep Reading 라이브 후 pre-launch "coming this week — notify me" 잔재(16 lang)가
+      // 결제 CTA 바로 아래서 상품 미출시로 오인시킴 — DEEP_URL 활성 시 숨김
+      const note = document.getElementById('upgrade-note');
+      if (note) note.hidden = true;
       const cta = document.getElementById('upsell-deep-cta');
       if (!cta) return;
       cta.href = DEEP_URL;
