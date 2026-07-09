@@ -20,7 +20,17 @@ All three run fully client-side. Enter a birth date/time, get a reading instantl
 - **Four Pillars engine**: Year/Month/Day/Hour gan-ji, Five Elements ratio, Ten Gods auto-labeling — handles 立春 solar-term boundaries
 - **Compatibility**: four-axis score (Day Master relation, Day Branch 六合/相沖, Five Elements complement, combined balance) → soulmate/strong/good/mixed/challenging verdict
 - **Shareable**: URL-encoded birth state, native Web Share, downloadable verdict card (PNG)
-- **Pricing (planned)**: free basic reading → premium detailed reading / membership
+- **Deep Reading**: the free reading is complete on its own; a long-form AI-written interpretation is available at https://gumroad.com/l/reading
+
+## Guides
+
+Long-form explainers on the concepts the reading uses — English, 한국어, 日本語:
+
+- **Day Master archetypes** — [EN](https://hoonsikim.github.io/saju/blog/day-master-archetypes-en.html) · [KO](https://hoonsikim.github.io/saju/blog/day-master-archetypes-ko.html) · [JA](https://hoonsikim.github.io/saju/blog/day-master-archetypes-ja.html)
+- **Five Elements balance** — [EN](https://hoonsikim.github.io/saju/blog/five-elements-balance-en.html) · [KO](https://hoonsikim.github.io/saju/blog/five-elements-balance-ko.html) · [JA](https://hoonsikim.github.io/saju/blog/five-elements-balance-ja.html)
+- **Saju compatibility (궁합)** — [EN](https://hoonsikim.github.io/saju/blog/saju-compatibility-en.html) · [KO](https://hoonsikim.github.io/saju/blog/saju-compatibility-ko.html) · [JA](https://hoonsikim.github.io/saju/blog/saju-compatibility-ja.html)
+
+Index: https://hoonsikim.github.io/saju/blog/
 
 ## Why this exists
 
