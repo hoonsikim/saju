@@ -304,11 +304,13 @@
     import { generateReading } from './src/reading-rules.js';
     import { generateShareCard, generateShareCardStory, downloadBlob, copyBlobToClipboard } from './src/share-card.js';
     import { ELEMENT_NAME, PILLAR_LABELS, UI_TEXT, LOCALE_TAG, RTL_LANGS, CHROME } from './src/i18n.js';
+    import { appendAttributionToUrl, mergeAttribution, sanitizeAttribution } from './src/attribution.js';
 
     // Cloudflare Worker URL — LLM 리딩 엔드포인트.
     // Empty = use client-side rule-based reading only.
     // 배포 실패 시 fetchLLMReading()이 null 반환 → 자동으로 rule-based fallback.
     const WORKER_URL = window.SAJU_WORKER_URL || 'https://saju-reading.h-company-sean.workers.dev';
+    const PAGE_ATTRIBUTION = sanitizeAttribution(window.location.search);
 
     const ELEMENT_COLOR = {
       wood: '#4ade80', fire: '#f97316', earth: '#d4a574',
@@ -331,7 +333,7 @@
 
     // track — GA4(dataLayer) + Worker /track 동시 송신. sendBeacon으로 unload-safe.
     function track(name, params) {
-      const payload = params || {};
+      const payload = mergeAttribution(params, PAGE_ATTRIBUTION);
       try {
         if (typeof window.gtag === 'function') {
           window.gtag('event', name, payload);
@@ -465,7 +467,7 @@
     function buildCheckoutUrl() {
       if (!DEEP_URL) return '';
       const f = lastInput;
-      if (!f) return DEEP_URL;
+      if (!f) return appendAttributionToUrl(DEEP_URL, PAGE_ATTRIBUTION);
       const pad = n => String(n).padStart(2, '0');
       const birth = `${f.year}${pad(f.month)}${pad(f.day)}${pad(f.hour)}${pad(f.minute || 0)}`;
       const params = new URLSearchParams();
@@ -474,7 +476,8 @@
       params.set('readingType', f.readingType || 'general');
       if (f.gender) params.set('gender', f.gender);
       if (f.city) params.set('city', f.city);
-      return DEEP_URL + (DEEP_URL.includes('?') ? '&' : '?') + params.toString();
+      const checkoutUrl = DEEP_URL + (DEEP_URL.includes('?') ? '&' : '?') + params.toString();
+      return appendAttributionToUrl(checkoutUrl, PAGE_ATTRIBUTION);
     }
 
     function applyPaidLinks() {
@@ -485,7 +488,7 @@
       if (note) note.hidden = true;
       const cta = document.getElementById('upsell-deep-cta');
       if (!cta) return;
-      cta.href = DEEP_URL;
+      cta.href = buildCheckoutUrl();
       cta.setAttribute('rel', 'noopener');
       cta.setAttribute('target', '_blank');
       const lang = document.getElementById('language')?.value || document.documentElement.lang || 'en';

@@ -9,6 +9,7 @@
 
 import { birthInfoToFourPillars } from '../../src/saju.js';
 import { buildClaudeRequest } from '../../src/reading-prompt.js';
+import { attributionSource, mergeAttribution, sanitizeAttribution } from '../../src/attribution.js';
 
 const ANTHROPIC_API = 'https://api.anthropic.com/v1/messages';
 const MAX_BODY_SIZE = 4096;
@@ -234,6 +235,7 @@ async function handlePrompt(request, env) {
 //   ct:{date}:{event}                    → total count
 //   ct:{date}:{event}:lang:{lang}        → lang-scoped count
 //   ct:{date}:{event}:page:{page}        → page-scoped count
+//   ct:{date}:{event}:source:{source}    → attribution source-scoped count
 //   raw:{date}:{ts}-{nano}               → JSON 원본 (TTL 30d, 최근 forensic용)
 // =========================================================================
 async function handleTrack(request, env) {
@@ -250,11 +252,16 @@ async function handleTrack(request, env) {
   const date = dateKey();
   const safeLang = (lang || '').replace(/[^a-zA-Z-]/g, '').slice(0, 8);
   const safePage = (page || '').replace(/[^a-zA-Z0-9_./-]/g, '').slice(0, 32);
+  const extraIsRecord = extra !== null && typeof extra === 'object' && !Array.isArray(extra);
+  const safeAttribution = sanitizeAttribution(extraIsRecord ? extra : null);
+  const safeExtra = extraIsRecord ? mergeAttribution(extra, safeAttribution) : null;
+  const safeSource = attributionSource(safeAttribution);
 
   // counters (race condition 허용 — traffic 적음)
   const ops = [kvIncrement(env.METRICS, `ct:${date}:${ev}`)];
   if (safeLang) ops.push(kvIncrement(env.METRICS, `ct:${date}:${ev}:lang:${safeLang}`));
   if (safePage) ops.push(kvIncrement(env.METRICS, `ct:${date}:${ev}:page:${safePage}`));
+  if (safeSource) ops.push(kvIncrement(env.METRICS, `ct:${date}:${ev}:source:${safeSource}`));
 
   // raw log (TTL 30d) — forensic
   const rawKey = `raw:${date}:${Date.now()}-${nanoid(6)}`;
@@ -267,7 +274,7 @@ async function handleTrack(request, env) {
         lang: safeLang || null,
         page: safePage || null,
         sessionId: sessionId ? String(sessionId).slice(0, 64) : null,
-        extra: extra && typeof extra === 'object' ? extra : null,
+        extra: safeExtra,
         ip: request.headers.get('cf-connecting-ip') || null,
         country: request.headers.get('cf-ipcountry') || null,
         ua: (request.headers.get('user-agent') || '').slice(0, 200),

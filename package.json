@@ -4,7 +4,8 @@
   "description": "Korean Saju (Four Pillars of Destiny) \u2014 global, AI-powered, multilingual",
   "main": "index.js",
   "scripts": {
-    "test": "node test/saju.test.js"
+    "test": "node test/saju.test.js && node --test test/attribution.test.js",
+    "test:attribution": "node --test test/attribution.test.js"
   },
   "repository": {
     "type": "git",
