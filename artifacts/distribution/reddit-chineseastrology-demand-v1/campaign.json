@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "campaign_id": "reddit_chineseastrology_001",
+  "platform": "reddit",
+  "community": "r/chineseastrology",
+  "role": "qualified_acquisition_source_only",
+  "status": "staged_pending_modmail_send_confirmation",
+  "source": "reddit_chineseastrology_001",
+  "cta": "https://hoonsikim.github.io/saju/?source=reddit_chineseastrology_001&utm_source=reddit&utm_medium=organic-social&utm_campaign=reddit_chineseastrology_001",
+  "permission_required": true,
+  "silence_is_permission": false,
+  "paid_offer_advertised_on_reddit": false,
+  "publish_count_limit": 1,
+  "decision_window_days": 7,
+  "success": "At least one verified external Gumroad order attributed to reddit_chineseastrology_001, or at least three usable non-identifying comparison reports that justify an offer iteration.",
+  "kill": "Moderator warning/removal, privacy complaint, broken attribution, fewer than 10 destination visits after one approved post plus substantive participation, or zero paid clicks after 50 qualified destination visits.",
+  "modmail_sent_at": null,
+  "moderator_decision": null,
+  "published_at": null
+}

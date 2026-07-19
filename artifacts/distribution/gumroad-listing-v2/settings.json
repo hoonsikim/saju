@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "product_id": "jdykvl",
+  "product_name": "Saju Deep Reading",
+  "summary": "Personalized Korean Four Pillars / BaZi reading: 2,500–3,500 words, AI-generated and delivered by email.",
+  "price_currency": "USD",
+  "price_amount": 7,
+  "delivery_expectation": "Usually within 10 minutes; allow up to 24 hours for provider recovery.",
+  "refund_selector": "No refunds allowed, except as stated in the fine print and where applicable law or Gumroad protections require otherwise.",
+  "refund_fine_print": "Full refund if payment succeeds but no usable reading is delivered within 24 hours and our recovery or re-send attempt fails, or generation fails technically on our side. No discretionary refund for disagreement, change of mind, mistyped birth data, or an inaccessible buyer email, except where applicable law or Gumroad buyer protections require otherwise. Contact h.company.sean@gmail.com from the purchase email with the Gumroad order identifier.",
+  "public_policy_url": "https://hoonsikim.github.io/saju/legal/refund/",
+  "saved_live": false
+}

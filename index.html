@@ -118,7 +118,7 @@
     </details>
 
     <div id="paid-banner" hidden role="status" aria-live="polite" style="max-width:720px;margin:16px auto 0;padding:14px 18px;background:linear-gradient(135deg,#1a3d2e,#0f2920);border:1px solid #2d6a4f;border-radius:8px;color:#d4f0e0;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
-      <span id="paid-banner-text">Payment confirmed · Showing your reading · Email also on the way</span>
+      <span id="paid-banner-text">Checkout return · If payment completed, your Deep Reading will be delivered by email</span>
       <button id="paid-banner-close" aria-label="Close" style="background:transparent;border:0;color:#d4f0e0;font-size:20px;line-height:1;cursor:pointer;padding:0 4px;">&times;</button>
     </div>
 
@@ -162,6 +162,7 @@
             </label>
           </div>
           <p class="hint" id="form-hint">Don't know your birth time? Use 12:00 — gives a less precise Hour pillar but everything else stays accurate.</p>
+          <p class="hint" id="form-processing-notice">The chart math runs in your browser. To generate the free AI narrative, your raw birth fields and derived chart data are sent to Cloudflare Workers and Anthropic. After submission, birth date/time and focus are also placed in the current page address so the result can be reopened; reset removes them. <a href="./about/#model-card">Data &amp; model details</a>.</p>
           <p class="form-error" id="form-error" role="alert" hidden></p>
           <button type="submit" id="submit-btn">Read my Saju →</button>
         </form>
@@ -172,7 +173,7 @@
       <div class="container narrow">
         <p class="source-disclosure" id="source-disclosure" style="font-family:monospace;font-size:11px;color:#8a7f6e;letter-spacing:0.8px;line-height:1.6;margin:0 0 22px;padding:11px 14px;border-left:2px solid #d4a574;background:rgba(212,165,116,0.04);">
           <span style="color:#d4a574;">⚙ Chart</span> below is <strong style="color:#ede4d3;">deterministic rule-based computation</strong> (4 pillars · 5 elements · 10 gods · 신살 · 12운성 · 공망 · 대운 · 세운).
-          <span style="color:#d4a574;">✦ Reading</span> uses <strong style="color:#ede4d3;">Claude Haiku 4.5 LLM</strong> on top of the chart. <a href="/saju/about/#methodology" style="color:#d4a574;">Methodology →</a>
+          <span style="color:#d4a574;">✦ Reading</span> uses <strong style="color:#ede4d3;">Claude Opus 4.8 LLM</strong> on top of the chart. <a href="/saju/about/#methodology" style="color:#d4a574;">Methodology →</a>
         </p>
         <h2 id="result-h2">Your Four Pillars</h2>
         <div class="pillars-grid" id="pillars-grid"></div>
@@ -200,7 +201,7 @@
           </div>
         </div>
 
-        <h3 id="result-h3-reading">Reading <span style="display:inline-block;font-family:monospace;font-size:10px;color:#d4a574;letter-spacing:2px;text-transform:uppercase;margin-left:10px;padding:2px 7px;border:1px solid #2a2520;border-radius:3px;font-weight:normal;vertical-align:middle;">AI · Claude Haiku 4.5</span></h3>
+        <h3 id="result-h3-reading">Reading <span style="display:inline-block;font-family:monospace;font-size:10px;color:#d4a574;letter-spacing:2px;text-transform:uppercase;margin-left:10px;padding:2px 7px;border:1px solid #2a2520;border-radius:3px;font-weight:normal;vertical-align:middle;">AI · Claude Opus 4.8</span></h3>
         <div class="reading-text" id="reading-text"></div>
 
         <section class="major-luck-section" id="major-luck-section" hidden>
@@ -228,6 +229,7 @@
             <button type="button" class="fb-star" data-rating="5" aria-label="5 stars">★</button>
           </div>
           <textarea class="fb-text" id="fb-text" placeholder="Optional: tell us more" maxlength="500" rows="2" hidden></textarea>
+          <p id="fb-privacy-warning" style="font-size:11px;line-height:1.45;color:#9a9182;margin:7px 0 0;" hidden>Do not include birth details, email, phone, or other contact information.</p>
           <button type="button" class="fb-submit" id="fb-submit" hidden>Send</button>
           <div class="fb-thanks" id="fb-thanks" hidden>✓ Thanks!</div>
         </div>
@@ -247,11 +249,12 @@
               <p class="upsell-desc" id="upsell-deep-desc">2500-3500 word deep reading across 5 sections (Personality · Career · Love · Wealth · Timing) + closing insight. Choose your focus (career / love / wealth) → that section expands to ~800 words. Rule-based chart (deterministic) + LLM interpretation. Delivered to your inbox in your selected language.</p>
               <a class="upsell-cta" id="upsell-deep-cta" href="mailto:h.company.sean@gmail.com?subject=Saju%20Deep%20Reading%20%247%20%E2%80%94%20notify%20me&body=Notify%20me%20when%20Deep%20Reading%20goes%20live.%0A%0AMy%20Day%20Master%20(if%20you%20already%20did%20the%20free%20reading):%20%0A">Notify me when live →</a>
               <p class="paid-agreement" id="paid-agreement" style="margin:10px 0 0;font-size:11px;line-height:1.5;color:#8a7f6e;letter-spacing:0.2px;">
-                <span id="paid-agreement-text">By purchasing, you agree to instant delivery and waive your 14-day right of withdrawal.</span>
+                <span id="paid-agreement-text">Delivery timing and withdrawal rights follow the checkout confirmation, applicable law, and our Terms.</span>
                 <a href="./legal/terms/" id="paid-agreement-terms" style="color:#a89a82;text-decoration:underline;">Terms</a>
                 ·
                 <a href="./legal/refund/" id="paid-agreement-refund" style="color:#a89a82;text-decoration:underline;">Refund</a>
               </p>
+              <p class="paid-agreement" id="paid-data-notice" style="margin:8px 0 0;font-size:11px;line-height:1.5;color:#8a7f6e;letter-spacing:0.2px;">Direct checkout: the current email workflow needs birth date/time, gender, language and focus in the Gumroad URL. City is excluded and Saju does not save a second paid-checkout copy in browser storage. Gumroad, Cloudflare Workers, Anthropic and Resend process the order/reading; provider records follow their own retention.</p>
             </div>
             <div class="upsell-card" id="upsell-compat">
               <div class="upsell-title" id="upsell-compat-title">Compatibility · $7 per pair</div>
@@ -304,13 +307,20 @@
     import { generateReading } from './src/reading-rules.js';
     import { generateShareCard, generateShareCardStory, downloadBlob, copyBlobToClipboard } from './src/share-card.js';
     import { ELEMENT_NAME, PILLAR_LABELS, UI_TEXT, LOCALE_TAG, RTL_LANGS, CHROME } from './src/i18n.js';
-    import { appendAttributionToUrl, mergeAttribution, sanitizeAttribution } from './src/attribution.js';
+    import { createAnalyticsSessionProvider, mergeAttribution, sanitizeAttribution } from './src/attribution.js';
+    import { buildDirectCheckoutUrl } from './src/direct-checkout.js';
 
     // Cloudflare Worker URL — LLM 리딩 엔드포인트.
     // Empty = use client-side rule-based reading only.
     // 배포 실패 시 fetchLLMReading()이 null 반환 → 자동으로 rule-based fallback.
     const WORKER_URL = window.SAJU_WORKER_URL || 'https://saju-reading.h-company-sean.workers.dev';
     const PAGE_ATTRIBUTION = sanitizeAttribution(window.location.search);
+    // Explicit owner/test switch. This is a signaled exclusion, not owner
+    // detection: set window.SAJU_ANALYTICS_MODE = 'exclude' before this module.
+    let ANALYTICS_EXCLUDED = window.SAJU_ANALYTICS_MODE === 'exclude';
+    try {
+      ANALYTICS_EXCLUDED ||= localStorage.getItem('saju.analytics.mode') === 'exclude';
+    } catch {}
 
     const ELEMENT_COLOR = {
       wood: '#4ade80', fire: '#f97316', earth: '#d4a574',
@@ -322,17 +332,18 @@
       if (el) el.setAttribute(attr, value);
     }
 
-    // 세션 ID — 같은 브라우저 탭 내 user journey 묶기 (ADR-020 측정 인프라).
-    function getSessionId() {
-      try {
-        let s = sessionStorage.getItem('saju.sess');
-        if (!s) { s = 'sess_' + Math.random().toString(36).slice(2, 12); sessionStorage.setItem('saju.sess', s); }
-        return s;
-      } catch { return null; }
-    }
+    // 세션 ID — crypto RNG만 사용한다. sessionStorage가 차단되면 동일한
+    // page load 안에서만 유지되는 in-memory ID로 자동 fallback한다.
+    let analyticsSessionStorage = null;
+    try { analyticsSessionStorage = window.sessionStorage; } catch {}
+    const getSessionId = createAnalyticsSessionProvider({
+      storage: analyticsSessionStorage,
+      cryptoProvider: window.crypto,
+    });
 
     // track — GA4(dataLayer) + Worker /track 동시 송신. sendBeacon으로 unload-safe.
     function track(name, params) {
+      if (ANALYTICS_EXCLUDED) return;
       const payload = mergeAttribution(params, PAGE_ATTRIBUTION);
       try {
         if (typeof window.gtag === 'function') {
@@ -343,11 +354,13 @@
       } catch {}
       if (WORKER_URL) {
         try {
+          const sessionId = getSessionId();
+          if (!sessionId) return;
           const body = JSON.stringify({
             event: name,
             lang: document.documentElement.lang || null,
-            page: (location.pathname.split('/').filter(Boolean).pop() || 'index').replace('.html', ''),
-            sessionId: getSessionId(),
+            page: 'index',
+            sessionId,
             extra: payload,
           });
           // fetch(keepalive)로 통일 — sendBeacon은 application/json blob에서
@@ -365,8 +378,14 @@
     }
 
     // Gumroad Deep Reading checkout (LIVE — Saju Deep Reading $7, product jdykvl).
-    // LS 폐기 (ADR-037) — delivery는 Gumroad ping → n8n(e19CqCd5aGg4SZN4) → Worker /reading → Resend.
+    // LS 폐기 (ADR-037) — delivery는 Gumroad ping → fulfillment gateway → reading Worker → Resend.
     const DEEP_URL = window.SAJU_DEEP_URL || 'https://hcompany.gumroad.com/l/reading';
+
+    // 과거 checkout 복원용으로 무기한 남던 원본 출생정보 사본을 재방문 시 삭제한다.
+    try {
+      localStorage.removeItem('saju.paid.lastInput');
+      localStorage.removeItem('saju.paid.ts');
+    } catch {}
 
     // DEEP_URL 활성 시 CTA 텍스트도 결제 유도로 swap (i18n 9 lang + en 폴백)
     const PAID_CTA_I18N = {
@@ -382,31 +401,31 @@
     };
     const paidCtaText = (lang) => PAID_CTA_I18N[lang] || PAID_CTA_I18N.en;
 
-    // Path 1 banner — 결제 직후 redirect 복귀 시 상단 안내
+    // 결제 직후 redirect 복귀 시 상단 안내. 출생정보 browser copy는 보존하지 않는다.
     const PAID_BANNER_I18N = {
-      en: 'Payment confirmed · Showing your reading · Email also on the way',
-      ko: '결제 완료 · 결과를 표시합니다 · 이메일도 곧 도착합니다',
-      ja: '決済完了 · リーディングを表示します · メールも間もなく届きます',
-      zh: '支付完成 · 正在显示解读 · 邮件即将送达',
-      es: 'Pago confirmado · Mostrando tu lectura · El correo también está en camino',
-      pt: 'Pagamento confirmado · Mostrando sua leitura · O e-mail também está a caminho',
-      fr: 'Paiement confirmé · Affichage de votre lecture · L’e-mail arrive aussi',
-      de: 'Zahlung bestätigt · Lesung wird angezeigt · E-Mail folgt in Kürze',
-      ar: 'تم تأكيد الدفع · جارٍ عرض القراءة · البريد الإلكتروني في الطريق',
+      en: 'Checkout return · If payment completed, your Deep Reading will be delivered by email',
+      ko: '결제 화면에서 돌아왔습니다 · 결제가 완료됐다면 심층 풀이가 이메일로 발송됩니다',
+      ja: '決済画面から戻りました · 支払いが完了していれば詳細リーディングをメールで配信します',
+      zh: '已返回结账页面 · 如已完成付款，深度解读将通过电子邮件发送',
+      es: 'Regreso del pago · Si se completó, tu lectura profunda se enviará por correo',
+      pt: 'Retorno do checkout · Se o pagamento foi concluído, sua leitura será enviada por e-mail',
+      fr: 'Retour du paiement · S’il est terminé, votre lecture sera envoyée par e-mail',
+      de: 'Rückkehr vom Checkout · Nach abgeschlossener Zahlung folgt die Tiefenlesung per E-Mail',
+      ar: 'العودة من الدفع · إذا اكتمل الدفع فستُرسل قراءتك العميقة عبر البريد الإلكتروني',
     };
     const paidBannerText = (lang) => PAID_BANNER_I18N[lang] || PAID_BANNER_I18N.en;
 
-    // 결제 동의 문구 (옵션 C) — 즉시 발송 동의 + 14일 청약철회권 포기
+    // 채널별 결제·배송·철회 고지. 결제만으로 권리 포기를 추정하지 않는다.
     const PAID_AGREEMENT_I18N = {
-      en: { text: 'By purchasing, you agree to instant delivery and waive your 14-day right of withdrawal.', terms: 'Terms', refund: 'Refund' },
-      ko: { text: '구매 시 즉시 발송에 동의하며 14일 청약철회권을 포기합니다.', terms: '약관', refund: '환불' },
-      ja: { text: 'ご購入により即時配信に同意し、14日間の撤回権を放棄したものとみなされます。', terms: '規約', refund: '返金' },
-      zh: { text: '购买即视为同意即时交付，并放弃 14 天撤回权。', terms: '条款', refund: '退款' },
-      es: { text: 'Al comprar, acepta la entrega inmediata y renuncia a su derecho de desistimiento de 14 días.', terms: 'Términos', refund: 'Reembolso' },
-      pt: { text: 'Ao comprar, você concorda com a entrega imediata e renuncia ao seu direito de retirada de 14 dias.', terms: 'Termos', refund: 'Reembolso' },
-      fr: { text: 'En achetant, vous acceptez la livraison immédiate et renoncez à votre droit de rétractation de 14 jours.', terms: 'Conditions', refund: 'Remboursement' },
-      de: { text: 'Mit dem Kauf stimmen Sie der sofortigen Lieferung zu und verzichten auf Ihr 14-tägiges Widerrufsrecht.', terms: 'AGB', refund: 'Erstattung' },
-      ar: { text: 'بالشراء، فإنك توافق على التسليم الفوري وتتنازل عن حقك في الانسحاب لمدة 14 يومًا.', terms: 'الشروط', refund: 'الاسترداد' },
+      en: { text: 'Delivery timing and withdrawal rights follow the checkout confirmation, applicable law, and our Terms.', terms: 'Terms', refund: 'Refund' },
+      ko: { text: '배송 시점과 청약철회 권리는 결제 화면의 명시적 확인, 적용 법률 및 약관을 따릅니다.', terms: '약관', refund: '환불' },
+      ja: { text: '配送時期と撤回権は、決済画面での明示的な確認、適用法および本規約に従います。', terms: '規約', refund: '返金' },
+      zh: { text: '交付时间与撤回权以结账页面的明确确认、适用法律及本条款为准。', terms: '条款', refund: '退款' },
+      es: { text: 'El plazo de entrega y el derecho de desistimiento se rigen por la confirmación del pago, la ley aplicable y nuestros Términos.', terms: 'Términos', refund: 'Reembolso' },
+      pt: { text: 'O prazo de entrega e o direito de retirada seguem a confirmação do checkout, a lei aplicável e nossos Termos.', terms: 'Termos', refund: 'Reembolso' },
+      fr: { text: 'Le délai de livraison et le droit de rétractation suivent la confirmation de paiement, la loi applicable et nos Conditions.', terms: 'Conditions', refund: 'Remboursement' },
+      de: { text: 'Lieferzeit und Widerrufsrechte richten sich nach der Bestätigung beim Checkout, dem anwendbaren Recht und unseren AGB.', terms: 'AGB', refund: 'Erstattung' },
+      ar: { text: 'يخضع توقيت التسليم وحقوق الانسحاب لتأكيد الدفع الصريح والقانون المعمول به وشروطنا.', terms: 'الشروط', refund: 'الاسترداد' },
     };
     const paidAgreement = (lang) => PAID_AGREEMENT_I18N[lang] || PAID_AGREEMENT_I18N.en;
 
@@ -423,35 +442,35 @@
     const WHAT_IS_SAJU_I18N = {
       en: {
         summary: 'First time? What is Saju? →',
-        body: '<p><strong>Saju (사주, 四柱) literally means "Four Pillars."</strong> It\'s the Korean version of Chinese BaZi (八字) — a birth chart based on your year, month, day, and hour of birth.</p><p><strong>If you know Western astrology:</strong> your Sun sign is one fact about your birth. Saju takes <em>eight</em> facts (a stem + branch for each of Year, Month, Day, Hour), then reads them through Five Elements (五行) and Ten Gods (十神).</p><p><strong>The most personal piece is your Day Master (日主, 일주)</strong> — the elemental archetype of your core self, like a zodiac sign but based on the day you were born.</p><p>This site computes the chart <strong>deterministically in your browser</strong>. The optional $7 Deep Reading adds an AI-written interpretation. We do not predict the future and we do not replace a credentialed practitioner.</p>'
+        body: '<p><strong>Saju (사주, 四柱) literally means "Four Pillars."</strong> It\'s the Korean version of Chinese BaZi (八字) — a birth chart based on your year, month, day, and hour of birth.</p><p><strong>If you know Western astrology:</strong> your Sun sign is one fact about your birth. Saju takes <em>eight</em> facts (a stem + branch for each of Year, Month, Day, Hour), then reads them through Five Elements (五行) and Ten Gods (十神).</p><p><strong>The most personal piece is your Day Master (日主, 일주)</strong> — the elemental archetype of your core self, like a zodiac sign but based on the day you were born.</p><p>The chart math is deterministic and can run in your browser. Every AI narrative, including this free reading and any paid or custom reading, sends the raw birth fields and derived chart structure to Cloudflare Workers and Claude Opus 4.8. We do not predict the future and we do not replace a credentialed practitioner.</p>'
       },
       ko: {
         summary: '사주가 처음? 1분 설명 →',
-        body: '<p><strong>사주(四柱)는 글자 그대로 "네 기둥"입니다.</strong> 태어난 연·월·일·시를 천간·지지(干支) 조합으로 표시한 8글자(八字)가 핵심입니다.</p><p><strong>서양 점성술과 비교하면:</strong> Sun sign 한 가지가 아니라 8가지 정보(연주·월주·일주·시주 각각 천간 + 지지)로 읽습니다. 오행(五行)과 십신(十神)의 관계 분석이 본질입니다.</p><p><strong>가장 개인적인 것은 일주(日主)</strong> — 태어난 날의 천간으로, 그 사람의 본질적 archetype을 나타냅니다. 서양 zodiac sign과 비슷하지만 날 단위로 더 세밀합니다.</p><p>이 사이트는 사주를 <strong>브라우저에서 결정론적으로 계산</strong>합니다. $7 심층 풀이는 AI(Claude Haiku 4.5)가 해석을 더합니다. 미래를 예측하지 않으며, 전문 명리상담사의 자리를 대신하지 않습니다.</p>'
+        body: '<p><strong>사주(四柱)는 글자 그대로 "네 기둥"입니다.</strong> 태어난 연·월·일·시를 천간·지지(干支) 조합으로 표시한 8글자(八字)가 핵심입니다.</p><p><strong>서양 점성술과 비교하면:</strong> Sun sign 한 가지가 아니라 8가지 정보(연주·월주·일주·시주 각각 천간 + 지지)로 읽습니다. 오행(五行)과 십신(十神)의 관계 분석이 본질입니다.</p><p><strong>가장 개인적인 것은 일주(日主)</strong> — 태어난 날의 천간으로, 그 사람의 본질적 archetype을 나타냅니다. 서양 zodiac sign과 비슷하지만 날 단위로 더 세밀합니다.</p><p>차트 계산은 결정론적이며 브라우저에서 실행될 수 있습니다. 현재 무료 풀이와 모든 유료·주문제작 풀이의 AI 서사는 원본 출생 필드와 파생 차트 구조를 Cloudflare Workers와 Claude Opus 4.8로 전송합니다. 미래를 예측하지 않으며, 전문 명리상담사의 자리를 대신하지 않습니다.</p>'
       },
       ja: {
         summary: '初めて? 1分で四柱を理解 →',
-        body: '<p><strong>四柱(さしゅう)は文字通り「四つの柱」を意味します。</strong> 生まれた年・月・日・時を干支の組み合わせで表した八文字(八字)が本質です。</p><p><strong>西洋占星術と比較すると:</strong> Sun signという一つの情報ではなく、八つの情報(各柱に天干と地支)で読み解きます。五行と十神の関係分析が核心です。</p><p><strong>最も個人的なのが日主(日干)</strong> — 生まれた日の天干で、その人の本質的なアーキタイプを表します。西洋のzodiac signに似ていますが、日単位でより精細です。</p><p>このサイトは四柱推命を<strong>ブラウザで決定論的に計算</strong>します。$7の心層リーディングはAI(Claude Haiku 4.5)が解釈を追加します。未来を予言するものではなく、認定された専門家の代わりにはなりません。</p>'
+        body: '<p><strong>四柱(さしゅう)は文字通り「四つの柱」を意味します。</strong> 生まれた年・月・日・時を干支の組み合わせで表した八文字(八字)が本質です。</p><p><strong>西洋占星術と比較すると:</strong> Sun signという一つの情報ではなく、八つの情報(各柱に天干と地支)で読み解きます。五行と十神の関係分析が核心です。</p><p><strong>最も個人的なのが日主(日干)</strong> — 生まれた日の天干で、その人の本質的なアーキタイプを表します。西洋のzodiac signに似ていますが、日単位でより精細です。</p><p>命式計算は決定論的で、ブラウザ上で実行できます。現在の無料リーディングとすべての有料・受注制作リーディングのAI解釈では、原出生項目と派生命式構造をCloudflare WorkersとClaude Opus 4.8へ送信します。未来を予言するものではなく、認定された専門家の代わりにはなりません。</p>'
       },
       zh: {
         summary: '第一次? 一分钟看懂八字 →',
-        body: '<p><strong>四柱(Sìzhù)字面意思是"四根柱子"。</strong>是基于出生年、月、日、时,以天干地支组合表示的八个字(八字)。</p><p><strong>与西方占星术对比:</strong>不是Sun sign一个信息,而是八个信息(年柱、月柱、日柱、时柱各有天干和地支)。五行和十神的关系分析是核心。</p><p><strong>最个人化的是日主(日干)</strong> — 出生日的天干,代表一个人本质上的原型。类似西方zodiac sign,但以日为单位更精细。</p><p>本网站在<strong>浏览器中确定性地计算</strong>八字。可选$7深度解读由AI(Claude Haiku 4.5)添加文字解释。我们不预测未来,也不替代经认证的命理师。</p>'
+        body: '<p><strong>四柱(Sìzhù)字面意思是"四根柱子"。</strong>是基于出生年、月、日、时,以天干地支组合表示的八个字(八字)。</p><p><strong>与西方占星术对比:</strong>不是Sun sign一个信息,而是八个信息(年柱、月柱、日柱、时柱各有天干和地支)。五行和十神的关系分析是核心。</p><p><strong>最个人化的是日主(日干)</strong> — 出生日的天干,代表一个人本质上的原型。类似西方zodiac sign,但以日为单位更精细。</p><p>命盘计算是确定性的，可在浏览器中执行。当前免费解读及所有付费或定制解读的AI叙事，都会把原始出生字段和派生命盘结构发送给Cloudflare Workers与Claude Opus 4.8。我们不预测未来,也不替代经认证的命理师。</p>'
       },
       es: {
         summary: '¿Primera vez? ¿Qué es Saju? →',
-        body: '<p><strong>Saju (사주, "Cuatro Pilares") es la versión coreana del BaZi chino (八字)</strong> — una carta natal basada en tu año, mes, día y hora de nacimiento.</p><p><strong>Si conoces la astrología occidental:</strong> tu signo solar es un dato sobre tu nacimiento. Saju toma <em>ocho</em> datos (un tallo y una rama para cada uno de Año, Mes, Día, Hora) y los lee a través de los Cinco Elementos (五行) y los Diez Dioses (十神).</p><p><strong>El más personal es tu Maestro del Día (Day Master, 日主)</strong> — el arquetipo elemental de tu yo esencial, como un signo zodiacal pero basado en el día en que naciste.</p><p>Este sitio calcula la carta de forma <strong>determinista en tu navegador</strong>. La Lectura Profunda opcional de $7 añade una interpretación escrita por IA. No predecimos el futuro ni reemplazamos a un practicante acreditado.</p>'
+        body: '<p><strong>Saju (사주, "Cuatro Pilares") es la versión coreana del BaZi chino (八字)</strong> — una carta natal basada en tu año, mes, día y hora de nacimiento.</p><p><strong>Si conoces la astrología occidental:</strong> tu signo solar es un dato sobre tu nacimiento. Saju toma <em>ocho</em> datos (un tallo y una rama para cada uno de Año, Mes, Día, Hora) y los lee a través de los Cinco Elementos (五行) y los Diez Dioses (十神).</p><p><strong>El más personal es tu Maestro del Día (Day Master, 日主)</strong> — el arquetipo elemental de tu yo esencial, como un signo zodiacal pero basado en el día en que naciste.</p><p>El cálculo de la carta es determinista y puede ejecutarse en tu navegador. Toda narrativa de IA, incluida esta lectura gratuita y cualquier lectura pagada o personalizada, envía los campos de nacimiento y la estructura derivada a Cloudflare Workers y Claude Opus 4.8. No predecimos el futuro ni reemplazamos a un practicante acreditado.</p>'
       },
       fr: {
         summary: 'Première fois ? Qu\'est-ce que le Saju ? →',
-        body: '<p><strong>Saju (사주, « Quatre Piliers ») est la version coréenne du BaZi chinois (八字)</strong> — un thème natal basé sur votre année, mois, jour et heure de naissance.</p><p><strong>Comparé à l\'astrologie occidentale :</strong> votre signe solaire est un fait à propos de votre naissance. Saju prend <em>huit</em> faits (un tronc et une branche pour chacun de Année, Mois, Jour, Heure) et les lit à travers les Cinq Éléments (五行) et les Dix Dieux (十神).</p><p><strong>Le plus personnel est votre Maître du Jour (Day Master, 日主)</strong> — l\'archétype élémentaire de votre soi essentiel, comme un signe zodiacal mais basé sur le jour de votre naissance.</p><p>Ce site calcule le thème de manière <strong>déterministe dans votre navigateur</strong>. La Lecture Approfondie optionnelle à 7$ ajoute une interprétation écrite par IA. Nous ne prédisons pas l\'avenir et ne remplaçons pas un praticien accrédité.</p>'
+        body: '<p><strong>Saju (사주, « Quatre Piliers ») est la version coréenne du BaZi chinois (八字)</strong> — un thème natal basé sur votre année, mois, jour et heure de naissance.</p><p><strong>Comparé à l\'astrologie occidentale :</strong> votre signe solaire est un fait à propos de votre naissance. Saju prend <em>huit</em> faits (un tronc et une branche pour chacun de Année, Mois, Jour, Heure) et les lit à travers les Cinq Éléments (五行) et les Dix Dieux (十神).</p><p><strong>Le plus personnel est votre Maître du Jour (Day Master, 日主)</strong> — l\'archétype élémentaire de votre soi essentiel, comme un signe zodiacal mais basé sur le jour de votre naissance.</p><p>Le calcul du thème est déterministe et peut s\'exécuter dans votre navigateur. Toute narration par IA, y compris cette lecture gratuite et toute lecture payante ou personnalisée, envoie les champs de naissance et la structure dérivée à Cloudflare Workers et Claude Opus 4.8. Nous ne prédisons pas l\'avenir et ne remplaçons pas un praticien accrédité.</p>'
       },
       de: {
         summary: 'Zum ersten Mal? Was ist Saju? →',
-        body: '<p><strong>Saju (사주, „Vier Säulen") ist die koreanische Variante des chinesischen BaZi (八字)</strong> — ein Geburtsdiagramm basierend auf Ihrem Geburtsjahr, -monat, -tag und -stunde.</p><p><strong>Im Vergleich zur westlichen Astrologie:</strong> Ihr Sonnenzeichen ist eine Information über Ihre Geburt. Saju nimmt <em>acht</em> Informationen (ein Stamm und ein Zweig für Jahr, Monat, Tag, Stunde) und liest sie durch die Fünf Elemente (五行) und die Zehn Götter (十神).</p><p><strong>Das Persönlichste ist Ihr Tagesmeister (Day Master, 日主)</strong> — der elementare Archetyp Ihres Kerns, wie ein Tierkreiszeichen, aber basierend auf dem Tag Ihrer Geburt.</p><p>Diese Website berechnet das Diagramm <strong>deterministisch in Ihrem Browser</strong>. Die optionale Tiefenlesung für 7$ fügt eine KI-geschriebene Interpretation hinzu. Wir sagen die Zukunft nicht voraus und ersetzen keinen anerkannten Praktiker.</p>'
+        body: '<p><strong>Saju (사주, „Vier Säulen") ist die koreanische Variante des chinesischen BaZi (八字)</strong> — ein Geburtsdiagramm basierend auf Ihrem Geburtsjahr, -monat, -tag und -stunde.</p><p><strong>Im Vergleich zur westlichen Astrologie:</strong> Ihr Sonnenzeichen ist eine Information über Ihre Geburt. Saju nimmt <em>acht</em> Informationen (ein Stamm und ein Zweig für Jahr, Monat, Tag, Stunde) und liest sie durch die Fünf Elemente (五行) und die Zehn Götter (十神).</p><p><strong>Das Persönlichste ist Ihr Tagesmeister (Day Master, 日主)</strong> — der elementare Archetyp Ihres Kerns, wie ein Tierkreiszeichen, aber basierend auf dem Tag Ihrer Geburt.</p><p>Die Diagrammberechnung ist deterministisch und kann in Ihrem Browser ausgeführt werden. Jede KI-Erzählung, einschließlich dieser kostenlosen sowie jeder bezahlten oder individuellen Lesung, sendet die Geburtsfelder und die abgeleitete Diagrammstruktur an Cloudflare Workers und Claude Opus 4.8. Wir sagen die Zukunft nicht voraus und ersetzen keinen anerkannten Praktiker.</p>'
       },
       ar: {
         summary: 'لأول مرة؟ ما هو الساجو؟ →',
-        body: '<p><strong>ساجو (사주، "الأعمدة الأربعة") هي النسخة الكورية من باتزي الصينية (八字)</strong> — مخطط ميلاد يعتمد على سنة وشهر ويوم وساعة ميلادك.</p><p><strong>مقارنة بالتنجيم الغربي:</strong> علامة شمسك هي معلومة واحدة عن ميلادك. ساجو يأخذ <em>ثمانية</em> معلومات (جذع وفرع لكل من السنة والشهر واليوم والساعة) ويقرؤها من خلال العناصر الخمسة (五行) والآلهة العشر (十神).</p><p><strong>الأكثر شخصية هو سيد اليوم (Day Master، 日主)</strong> — النموذج الأصلي العنصري لذاتك الجوهرية، مثل علامة زودياك لكن بناءً على يوم ميلادك.</p><p>هذا الموقع يحسب المخطط <strong>بشكل حتمي في متصفحك</strong>. القراءة العميقة الاختيارية بسعر 7$ تضيف تفسيراً مكتوباً بالذكاء الاصطناعي. نحن لا نتنبأ بالمستقبل ولا نحل محل ممارس معتمد.</p>'
+        body: '<p><strong>ساجو (사주، "الأعمدة الأربعة") هي النسخة الكورية من باتزي الصينية (八字)</strong> — مخطط ميلاد يعتمد على سنة وشهر ويوم وساعة ميلادك.</p><p><strong>مقارنة بالتنجيم الغربي:</strong> علامة شمسك هي معلومة واحدة عن ميلادك. ساجو يأخذ <em>ثمانية</em> معلومات (جذع وفرع لكل من السنة والشهر واليوم والساعة) ويقرؤها من خلال العناصر الخمسة (五行) والآلهة العشر (十神).</p><p><strong>الأكثر شخصية هو سيد اليوم (Day Master، 日主)</strong> — النموذج الأصلي العنصري لذاتك الجوهرية، مثل علامة زودياك لكن بناءً على يوم ميلادك.</p><p>حساب المخطط حتمي ويمكن تنفيذه في متصفحك. كل سرد بالذكاء الاصطناعي، بما في ذلك هذه القراءة المجانية وأي قراءة مدفوعة أو مخصصة، يرسل حقول الميلاد وبنية المخطط المشتقة إلى Cloudflare Workers وClaude Opus 4.8. نحن لا نتنبأ بالمستقبل ولا نحل محل ممارس معتمد.</p>'
       },
     };
     function applyWhatIsSaju(lang) {
@@ -462,22 +481,10 @@
       if (body) body.innerHTML = wis.body;
     }
 
-    // Gumroad checkout URL에 birth state를 query param으로 동봉.
-    // 폼 제출 후엔 그 값을, 제출 전엔 base URL만. n8n이 Gumroad ping url_params로 받음.
+    // 현재 자동 fulfillment가 요구하는 최소 handoff만 동봉한다.
+    // city는 제외하며 attribution은 공통 allowlist를 통과한다.
     function buildCheckoutUrl() {
-      if (!DEEP_URL) return '';
-      const f = lastInput;
-      if (!f) return appendAttributionToUrl(DEEP_URL, PAGE_ATTRIBUTION);
-      const pad = n => String(n).padStart(2, '0');
-      const birth = `${f.year}${pad(f.month)}${pad(f.day)}${pad(f.hour)}${pad(f.minute || 0)}`;
-      const params = new URLSearchParams();
-      params.set('birth', birth);
-      params.set('lang', f.language || 'en');
-      params.set('readingType', f.readingType || 'general');
-      if (f.gender) params.set('gender', f.gender);
-      if (f.city) params.set('city', f.city);
-      const checkoutUrl = DEEP_URL + (DEEP_URL.includes('?') ? '&' : '?') + params.toString();
-      return appendAttributionToUrl(checkoutUrl, PAGE_ATTRIBUTION);
+      return buildDirectCheckoutUrl(DEEP_URL, lastInput, PAGE_ATTRIBUTION);
     }
 
     function applyPaidLinks() {
@@ -488,8 +495,9 @@
       if (note) note.hidden = true;
       const cta = document.getElementById('upsell-deep-cta');
       if (!cta) return;
-      cta.href = buildCheckoutUrl();
-      cta.setAttribute('rel', 'noopener');
+      const baseCheckoutUrl = buildDirectCheckoutUrl(DEEP_URL, null, PAGE_ATTRIBUTION);
+      cta.href = baseCheckoutUrl;
+      cta.setAttribute('rel', 'noopener noreferrer');
       cta.setAttribute('target', '_blank');
       const lang = document.getElementById('language')?.value || document.documentElement.lang || 'en';
       cta.textContent = paidCtaText(lang);
@@ -510,16 +518,15 @@
             track('saju_paid_block_no_gender', { product: 'deep' });
             return;
           }
-          // 클릭 직전 동적 href — 사용자가 form 제출 후 birth state 동봉
+          // 클릭 직전에만 최소 fulfillment handoff를 href에 넣고 즉시 base URL로 복구한다.
+          // 원본 출생값을 localStorage/sessionStorage에 중복 보존하지 않는다.
           const dyn = buildCheckoutUrl();
-          if (dyn) cta.href = dyn;
-          // Path 1: birth state를 localStorage에 보존. redirect 복귀 시 즉시 표시용.
-          if (lastInput) {
-            try {
-              localStorage.setItem('saju.paid.lastInput', JSON.stringify(lastInput));
-              localStorage.setItem('saju.paid.ts', String(Date.now()));
-            } catch {}
+          if (!lastInput || !dyn || !new URL(dyn).searchParams.has('birth')) {
+            ev.preventDefault();
+            return;
           }
+          cta.href = dyn;
+          setTimeout(() => { cta.href = baseCheckoutUrl; }, 0);
           track('saju_paid_click', { product: 'deep', hasBirth: !!lastInput });
         });
         cta.dataset.paidTracked = '1';
@@ -534,7 +541,7 @@
         agTerms.textContent = ag.terms;
         agRefund.textContent = ag.refund;
       }
-      // Path 1 banner — ?paid=deep 복귀 시 안내 + 다국어 textContent swap
+      // ?paid=deep 복귀 시 이메일 delivery 안내 + 다국어 textContent swap
       const banner = document.getElementById('paid-banner');
       const bannerText = document.getElementById('paid-banner-text');
       if (banner && bannerText) {
@@ -561,15 +568,15 @@
 
     // Feedback widget i18n — CHROME 50 키와 분리, 가벼운 5 lang 사전(나머지는 en 폴백).
     const FEEDBACK_I18N = {
-      en: { prompt: 'How was your reading?', placeholder: 'Optional: tell us more', btn: 'Send', thanks: '✓ Thanks!' },
-      ko: { prompt: '리딩 어떠셨나요?', placeholder: '선택: 의견 남기기', btn: '보내기', thanks: '✓ 감사합니다' },
-      ja: { prompt: 'リーディングはどうでしたか?', placeholder: '任意: 詳しく教えてください', btn: '送信', thanks: '✓ ありがとう' },
-      zh: { prompt: '解读如何?', placeholder: '可选: 留言', btn: '发送', thanks: '✓ 谢谢' },
-      es: { prompt: '¿Qué te pareció?', placeholder: 'Opcional: dinos más', btn: 'Enviar', thanks: '✓ ¡Gracias!' },
-      pt: { prompt: 'Como foi a leitura?', placeholder: 'Opcional: nos conte mais', btn: 'Enviar', thanks: '✓ Obrigado!' },
-      fr: { prompt: 'Comment trouvez-vous la lecture ?', placeholder: 'Facultatif : dites-nous plus', btn: 'Envoyer', thanks: '✓ Merci !' },
-      de: { prompt: 'Wie war die Lesung?', placeholder: 'Optional: Sag uns mehr', btn: 'Senden', thanks: '✓ Danke!' },
-      ar: { prompt: 'كيف كانت القراءة؟', placeholder: 'اختياري: أخبرنا المزيد', btn: 'إرسال', thanks: '✓ شكراً!' },
+      en: { prompt: 'How was your reading?', placeholder: 'Optional: tell us more', btn: 'Send', thanks: '✓ Thanks!', retry: 'Could not send. Check the text and try again.' },
+      ko: { prompt: '리딩 어떠셨나요?', placeholder: '선택: 의견 남기기', btn: '보내기', thanks: '✓ 감사합니다', retry: '전송하지 못했습니다. 내용을 확인하고 다시 시도해주세요.' },
+      ja: { prompt: 'リーディングはどうでしたか?', placeholder: '任意: 詳しく教えてください', btn: '送信', thanks: '✓ ありがとう', retry: '送信できませんでした。内容を確認してもう一度お試しください。' },
+      zh: { prompt: '解读如何?', placeholder: '可选: 留言', btn: '发送', thanks: '✓ 谢谢', retry: '未能发送。请检查内容后重试。' },
+      es: { prompt: '¿Qué te pareció?', placeholder: 'Opcional: dinos más', btn: 'Enviar', thanks: '✓ ¡Gracias!', retry: 'No se pudo enviar. Revisa el texto e inténtalo otra vez.' },
+      pt: { prompt: 'Como foi a leitura?', placeholder: 'Opcional: nos conte mais', btn: 'Enviar', thanks: '✓ Obrigado!', retry: 'Não foi possível enviar. Confira o texto e tente novamente.' },
+      fr: { prompt: 'Comment trouvez-vous la lecture ?', placeholder: 'Facultatif : dites-nous plus', btn: 'Envoyer', thanks: '✓ Merci !', retry: 'Envoi impossible. Vérifiez le texte et réessayez.' },
+      de: { prompt: 'Wie war die Lesung?', placeholder: 'Optional: Sag uns mehr', btn: 'Senden', thanks: '✓ Danke!', retry: 'Konnte nicht senden. Prüfe den Text und versuche es erneut.' },
+      ar: { prompt: 'كيف كانت القراءة؟', placeholder: 'اختياري: أخبرنا المزيد', btn: 'إرسال', thanks: '✓ شكراً!', retry: 'تعذر الإرسال. تحقق من النص وحاول مرة أخرى.' },
     };
     function applyFeedbackI18n(lang) {
       const i = FEEDBACK_I18N[lang] || FEEDBACK_I18N.en;
@@ -593,6 +600,7 @@
       const submitBtn = document.getElementById('fb-submit');
       const promptEl = document.getElementById('fb-prompt');
       const starsEl = document.getElementById('fb-stars');
+      const privacyWarningEl = document.getElementById('fb-privacy-warning');
       const thanksEl = document.getElementById('fb-thanks');
       let rating = 0;
       stars.forEach(btn => {
@@ -600,29 +608,39 @@
           rating = +btn.dataset.rating;
           stars.forEach(s => s.classList.toggle('selected', +s.dataset.rating <= rating));
           textEl.hidden = false;
+          if (privacyWarningEl) privacyWarningEl.hidden = false;
           submitBtn.hidden = false;
+          thanksEl.hidden = true;
         });
       });
       submitBtn.addEventListener('click', async () => {
         if (!rating) return;
         submitBtn.disabled = true;
         const lang = document.getElementById('language').value;
+        const i = FEEDBACK_I18N[lang] || FEEDBACK_I18N.en;
         const text = (textEl.value || '').trim();
-        if (WORKER_URL) {
-          try {
-            await fetch(WORKER_URL + '/feedback', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ rating, text: text || null, lang, page: 'index', sessionId: getSessionId() }),
-              keepalive: true,
-            });
-          } catch {}
+        try {
+          if (!WORKER_URL) throw new Error('feedback unavailable');
+          const res = await fetch(WORKER_URL + '/feedback', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ rating, text: text || null, lang, page: 'index', sessionId: getSessionId() }),
+            keepalive: true,
+          });
+          if (!res.ok) throw new Error(`feedback failed: ${res.status}`);
+        } catch {
+          submitBtn.disabled = false;
+          thanksEl.textContent = i.retry;
+          thanksEl.hidden = false;
+          return;
         }
         try { localStorage.setItem('saju.fb.submitted', '1'); } catch {}
         promptEl.hidden = true;
         starsEl.hidden = true;
         textEl.hidden = true;
+        if (privacyWarningEl) privacyWarningEl.hidden = true;
         submitBtn.hidden = true;
+        thanksEl.textContent = i.thanks;
         thanksEl.hidden = false;
         track('saju_feedback_submitted', { rating, hasText: !!text });
       });
@@ -657,6 +675,8 @@
       set('label-city', t.labelCity);
       set('label-reading-type', t.labelReadingType);
       set('form-hint', t.hint);
+      setHtml('form-processing-notice', t.processingNoticeHtml || CHROME.en.processingNoticeHtml);
+      setHtml('paid-data-notice', t.directCheckoutNoticeHtml || CHROME.en.directCheckoutNoticeHtml);
 
       const langEl = document.getElementById('language');
       if (langEl) langEl.setAttribute('aria-label', t.labelLanguage);
@@ -755,8 +775,8 @@
       }
     }
 
-    const READING_TYPE_CODE = { general: 'g', career: 'c', love: 'l' };
-    const READING_TYPE_DECODE = { g: 'general', c: 'career', l: 'love' };
+    const READING_TYPE_CODE = { general: 'g', career: 'c', love: 'l', wealth: 'w' };
+    const READING_TYPE_DECODE = { g: 'general', c: 'career', l: 'love', w: 'wealth' };
 
     function encodeBirthToUrl({ year, month, day, hour, minute, readingType }) {
       const pad = n => String(n).padStart(2, '0');
@@ -940,29 +960,6 @@
       submitBtn.disabled = false;
       submitBtn.textContent = T.submit;
     });
-
-    // Path 1: ?paid=deep 복귀 → localStorage에서 birth 복원 → URL ?b=&t= 주입
-    // 기존 applyBirthFromUrlIfAny → auto-submit 흐름을 그대로 재사용한다.
-    function restorePaidBirth() {
-      const url = new URL(window.location.href);
-      if (url.searchParams.get('paid') !== 'deep') return false;
-      if (url.searchParams.get('b')) return false; // 이미 birth URL 있음 → 우선
-      try {
-        const raw = localStorage.getItem('saju.paid.lastInput');
-        if (!raw) return false;
-        const f = JSON.parse(raw);
-        if (!f || !f.year || !f.month || !f.day) return false;
-        const pad = n => String(n).padStart(2, '0');
-        const b = `${f.year}${pad(f.month)}${pad(f.day)}${pad(f.hour ?? 12)}${pad(f.minute ?? 0)}`;
-        const t = READING_TYPE_CODE[f.readingType] || 'g';
-        url.searchParams.set('b', b);
-        url.searchParams.set('t', t);
-        window.history.replaceState({}, '', url.toString());
-        track('saju_paid_return', { hasBirth: true });
-        return true;
-      } catch { return false; }
-    }
-    restorePaidBirth();
 
     if (applyBirthFromUrlIfAny()) {
       requestAnimationFrame(() => {

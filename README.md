@@ -12,7 +12,7 @@ Korean Four Pillars of Destiny (사주, 四柱) — global edition.
 - **Daily fortune** — https://hoonsikim.github.io/saju/today.html — today's reading + 7-day forecast strip, surfaces the best day of the week
 - **Compatibility (궁합)** — https://hoonsikim.github.io/saju/compat.html — two birth charts, a 0–100 verdict, shareable result card
 
-All three run fully client-side. Enter a birth date/time, get a reading instantly. Every result is a shareable URL — open someone's link and their chart renders on your screen.
+The deterministic chart engines and rule-based fallback run client-side. The current Reading page also sends the applicable raw birth fields and derived chart context through Cloudflare Workers to Anthropic for its AI narrative; Daily Fortune and Compatibility remain client-side. Reading URLs contain encoded birth date/time and focus so a result can be reopened, so treat copied reading URLs as sensitive. See [Terms](https://hoonsikim.github.io/saju/legal/terms/) and the [AI model card](https://hoonsikim.github.io/saju/about/#model-card).
 
 ## What it does
 
@@ -20,7 +20,7 @@ All three run fully client-side. Enter a birth date/time, get a reading instantl
 - **Four Pillars engine**: Year/Month/Day/Hour gan-ji, Five Elements ratio, Ten Gods auto-labeling — handles 立春 solar-term boundaries
 - **Compatibility**: four-axis score (Day Master relation, Day Branch 六合/相沖, Five Elements complement, combined balance) → soulmate/strong/good/mixed/challenging verdict
 - **Shareable**: URL-encoded birth state, native Web Share, downloadable verdict card (PNG)
-- **Deep Reading**: the free reading is complete on its own; a long-form AI-written interpretation is available at https://gumroad.com/l/reading
+- **Deep Reading**: the free reading is complete on its own; a long-form AI-written interpretation is available at https://hcompany.gumroad.com/l/reading
 
 ## Guides
 

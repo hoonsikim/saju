@@ -71,18 +71,18 @@
 
     <h2>何が得られるか</h2>
     <ul>
-      <li><strong>無料ベーシックリーディング</strong> — 四柱 + 日主 + 五行バランス + 短い総合解釈。即時。登録不要。ブラウザで生成。</li>
+      <li><strong>無料ベーシックリーディング</strong> — 四柱 + 日主 + 五行バランス + 短いAI解釈。即時。登録不要。命式計算はブラウザで行い、AI解釈はCloudflare WorkersとAnthropicを使用します。</li>
       <li><strong>$7 心層リーディング</strong> — 上記すべて + 蔵干・十二運星・空亡・十年大運を一つの物語に織り込んだAI長文解釈。メールで配信。</li>
     </ul>
 
     <h2>どのように動くか</h2>
-    <p>生年月日のデータはすべて<strong>あなたのブラウザだけで</strong>計算されます。サーバーに保存しません、売りません、共有しません。保存するデータは決済プロバイダーが必要とする注文記録と、決済時に入力されたメールアドレスのみ — リーディングを配信するためだけです。</p>
+    <p>決定論的な命式計算はブラウザで実行できますが、現在の無料リーディングとすべての有料・受注制作リーディングを含む全AI解釈では、生年月日・現地出生時刻・言語・選択した焦点・該当する伝統的な性別設定と派生命式項目をCloudflare WorkersとAnthropic Claude APIへ送信します。都市/国は無料またはEtsy経路で入力された場合に使われますが、Gumroad直接決済からは意図的に除外します。無料結果は再表示できるよう現在のページURLに生年月日・時刻・焦点を保持し、リセットで削除します。直接決済では現在の配信に必要な最小項目である生年月日・時刻・性別・言語・焦点をGumroad URLへ渡し、Gumroadが購入者メールを提供します。Sajuは有料決済用の出生情報コピーをブラウザストレージへ別途保存しません。直接配信の注文・リーディングデータはGumroad、Cloudflare Workers、Anthropic、Resendを通り、Etsyは独自の注文・メッセージ記録を保持します。出生データを販売したり、意図的に分析・広告オーディエンス・メーリングリスト・再利用学習データへ入れたりしません。Etsy注文の30日削除ツールが対象とするのは、文書化された保留を除くローカルの原出生データ作業ディレクトリのみで、プロバイダー・取引・メール・メッセージ記録は削除しません。Anthropicは標準API入出力を明示された例外を除き30日以内に削除し、既定ではモデル学習に使わないと説明しています。他のプロバイダーは各社の規約を適用します。</p>
 
     <h2>誰が運営しているか</h2>
     <p>Sajuは<strong>김시훈 (Hoonsi Kim)</strong>が運営しています — ソウル在住の個人運営者。ソフトウェアエンジニアおよびプロダクトバックグラウンド。サイトは1人プロジェクトとして構築・維持されています — チームなし、投資家なし、データ収集なし。</p>
 
     <h2>決済と配信</h2>
-    <p>決済は<a href="https://gumroad.com" rel="noopener">Gumroad</a>がMerchant of Recordとして処理します(全世界の税金・規制を自動処理)。心層リーディングの配信は完全自動化: 注文webhook → AI生成 → メール配信 — 通常1分以内に届きます。</p>
+    <p>直接決済は<a href="https://gumroad.com" rel="noopener">Gumroad</a>で処理され、現在の自動メール経路はGumroad → Cloudflare Workers → Anthropic → Resendです。<code>?paid=deep</code>で戻ったこと自体は支払い完了の証明ではなく、決済画面とメールで配信状況を確認します。Etsyの受注制作購入は別の約束に従い、支払済み注文時刻から24時間以内に完成PDFをEtsy Ordersへアップロードします。</p>
 
     <h2 id="methodology">方法論(Methodology)</h2>
     <p>チャート計算は<strong>決定論的で再現可能</strong>です。オープンソースの<a href="https://github.com/6tail/lunar-javascript" rel="noopener">lunar-javascript</a>ライブラリ(v1.7.7)をベースに、韓国正統四柱推命の慣例に従います:</p>
@@ -106,13 +106,13 @@
     <p>このサイトは有資格の鑑定士に取って代わるものではありません — 命理フレームワークを世界中のユーザーがアクセスできるようにするソフトウェア解釈です。</p>
 
     <h2 id="model-card">AIモデルカード</h2>
-    <p>$7 心層リーディングは以下で生成されます:</p>
+    <p>現在の無料リーディングと有料・受注制作リーディングを含む全AI解釈は、以下を使用して生成されます:</p>
     <ul>
-      <li><strong>モデル</strong>: Anthropic Claude Haiku 4.5 (<code>claude-haiku-4-5-20251001</code>)</li>
-      <li><strong>最大出力トークン</strong>: 6,144 (≈ 2,500–3,500 words)</li>
+      <li><strong>モデル</strong>: Anthropic Claude Opus 4.8 (<code>claude-opus-4-8</code>)</li>
+      <li><strong>設定上の最大出力トークン</strong>: 8,192</li>
       <li><strong>再現性</strong>: 同じ生年月日 + 同じreadingType → 類似の解釈 (LLMは確率的、同一出力は保証されません)</li>
       <li><strong>システムプロンプト</strong>: <a href="https://github.com/hoonsikim/saju/blob/main/src/reading-prompt.js" rel="noopener">src/reading-prompt.js</a> (MITライセンスでGitHub公開)</li>
-      <li><strong>モデルへの入力</strong>: 生年月日・時刻・性別(任意)・都市(任意、文脈のみ)・言語・readingType (general/career/love/wealth)。生年月日はブラウザで計算され、決定論的なチャート構造のみがモデルに送信されます。原本の生年月日はサーバーに保存されません。</li>
+      <li><strong>モデルへの入力</strong>: 生年月日・現地時刻・該当する伝統的な性別設定・言語・readingType (general/career/love/wealth)と、Cloudflare Workerが計算した決定論的チャート構造。都市/国は無料またはEtsy経路で入力された場合に含まれますが、現在のGumroad直接決済からは除外されます。該当する原出生項目に加え、四柱・日主・五行・十神・蔵干・十二運星・空亡・大運・歳運の文脈が含まれます。</li>
     </ul>
     <p>チャート自体(四柱・五行・十神・蔵干・十二運星・空亡・大運・神煞・歳運)は<strong>決定論的でGitHubソースから検証可能</strong>です。LLMはその上に自然言語の解釈レイヤーを加えるだけです。</p>
 
@@ -120,7 +120,7 @@
     <p>メール: <a href="mailto:h.company.sean@gmail.com">h.company.sean@gmail.com</a></p>
     <p>返金ポリシー: <a href="/saju/legal/refund/">/legal/refund</a> · 利用規約: <a href="/saju/legal/terms/">/legal/terms</a> <span style="color:#5e5648;font-size:13px;">(法的ページは英語のみ)</span></p>
 
-    <div class="meta">最終更新: 2026-05-24</div>
+    <div class="meta">最終更新: 2026-07-16</div>
   </main>
   <footer>
     <a href="/saju/?lang=ja">ホーム</a>

@@ -1,0 +1,13 @@
+{
+  "name": "saju-fulfillment-gateway",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "dev": "wrangler dev --config wrangler.toml.example"
+  },
+  "devDependencies": {
+    "wrangler": "4.112.0"
+  }
+}

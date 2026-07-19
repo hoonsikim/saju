@@ -71,18 +71,18 @@
 
     <h2>你能得到什么</h2>
     <ul>
-      <li><strong>免费基础解读</strong> — 四柱 + 日主 + 五行平衡 + 简短综合解释。即时。无需注册。在浏览器中生成。</li>
+      <li><strong>免费基础解读</strong> — 四柱 + 日主 + 五行平衡 + 简短AI解读。即时。无需注册。命盘计算在浏览器中进行，AI解读使用Cloudflare Workers与Anthropic。</li>
       <li><strong>$7 心层解读</strong> — 上述全部 + 藏干、十二运星、空亡、十年大运编织为单一叙事的AI长文解释。邮件送达。</li>
     </ul>
 
     <h2>如何运作</h2>
-    <p>生日数据完全<strong>在你的浏览器中</strong>计算。不保存在服务器,不出售,不分享。我们保留的数据仅有支付提供商需要的订单记录和结账时输入的电子邮件地址 — 仅用于发送解读。</p>
+    <p>确定性的命盘计算可以在浏览器中执行，但包括当前免费解读及所有付费或定制解读在内的每一段AI解读，都会把出生日期、当地出生时间、语言、所选重点、适用的传统性别设置及派生命盘字段发送给Cloudflare Workers与Anthropic Claude API。城市/国家可在免费或Etsy流程中按输入使用，但会被有意排除在Gumroad直接结账之外。免费结果会在当前页面地址中保留出生日期、时间和重点以便重新打开，重置时会删除。直接结账仅在Gumroad URL中传递当前交付所需的最少字段，即出生日期/时间、性别、语言和重点；买家邮箱由Gumroad提供。Saju不会在浏览器存储中另存一份付费结账出生信息。直接交付的订单/解读数据会经过Gumroad、Cloudflare Workers、Anthropic和Resend；Etsy保留自己的订单与消息记录。我们不出售出生数据，也不会有意把它放入分析、广告受众、邮件列表或可重复使用的训练数据。Etsy订单的30天删除工具仅覆盖本地原始出生数据工作目录（有记录的保留除外），不会删除提供商、交易、邮件或消息记录。Anthropic说明，标准API输入和输出会在30天内删除（有明确例外），且默认不用于模型训练。其他提供商适用各自条款。</p>
 
     <h2>谁在运营</h2>
     <p>Saju由<strong>김시훈 (Hoonsi Kim)</strong>运营 — 居住在首尔的个人运营者。软件工程师和产品背景。网站作为单人项目构建和维护 — 无团队、无投资者、无数据收割。</p>
 
     <h2>支付与发送</h2>
-    <p>支付由<a href="https://gumroad.com" rel="noopener">Gumroad</a>作为Merchant of Record处理(自动处理全球税收和合规)。心层解读发送完全自动化: 订单webhook → AI生成 → 邮件发送 — 通常1分钟内送达。</p>
+    <p>直接付款由<a href="https://gumroad.com" rel="noopener">Gumroad</a>处理；当前自动邮件路径为Gumroad → Cloudflare Workers → Anthropic → Resend。仅通过<code>?paid=deep</code>返回本站并不能证明付款完成，交付状态以结账页面和邮件为准。Etsy定制订单遵循另一项承诺：从已付款订单时间起24小时内通过Etsy Orders上传完成的PDF。</p>
 
     <h2 id="methodology">方法论</h2>
     <p>排盘计算<strong>确定且可重现</strong>。基于开源<a href="https://github.com/6tail/lunar-javascript" rel="noopener">lunar-javascript</a>库(v1.7.7),遵循韩国正统四柱推命惯例:</p>
@@ -106,13 +106,13 @@
     <p>本站不取代经认证的命理师 — 是使命理框架在全球范围内可访问的软件解读。</p>
 
     <h2 id="model-card">AI 模型卡</h2>
-    <p>$7 心层解读由以下生成:</p>
+    <p>包括当前免费解读及付费或定制解读在内的每一段AI解读，均使用以下内容生成:</p>
     <ul>
-      <li><strong>模型</strong>: Anthropic Claude Haiku 4.5 (<code>claude-haiku-4-5-20251001</code>)</li>
-      <li><strong>最大输出token</strong>: 6,144 (≈ 2,500–3,500 词)</li>
+      <li><strong>模型</strong>: Anthropic Claude Opus 4.8 (<code>claude-opus-4-8</code>)</li>
+      <li><strong>配置的最大输出token</strong>: 8,192</li>
       <li><strong>重现性</strong>: 相同生日 + 相同readingType → 类似解读 (LLM为随机,不保证相同输出)</li>
       <li><strong>系统提示词</strong>: <a href="https://github.com/hoonsikim/saju/blob/main/src/reading-prompt.js" rel="noopener">src/reading-prompt.js</a> (MIT许可,GitHub公开)</li>
-      <li><strong>模型输入</strong>: 生日时间、性别(可选)、城市(可选,仅上下文)、语言、readingType (general/career/love/wealth)。生日在浏览器中计算,仅确定的排盘结构发送给模型。原始生日不保存在服务器。</li>
+      <li><strong>模型输入</strong>: 出生日期和当地时间、适用的传统性别设置、语言、readingType (general/career/love/wealth)，以及Cloudflare Worker计算出的确定性命盘结构。城市/国家在免费或Etsy流程中按输入包含，但会从当前Gumroad直接结账中排除。内容包括适用的原始出生字段及四柱、日主、五行、十神、藏干、十二运、空亡、大运和流年上下文。</li>
     </ul>
     <p>排盘本身(四柱、五行、十神、藏干、十二运星、空亡、大运、神煞、岁运)<strong>确定且可通过GitHub源码验证</strong>。LLM仅在上面添加自然语言解读层。</p>
 
@@ -120,7 +120,7 @@
     <p>邮箱: <a href="mailto:h.company.sean@gmail.com">h.company.sean@gmail.com</a></p>
     <p>退款政策: <a href="/saju/legal/refund/">/legal/refund</a> · 使用条款: <a href="/saju/legal/terms/">/legal/terms</a> <span style="color:#5e5648;font-size:13px;">(法律页面仅英文)</span></p>
 
-    <div class="meta">最近更新: 2026-05-24</div>
+    <div class="meta">最近更新: 2026-07-16</div>
   </main>
   <footer>
     <a href="/saju/?lang=zh">主页</a>
