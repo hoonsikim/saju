@@ -2,7 +2,7 @@
 
 Staged copy for the live `Saju Deep Reading` product (`jdykvl`). This pack corrects the empty description, misleading online-delivery link, and contradictory refund language observed in the authenticated Gumroad editor on 2026-07-19.
 
-Nothing in this directory proves that the live listing was saved. External state must be read back after `Save changes` and recorded separately.
+`settings.json.saved_live` is an operator record, not self-proving evidence. The authenticated read-back and runtime checks from the 2026-07-20 cutover are recorded in `live-evidence-2026-07-20.md`.
 
 ## Publish order
 
