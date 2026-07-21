@@ -58,6 +58,23 @@ test('wealth focus survives direct checkout handoff', () => {
   assert.equal(checkout.searchParams.get('readingType'), 'wealth');
 });
 
+test('localized Threads sources preserve language and fixed campaign attribution', () => {
+  for (const language of ['ko', 'ja', 'en']) {
+    const source = `threads_saju_${language}_001`;
+    const checkout = new URL(buildDirectCheckoutUrl(
+      BASE,
+      { ...INPUT, language },
+      { source },
+    ));
+
+    assert.equal(checkout.searchParams.get('lang'), language);
+    assert.equal(checkout.searchParams.get('source'), source);
+    assert.equal(checkout.searchParams.get('utm_source'), 'threads');
+    assert.equal(checkout.searchParams.get('utm_medium'), 'organic-social');
+    assert.equal(checkout.searchParams.get('utm_campaign'), source);
+  }
+});
+
 test('invalid or incomplete fulfillment input falls back to the non-sensitive product URL', () => {
   for (const input of [
     null,

@@ -12,6 +12,9 @@ const REGISTERED_SOURCES = Object.freeze([
   'reddit_chineseastrology_001',
   'fivearts_001',
   'gumroad_discover_001',
+  'threads_saju_ko_001',
+  'threads_saju_ja_001',
+  'threads_saju_en_001',
 ]);
 const LONG_READING = Array.from({ length: 190 }, (_, index) => `Reading sentence ${index} explains a concrete Saju pattern with careful detail.`).join(' ');
 
@@ -307,10 +310,9 @@ test('direct events remain allowed while campaign is always derived server-side'
 test('all registered campaign sources are accepted and bucketed server-side by exact source', async () => {
   const METRICS = new MemoryKV();
   const env = { METRICS, ADMIN_TOKEN: 'admin', __TEST_NOW_MS: KST_DAY_1_MS };
-  const sessionLetters = ['c', 'd', 'e', 'f', 'a'];
 
   for (const [index, source] of REGISTERED_SOURCES.entries()) {
-    const sessionId = `sess_${sessionLetters[index].repeat(32)}`;
+    const sessionId = `sess_${'a'.repeat(31)}${index.toString(16)}`;
     const result = await postTrack(env, validPayload({ sessionId, extra: { source } }));
     assert.equal(result.response.status, 200, `${source}: ${JSON.stringify(result.body)}`);
   }
@@ -333,8 +335,10 @@ test('registered campaign sources reject spoofed variants and extra attribution 
     { source: 'reddit_chineseastrology_001_copy' },
     { source: 'fivearts' },
     { source: 'gumroad-discover-001' },
+    { source: 'threads_saju_en_001_copy' },
     { source: 'gumroad_discover_001', utm_campaign: 'gumroad_discover_001' },
     { source: 'fivearts_001', utm_source: 'fivearts' },
+    { source: 'threads_saju_ja_001', utm_source: 'x' },
   ];
 
   for (const extra of cases) {

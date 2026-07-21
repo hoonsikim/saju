@@ -56,6 +56,30 @@ export const ATTRIBUTION_REGISTRY = Object.freeze({
       utm_campaign: 'gumroad_discover_001',
     }),
   }),
+  threads_saju_ko_001: Object.freeze({
+    campaign: 'threads_saju_ko_001',
+    acceptedQuery: Object.freeze({
+      utm_source: 'threads',
+      utm_medium: 'organic-social',
+      utm_campaign: 'threads_saju_ko_001',
+    }),
+  }),
+  threads_saju_ja_001: Object.freeze({
+    campaign: 'threads_saju_ja_001',
+    acceptedQuery: Object.freeze({
+      utm_source: 'threads',
+      utm_medium: 'organic-social',
+      utm_campaign: 'threads_saju_ja_001',
+    }),
+  }),
+  threads_saju_en_001: Object.freeze({
+    campaign: 'threads_saju_en_001',
+    acceptedQuery: Object.freeze({
+      utm_source: 'threads',
+      utm_medium: 'organic-social',
+      utm_campaign: 'threads_saju_en_001',
+    }),
+  }),
 });
 
 const CHECKOUT_MAX_LENGTH = Object.freeze({

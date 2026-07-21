@@ -39,6 +39,21 @@ const REGISTERED_SOURCES = Object.freeze({
     utm_medium: 'marketplace',
     utm_campaign: 'gumroad_discover_001',
   },
+  threads_saju_ko_001: {
+    utm_source: 'threads',
+    utm_medium: 'organic-social',
+    utm_campaign: 'threads_saju_ko_001',
+  },
+  threads_saju_ja_001: {
+    utm_source: 'threads',
+    utm_medium: 'organic-social',
+    utm_campaign: 'threads_saju_ja_001',
+  },
+  threads_saju_en_001: {
+    utm_source: 'threads',
+    utm_medium: 'organic-social',
+    utm_campaign: 'threads_saju_en_001',
+  },
 });
 
 test('analytics attribution accepts only the exact registered sources and fixed aliases', () => {
@@ -114,6 +129,7 @@ test('checkout propagation rejects unregistered or spoofed attribution instead o
     { source: 'reddit_chineseastrology_001', utm_campaign: 'reddit_chinesezodiac_001' },
     { source: 'fivearts_001', utm_medium: 'organic-social' },
     { source: 'gumroad_discover_001', utm_content: 'banner-a' },
+    { source: 'threads_saju_en_001', utm_campaign: 'threads_saju_ko_001' },
   ]) {
     const checkout = new URL(appendAttributionToUrl('https://hcompany.gumroad.com/l/reading?affiliate=partner', attribution));
     assert.equal(checkout.searchParams.get('affiliate'), 'partner');
